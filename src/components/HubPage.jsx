@@ -14,7 +14,7 @@ export const HubPage = ({ onSelectSection }) => (
         The MedTech Europe Code of Ethical Business Practice
       </h1>
       <p className="text-xl text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">
-        Digital Compliance Toolkit
+        The Digital Home of the MedTech Europe Code of Ethical Business Practice
       </p>
     </div>
 

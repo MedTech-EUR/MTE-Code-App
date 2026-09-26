@@ -308,7 +308,7 @@ export default function EventSupportContent({ onGoHome, scrollRef, glossaryMap, 
               Can we support this event?
             </h1>
             <p className="mt-3 text-slate-600">
-              Check what the company plans to provide against the Code and, for a third-party Event, its CVS status. Then compare other ways to support the same Event.
+              Interactive guide to asess specific scenarios on whether support to an Event can be provided.
             </p>
           </div>
 
@@ -327,7 +327,7 @@ export default function EventSupportContent({ onGoHome, scrollRef, glossaryMap, 
           {stage === 'activity' && (
             <div className="no-print space-y-8">
               <p className="text-sm text-slate-600">
-                Choose one activity. If the company plans several, check each one separately: the facts about the Event are kept when you switch.
+                Choose one type of interaction. If the company plans several, check each one separately: the facts about the Event are kept when you switch.
               </p>
               {data.activityGroups.map((group) => (
                 <section key={group.id}>

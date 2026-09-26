@@ -74,22 +74,22 @@
     ]
   },
   "activityGroups": [
-    { "id": "event", "label": "Support for an Event" },
+    { "id": "event", "label": "We want to..." },
     { "id": "other", "label": "Other interactions with HCPs and HCOs" }
   ],
   "activities": [
     {
       "id": "grant-running",
       "group": "event",
-      "label": "Give an Educational Grant for the Event’s general running",
-      "description": "Funding or In Kind support to the organising Healthcare Organisation.",
+      "label": "Provide an Educational Grant for the general running of the Event",
+      "description": "Funding or In Kind support to the organisation of an Event.",
       "eventTypes": ["conference", "tppt"],
       "sources": ["annex1", "educationalGrants"]
     },
     {
       "id": "grant-attendance",
       "group": "event",
-      "label": "Give an Educational Grant that funds HCPs’ attendance",
+      "label": "Provide an Educational Grant to support the attendance of HCPs to an Event",
       "description": "The Healthcare Organisation receiving the grant chooses the HCPs who benefit.",
       "eventTypes": ["conference", "tppt"],
       "sources": ["annex1", "educationalGrants"]
@@ -97,7 +97,7 @@
     {
       "id": "grant-faculty",
       "group": "event",
-      "label": "Give an Educational Grant that funds the Faculty",
+      "label": "Provide an Educational Grant to support the Faculty of an Event",
       "description": "The organiser selects and pays its speakers, chairs and moderators.",
       "eventTypes": ["conference", "tppt"],
       "sources": ["annex1", "educationalGrants"]
@@ -105,15 +105,15 @@
     {
       "id": "booth",
       "group": "event",
-      "label": "Buy booth space, advertising or a satellite symposium",
-      "description": "A commercial package from the organiser, with something in return.",
+      "label": "Purchase booth space, advertising opportunities or a satellite symposium slot",
+      "description": "A commercial package from the organiser.",
       "eventTypes": ["conference"],
       "sources": ["annex1", "conferences"]
     },
     {
       "id": "satellite",
       "group": "event",
-      "label": "Pay an HCP to speak at the company’s satellite symposium or booth",
+      "label": "Engage an HCP to speak at the company’s satellite symposium or booth",
       "description": "A consulting agreement for speaker services at the company’s own session.",
       "eventTypes": ["conference"],
       "sources": ["annex1", "annex6", "companyAtTpoe", "consultingCriteria"]
@@ -121,24 +121,24 @@
     {
       "id": "company-attendance",
       "group": "event",
-      "label": "Send company employees to attend",
-      "description": "Company representatives attend the Event themselves.",
+      "label": "Send company employees to attend an Event",
+      "description": "Company staff attend the Event themselves.",
       "eventTypes": ["conference", "tppt"],
       "sources": ["annex1", "conferences"]
     },
     {
       "id": "direct-delegate",
       "group": "event",
-      "label": "Pay an HCP’s costs to attend as a Delegate",
-      "description": "Registration, travel, accommodation or meals for an HCP who attends without speaking.",
+      "label": "Cover/reimburse the costs of attendance of an HCP’s to attend an event as as a Delegate",
+      "description": "Registration, travel, accommodation or meals for an HCP who attends an Event without being a speaker.",
       "eventTypes": ["conference", "tppt", "company-training", "company-business"],
       "sources": ["annex1", "annex6"]
     },
     {
       "id": "direct-faculty",
       "group": "event",
-      "label": "Pay an HCP to speak, chair or provide services",
-      "description": "A fee or expenses for Faculty, or for an HCP’s services at a Company Event.",
+      "label": "Compensate an HCP for providing speaking or other services",
+      "description": "A fee and/or expenses for Faculty, or for an HCP’s services at a Company Event.",
       "eventTypes": ["conference", "tppt", "company-training", "company-business", "company-services"],
       "sources": ["annex1", "annex6", "consultingCriteria"]
     },
@@ -146,14 +146,14 @@
       "id": "in-kind",
       "group": "event",
       "label": "Support an Event organised by individual HCPs",
-      "description": "No legal entity, such as a Healthcare Organisation or PCO, organises it.",
+      "description": "No legal entity, such as a Healthcare Organisation or PCO organises the Event.",
       "eventTypes": ["conference", "tppt"],
       "sources": ["tppt"]
     },
     {
       "id": "meal",
       "group": "event",
-      "label": "Pay for a meal with HCPs at a meeting",
+      "label": "Pay for a meal with HCPs",
       "description": "Lunch or dinner at a business or scientific meeting, including during a congress.",
       "eventTypes": [],
       "sources": ["hospitality", "companyAtTpoe"]
@@ -170,7 +170,7 @@
       "id": "demos",
       "group": "other",
       "label": "Provide Demonstration Products or Samples",
-      "description": "Free-of-charge products for training, demonstration or familiarisation.",
+      "description": "Free-of-charge products for training, demonstration or familiarisation with medical technologies.",
       "eventTypes": [],
       "sources": ["demosGeneral"]
     },
@@ -193,7 +193,7 @@
     {
       "id": "research",
       "group": "other",
-      "label": "Fund research or agree royalties",
+      "label": "Fund research or include royalties in an agreement",
       "description": "Not event support: other chapters of the Code apply.",
       "eventTypes": [],
       "sources": ["research", "royalties"]

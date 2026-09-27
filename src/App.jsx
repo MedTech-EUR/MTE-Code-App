@@ -24,6 +24,7 @@ import { TransparencyContent } from './components/TransparencyContent';
 import { SectionLoadError } from './components/SectionLoadError';
 import { getTransparencyUnit } from './data/transparency/transparencyData';
 import { getReaderMeasure } from './config/readerSettings';
+import { CVS_CHECK_TREE_ID } from './config/sections';
 import {
   describeReferenceTarget,
   findReferenceTarget,
@@ -313,6 +314,7 @@ const App = () => {
     setSidebarOpen(false);
     if (sectionId === 'code') navigateCodeHome();
     if (sectionId === 'trees') navigateTreesHome();
+    if (sectionId === 'cvs-check') navigateTree(CVS_CHECK_TREE_ID);
     if (sectionId === 'quiz') navigateQuiz();
     if (sectionId === 'tppt') navigateTppt();
     if (sectionId === 'event-support') navigateEventSupport();
@@ -399,7 +401,7 @@ const App = () => {
           onNavigateChapter={navigateChapter}
           onNavigateCodeSection={navigateCodeSection}
           onNavigateTrees={navigateTreesHome}
-          onNavigateEventSupport={navigateEventSupport}
+          onNavigateTree={navigateTree}
           onNavigateTransparency={navigateTransparencyHome}
           onNavigateTransparencyDocument={navigateTransparencyDocument}
           onNavigateTransparencyUnit={navigateTransparencyUnit}
@@ -486,6 +488,7 @@ const App = () => {
           >
             <EventSupportContent
               onGoHome={handleGoHome}
+              onBack={navigateTreesHome}
               scrollRef={scrollRef}
               glossaryMap={glossaryMap}
               onTermClick={handleTermClick}
@@ -511,6 +514,7 @@ const App = () => {
           <TreeContent
             activeId={activeId}
             setActiveId={handleTreeChange}
+            onOpenTool={handleSectionSelect}
             scrollRef={scrollRef}
             onOpenReference={navigateToReference}
           />

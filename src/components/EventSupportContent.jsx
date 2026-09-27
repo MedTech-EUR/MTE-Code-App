@@ -119,7 +119,7 @@ function AnswerFacts({ questions, answers }) {
   );
 }
 
-export default function EventSupportContent({ onGoHome, scrollRef, glossaryMap, onTermClick, onOpenReference, sidePane }) {
+export default function EventSupportContent({ onBack, scrollRef, glossaryMap, onTermClick, onOpenReference, sidePane }) {
   const [answers, setAnswers] = useState({});
   const [stage, setStage] = useState('activity');
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -294,8 +294,8 @@ export default function EventSupportContent({ onGoHome, scrollRef, glossaryMap, 
       >
         <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8 print:p-0">
           <div className="no-print mb-6 flex items-center justify-between gap-3">
-            <button type="button" onClick={onGoHome} className="flex items-center gap-1 text-sm text-slate-500 hover:text-[#7654A1]">
-              <AppIcon name="ChevronLeft" size={16} /> Home
+            <button type="button" onClick={onBack} className="flex items-center gap-1 text-sm text-slate-500 hover:text-[#7654A1]">
+              <AppIcon name="ChevronLeft" size={16} /> All Decision Trees
             </button>
             {Boolean(answers.activity) && (
               <button type="button" onClick={reset} className="text-sm font-semibold text-[#7654A1]">Start again</button>

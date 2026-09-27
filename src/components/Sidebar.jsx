@@ -3,6 +3,7 @@ import { AppIcon } from './AppIcons';
 import { SearchResults } from './SearchResults';
 import { ResizeHandle } from './ResizeHandle';
 import { CODE_CHAPTERS, WEBSITE_CHAPTERS, updateSearchStatus } from '../data/codeData';
+import { CVS_CHECK_TREE_ID } from '../config/sections';
 import {
   TRANSPARENCY_DOCUMENTS,
 } from '../data/transparency/transparencyData';
@@ -121,7 +122,7 @@ export const Sidebar = ({
   onNavigateChapter,
   onNavigateCodeSection,
   onNavigateTrees,
-  onNavigateEventSupport,
+  onNavigateTree,
   onNavigateTransparency,
   onNavigateTransparencyDocument,
   onNavigateTransparencyUnit,
@@ -148,6 +149,10 @@ export const Sidebar = ({
   const searchScope = isTransparencySection ? 'transparency' : 'code';
   const isWebsitePage = activeSection === 'code'
     && WEBSITE_CHAPTERS.some((chapter) => chapter.id === activeId);
+  // The Conference Vetting System check is a decision tree with its own entry; the event support
+  // checker is listed with the trees.
+  const cvsCheckOpen = activeSection === 'trees' && activeId === CVS_CHECK_TREE_ID;
+  const browsingTrees = (activeSection === 'trees' && !cvsCheckOpen) || activeSection === 'event-support';
 
   // Track which groups are expanded
   const [expandedGroups, setExpandedGroups] = useState(() => (
@@ -646,12 +651,12 @@ export const Sidebar = ({
                   setSidebarOpen(false);
                 }}
                 className={`w-[calc(100%-0.5rem)] group text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center gap-3 ml-2 ${
-                  activeSection === 'trees'
+                  browsingTrees
                     ? 'bg-amber-600 text-white shadow-md'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                <span className={`shrink-0 ${activeSection === 'trees' ? 'text-amber-200' : 'text-gray-400'}`}>
+                <span className={`shrink-0 ${browsingTrees ? 'text-amber-200' : 'text-gray-400'}`}>
                   <AppIcon name="GitBranch" size={18} />
                 </span>
                 <span className="line-clamp-2 flex-1">Browse Decision Trees</span>
@@ -659,20 +664,20 @@ export const Sidebar = ({
               <button
                 type="button"
                 onClick={() => {
-                  onNavigateEventSupport();
+                  onNavigateTree(CVS_CHECK_TREE_ID);
                   setSidebarOpen(false);
                 }}
-                aria-current={activeSection === 'event-support' ? 'page' : undefined}
+                aria-current={cvsCheckOpen ? 'page' : undefined}
                 className={`w-[calc(100%-0.5rem)] group text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center gap-3 ml-2 ${
-                  activeSection === 'event-support'
+                  cvsCheckOpen
                     ? 'bg-[#7654A1] text-white shadow-md'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                <span className={`shrink-0 ${activeSection === 'event-support' ? 'text-white' : 'text-gray-400'}`}>
-                  <AppIcon name="ShieldCheck" size={18} />
+                <span className={`shrink-0 ${cvsCheckOpen ? 'text-white' : 'text-gray-400'}`}>
+                  <AppIcon name="CVSBadge" size={18} />
                 </span>
-                <span className="line-clamp-2 flex-1">Can we support this event?</span>
+                <span className="line-clamp-2 flex-1">Conference Vetting System check</span>
               </button>
             </CollapsibleGroup>
 

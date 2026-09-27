@@ -24,3 +24,19 @@ export function getTreeCvsMessage(cvsCheck, mode, { status = null, noMatch = fal
   if (noMatch && settings.noMatch) return { text: settings.noMatch, tone: 'caution' };
   return null;
 }
+
+// The answer's outcome once the Event's status is known. Support that needs a positive CVS
+// decision turns Compliant or Non-Compliant with a final decision and stays Conditional while one
+// is pending; a national Event found in CVS turns Conditional.
+const TREE_CVS_OUTCOMES = Object.freeze({
+  required: Object.freeze({ positive: 'compliant', caution: 'conditional', negative: 'non-compliant' }),
+  national: Object.freeze({ caution: 'conditional', negative: 'non-compliant' }),
+});
+
+/**
+ * The outcome the answer card shows for a message's `tone` (from getTreeCvsMessage), or the
+ * result's own `outcome` when there is no message or the tone does not change it.
+ */
+export function getTreeCvsOutcome(mode, tone, outcome) {
+  return TREE_CVS_OUTCOMES[mode]?.[tone] || outcome;
+}

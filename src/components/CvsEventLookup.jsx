@@ -6,8 +6,9 @@ import { AppIcon } from './AppIcons';
 
 const inputClass = 'w-full rounded-xl border border-slate-200 p-3 outline-none focus:ring-2 focus:ring-[#7654A1]';
 
-export default function CvsEventLookup({ lookup }) {
-  const { filters, search, selected, status, busy, error, updateFilter, searchEvents, selectEvent } = lookup;
+// `showSelected={false}` leaves the selected Event to the caller (a decision tree shows it in its answer).
+export default function CvsEventLookup({ lookup, showSelected = true }) {
+  const { filters, search, selected, busy, error, updateFilter, searchEvents, selectEvent } = lookup;
   return <div>
         <form onSubmit={searchEvents} aria-busy={busy === 'search'} className="no-print mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -61,17 +62,45 @@ export default function CvsEventLookup({ lookup }) {
           </fieldset>
         )}
 
-        {selected && (
-          <section aria-live="polite" aria-busy={busy === 'status'} className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm print:shadow-none">
-            <h2 className="text-lg font-semibold text-slate-800">{status?.name || selected.name}</h2>
-            <p className="mt-1 text-sm text-slate-500">{selected.emtId}</p>
-            <p className="mt-4 text-slate-700">Status in CVS: <strong>{busy === 'status' ? 'Checking the current status…' : status?.status.raw || 'Unknown'}</strong></p>
-            {status && <p className="mt-2 text-xs text-slate-500">Checked {new Date(status.retrievedAt).toLocaleString()}. The status can change after this check.</p>}
-            <div className="no-print mt-4 flex flex-wrap items-center gap-4">
-              <a href={selected.detailUrl || status?.detailUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-[#007A86] hover:underline">View this Event in CVS <AppIcon name="ExternalLink" size={14} /></a>
-              {status && <button type="button" onClick={() => selectEvent(selected)} className="text-sm font-semibold text-[#7654A1] hover:underline">Check again</button>}
-            </div>
-          </section>
-        )}
+        {showSelected && <CvsSelectedEvent lookup={lookup} />}
   </div>;
+}
+
+const SELECTED_STYLES = {
+  full: {
+    box: 'mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm print:shadow-none',
+    name: 'text-lg font-semibold text-slate-800',
+    emtId: 'mt-1 text-sm text-slate-500',
+    status: 'mt-4 text-slate-700',
+    checked: 'mt-2 text-xs text-slate-500',
+    actions: 'no-print mt-4 flex flex-wrap items-center gap-4',
+  },
+  compact: {
+    box: 'mb-4 rounded-xl border border-white/80 bg-white/60 p-4',
+    name: 'text-sm font-semibold text-gray-900',
+    emtId: 'text-xs text-gray-500',
+    status: 'mt-2 text-sm text-gray-700',
+    checked: 'mt-1 text-xs text-gray-500',
+    actions: 'no-print mt-3 flex flex-wrap items-center gap-4',
+  },
+};
+
+// The selected Event and its current status. `compact` fits it inside a decision tree's answer.
+export function CvsSelectedEvent({ lookup, compact = false }) {
+  const { selected, status, busy, selectEvent } = lookup;
+  if (!selected) return null;
+  const styles = compact ? SELECTED_STYLES.compact : SELECTED_STYLES.full;
+  const Name = compact ? 'p' : 'h2';
+  return (
+    <section aria-live="polite" aria-busy={busy === 'status'} className={styles.box}>
+      <Name className={styles.name}>{status?.name || selected.name}</Name>
+      <p className={styles.emtId}>{selected.emtId}</p>
+      <p className={styles.status}>Status in CVS: <strong>{busy === 'status' ? 'Checking the current status…' : status?.status.raw || 'Unknown'}</strong></p>
+      {status && <p className={styles.checked}>Checked {new Date(status.retrievedAt).toLocaleString()}. The status can change after this check.</p>}
+      <div className={styles.actions}>
+        <a href={selected.detailUrl || status?.detailUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-[#007A86] hover:underline">View this Event in CVS <AppIcon name="ExternalLink" size={14} /></a>
+        {status && <button type="button" onClick={() => selectEvent(selected)} className="text-sm font-semibold text-[#7654A1] hover:underline">Check again</button>}
+      </div>
+    </section>
+  );
 }

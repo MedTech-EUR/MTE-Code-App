@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppIcon } from './AppIcons';
 import { TREE_DATA } from '../data/treeData';
+import { TREE_PAGE_TOOLS } from '../config/sections';
 import { filterDecisionTrees } from '../utils/treeSearchUtils';
 
 const CATEGORY_CONFIG = {
@@ -13,11 +14,15 @@ const CATEGORY_CONFIG = {
   default:    { label: 'General',               color: '#95a5a6', icon: 'GitBranch' },
 };
 
-export const TreeLandingPage = ({ onSelectTree }) => {
+// The trees, then the tools listed with them (which open their own sections).
+const TREE_PAGE_ITEMS = [...TREE_DATA, ...TREE_PAGE_TOOLS];
+const TOOL_ITEMS = new Set(TREE_PAGE_TOOLS);
+
+export const TreeLandingPage = ({ onSelectTree, onOpenTool }) => {
   const [filterText, setFilterText] = React.useState('');
 
   const filteredTrees = React.useMemo(
-    () => filterDecisionTrees(TREE_DATA, filterText),
+    () => filterDecisionTrees(TREE_PAGE_ITEMS, filterText),
     [filterText],
   );
 
@@ -88,7 +93,7 @@ export const TreeLandingPage = ({ onSelectTree }) => {
               {trees.map((tree) => (
                 <button
                   key={tree.id}
-                  onClick={() => onSelectTree(tree.id)}
+                  onClick={() => (TOOL_ITEMS.has(tree) ? onOpenTool?.(tree.id) : onSelectTree(tree.id))}
                   className="group bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-left transition-all hover:shadow-md hover:-translate-y-1 active:scale-[0.98] relative overflow-hidden"
                 >
                   <div

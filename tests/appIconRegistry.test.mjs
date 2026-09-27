@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 const testDirectory = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(testDirectory, '..');
 const componentsDirectory = resolve(projectRoot, 'src/components');
+// Registries such as the Home Hub's sections name icons too.
+const configDirectory = resolve(projectRoot, 'src/config');
 const iconSource = readFileSync(
   resolve(componentsDirectory, 'AppIcons.jsx'),
   'utf8',
@@ -77,7 +79,10 @@ test('all component AppIcon names are registered', () => {
   const registeredNames = getRegisteredIconNames(iconSource);
   const requestedNames = new Set();
 
-  for (const componentPath of getComponentFiles(componentsDirectory)) {
+  for (const componentPath of [
+    ...getComponentFiles(componentsDirectory),
+    ...getComponentFiles(configDirectory),
+  ]) {
     const componentSource = readFileSync(componentPath, 'utf8');
     for (const name of getRequestedIconNames(componentSource)) {
       requestedNames.add(name);

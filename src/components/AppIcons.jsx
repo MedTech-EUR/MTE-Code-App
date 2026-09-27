@@ -121,6 +121,25 @@ export const CVSIcon = ({ size, className }) => (
   </CustomSvgWrapper>
 );
 
+// “CVS” in a badge: the Conference Vetting System check.
+export const CVSBadge = ({ size, className }) => (
+  <CustomSvgWrapper size={size} className={className}>
+    <rect x="1.5" y="5" width="21" height="14" rx="3" />
+    <text
+      x="12"
+      y="15.2"
+      textAnchor="middle"
+      fontSize="8.4"
+      fontWeight="800"
+      fontFamily="Inter, sans-serif"
+      fill="currentColor"
+      stroke="none"
+    >
+      CVS
+    </text>
+  </CustomSvgWrapper>
+);
+
 export const AdminHierarchy = ({ size, className }) => (
   <CustomSvgWrapper size={size} className={className}>
     <rect x="9" y="3" width="6" height="4" />
@@ -203,6 +222,7 @@ export const MaskPerson = ({ size, className }) => (
 
 const customIconMap = {
   CVSIcon,
+  CVSBadge,
   AdminHierarchy,
   IntroI,
   JusticeScale,

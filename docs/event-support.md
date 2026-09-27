@@ -1,6 +1,8 @@
 # Event support checker (“Can we support this event?”)
 
-Route: `/event-support`, from the Home Hub and the sidebar’s Decision Trees group.
+Route: `/event-support`, from its card on the Decision Trees page (`TREE_PAGE_TOOLS` in
+`src/config/sections.js`). For now the Home Hub and the sidebar open the Conference Vetting
+System check, a decision tree, in its place.
 
 The checker takes one thing a company plans to provide — an Educational Grant, a booth, a
 payment to an HCP, a meal, an item, a donation and so on — asks only the questions that can
@@ -139,10 +141,15 @@ Reading the site’s HTML is a stopgap until a CVS API is available: a change to
 the lookup (the parser fails visibly rather than guessing). Production traffic limits should still
 be agreed with IQVIA before relying on it in production.
 
-The decision tree “When are CVS assessments required?” uses the same lookup under the results
-that depend on CVS (`src/components/TreeCvsCheck.jsx`). Its texts, keyed by the CVS 2.0 status
-labels, are the tree’s `cvsCheck` in `src/data/treeData.json`; `tests/annex1Tree.test.mjs` checks
-that the tree gives Annex I’s answer for every cell and has a text for every CVS 2.0 status.
+The decision tree “Conference Vetting System check” uses the same lookup under the results that
+depend on CVS (`src/components/TreeCvsCheck.jsx`). The answer card starts with the result’s
+outcome and changes with the status of the Event selected: Compliant (green) or Non-Compliant
+(red) with a final decision, Conditional (yellow) while one is pending or when no Event matches,
+and Conditional when a national Event turns out to be in CVS (`getTreeCvsOutcome` in
+`src/utils/treeCvs.js`). What the status means is added under the card’s text. The texts, keyed
+by the CVS 2.0 status labels, are the tree’s `cvsCheck` in `src/data/treeData.json`;
+`tests/annex1Tree.test.mjs` checks that the tree gives Annex I’s answer for every cell and has a
+text for every CVS 2.0 status, and `tests/treeCvs.test.mjs` the card’s colour for each status.
 
 Run the Worker locally with `npm run dev:worker` and open `http://127.0.0.1:8787/event-support`
 (Vite alone, `npm run dev`, proxies `/api/cvs` to that Worker). For a narrow live check:
@@ -185,7 +192,8 @@ These follow from the Code but are worth a content owner’s confirmation:
 
 ## Manual checks before release
 
-1. Open `/event-support` directly and reload; use Home, the sidebar and Back/Forward.
+1. Open `/event-support` directly and reload; open it from the Decision Trees page, go back with
+   “All Decision Trees” and use Back/Forward.
 2. Walk a grant for an international conference: find the Event in CVS, select it, check that
    the Event’s criteria show “Covered by CVS”, and print the summary.
 3. Answer “only local Delegates” for an Event with a CVS record and check the warning; try a

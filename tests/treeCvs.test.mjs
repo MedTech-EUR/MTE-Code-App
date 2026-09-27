@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { getTreeCvsMessage } from '../src/utils/treeCvs.js';
+import { getTreeCvsMessage, getTreeCvsOutcome } from '../src/utils/treeCvs.js';
 
 const { trees } = JSON.parse(readFileSync(new URL('../src/data/treeData.json', import.meta.url), 'utf8'));
 const { cvsCheck } = trees.find((tree) => tree.id === 'dt-annex1-cvs-scope');
@@ -39,4 +39,27 @@ test('a national Event found in CVS is flagged, unless CVS agrees it is out of s
   }
   // No match does not confirm a national Event, but the search itself says so.
   assert.equal(getTreeCvsMessage(cvsCheck, 'national', { noMatch: true }), null);
+});
+
+// The answer card's outcome for a lookup, as TreeCvsCheck.jsx works it out.
+const cardOutcome = (mode, outcome, lookup) => getTreeCvsOutcome(mode, getTreeCvsMessage(cvsCheck, mode, lookup)?.tone, outcome);
+
+test('the answer card turns green or red with a final CVS decision, and stays yellow while one is pending', () => {
+  assert.equal(cardOutcome('required', 'conditional', {}), 'conditional');
+  assert.equal(cardOutcome('required', 'conditional', { status: 'Compliant' }), 'compliant');
+  for (const status of ['Not Compliant', 'Not Pre-cleared', 'Not assessed - Late Submission', 'Not assessed - Insufficient information']) {
+    assert.equal(cardOutcome('required', 'conditional', { status }), 'non-compliant', status);
+  }
+  for (const status of ['To be reviewed', 'Under Review', 'Waiting for information', 'Under Correction Notice', 'Under Appeal', 'Pre-Cleared', 'Not assessed - Out Of Scope', 'A new status']) {
+    assert.equal(cardOutcome('required', 'conditional', { status }), 'conditional', status);
+  }
+  assert.equal(cardOutcome('required', 'conditional', { noMatch: true }), 'conditional');
+});
+
+test('a national Event keeps its answer unless it is found in CVS with another status', () => {
+  assert.equal(cardOutcome('national', 'not-required', {}), 'not-required');
+  assert.equal(cardOutcome('national', 'not-required', { noMatch: true }), 'not-required');
+  assert.equal(cardOutcome('national', 'not-required', { status: 'Not assessed - Out Of Scope' }), 'not-required');
+  assert.equal(cardOutcome('national', 'not-required', { status: 'Compliant' }), 'conditional');
+  assert.equal(getTreeCvsOutcome('missing-mode', 'negative', 'not-required'), 'not-required');
 });

@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-27.1",
+  "version": "2026-09-27.2",
   "codeVersion": "September 2024",
   "sources": {
     "scope": { "chapter": "scope", "section": 0 },
@@ -865,7 +865,7 @@
     "inKindMoney": "Financial support may never be transferred to an individual HCP’s bank account (Q&A 20).",
     "inKindIdentifiable": "In Kind support must not be used to pay for or arrange the attendance of identifiable HCPs at a third-party conference (Q&A 14 and Q&A 20).",
     "inKindCvs": "CVS approval is needed to support a Third Party Organised Educational Event that is within CVS scope (Annex I).",
-    "inKindTpptAttendance": "Paying for specific HCPs to attend a procedure training is direct support of their attendance: check it as “Pay an HCP’s costs to attend as a Delegate”.",
+    "inKindTpptAttendance": "Paying for specific HCPs to attend a procedure training is direct support of their attendance: check it as “Cover or reimburse an HCP’s costs of attending an Event as a Delegate”.",
     "tpptQualifiedDelegate": "On the answers given, the Event meets the Annex VII criteria for a Third Party Organised Procedure Training, so the company may pay HCPs’ registration fee, travel and hospitality directly (Chapter 2, Section 2). The exception is to be narrowly interpreted.",
     "tpptQualifiedFaculty": "On the answers given, the Event meets the Annex VII criteria for a Third Party Organised Procedure Training, where Annex VI allows direct support of Faculty.",
     "tpptQualifiedGrant": "The Event can be supported through an Educational Grant whether or not it qualifies as a procedure training (Chapter 2, Section 2).",

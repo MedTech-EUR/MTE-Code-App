@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useId, useMemo } from 'react';
 import DOMPurify from 'dompurify';
 import { AppIcon } from './AppIcons';
+import { TreeCvsCheck } from './TreeCvsCheck';
 import { TREE_DATA } from '../data/treeData';
 import { REFERENCE_INDEX } from '../data/referenceIndex';
 import {
@@ -20,6 +21,7 @@ const OUTCOME_STYLES = {
   'not-applicable':{ bg: 'bg-purple-50',   border: 'border-purple-200',  text: 'text-purple-800',  icon: '➖', label: 'Not Applicable' },
   'prior-review':  { bg: 'bg-purple-50',   border: 'border-purple-200',  text: 'text-purple-800',  icon: '📋', label: 'Prior Review Required' },
   'in-scope':      { bg: 'bg-indigo-50',   border: 'border-indigo-200',  text: 'text-indigo-800',  icon: '🎯', label: 'In Scope of the Code' },
+  'more-info':     { bg: 'bg-gray-50',     border: 'border-gray-300',    text: 'text-gray-800',    icon: '❔', label: 'More Information Needed' },
 };
 
 // The provision a result cites. It opens in place, so the tree keeps its answers, and links to
@@ -247,6 +249,11 @@ export const DecisionTree = ({ treeId, onShowVisualization, onOpenReference }) =
                 <ResultReference reference={currentNode.reference} onOpenReference={onOpenReference} />
               )}
             </div>
+
+            {/* The Event's live CVS status, where this result depends on it */}
+            {currentNode.cvsCheck && (
+              <TreeCvsCheck key={currentNode.id} mode={currentNode.cvsCheck} cvsCheck={tree.cvsCheck} />
+            )}
 
             {/* Controls */}
             <div className="flex gap-3">

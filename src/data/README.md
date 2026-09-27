@@ -15,7 +15,7 @@ This directory serves as the source of truth for application content.
   `transparency/disclosure-guidelines/source-manifest.json`.
 - `declaration-csv-template.csv` is the local Annex I download and the sole
   source for its non-normative in-app preview.
-- `treeData.json` and `quizData.json` contain decision-tree and quiz content.
+- `treeData.json` and `quizData.json` contain decision-tree and quiz content. A tree may add `cvsCheck` texts, keyed by CVS's own status labels, for results that set `cvsCheck` to `required` (the support needs a positive CVS decision) or `national` (a national Event found in CVS is flagged).
 - `eventSupportRules.json` holds the event support checker's wording, the Annex I and Annex VI tables, its sources and the CVS status labels. See `docs/event-support.md`.
 - `search/phrasebook.json` is the general-English search phrasebook (everyday words mapped to formal ones; never Code content references). It needs no edits when the Code changes. See `search/README.md`.
 

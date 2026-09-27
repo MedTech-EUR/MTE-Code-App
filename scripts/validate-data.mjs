@@ -10,6 +10,8 @@ import {
 } from '../src/utils/crossReferences.js';
 import { tokenizeAllWithOffsets, tokenizeWords } from '../src/utils/searchText.js';
 import { CONDITION_TAGS } from '../src/utils/eventSupportRules.js';
+import { normalizeCvsStatus } from '../src/utils/eventSupportCvs.js';
+import { TREE_CVS_MODES, TREE_CVS_TONES } from '../src/utils/treeCvs.js';
 import { loadSplitCodeData } from './lib/code-content.mjs';
 import { loadTransparencyData } from './lib/transparency-content.mjs';
 
@@ -27,10 +29,52 @@ const ALLOWED_OUTCOMES = new Set([
   'not-applicable',
   'prior-review',
   'in-scope',
+  'more-info',
 ]);
 
 function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
+}
+
+// A decision tree's texts for the live CVS check under its results (see src/utils/treeCvs.js).
+function validateTreeCvsCheck(cvsCheck, path, errors) {
+  if (!cvsCheck || typeof cvsCheck !== 'object' || Array.isArray(cvsCheck)) {
+    errors.push(`${path}: expected an object.`);
+    return;
+  }
+  if (!isNonEmptyString(cvsCheck.title)) errors.push(`${path}: missing title.`);
+  for (const key of Object.keys(cvsCheck)) {
+    if (key !== 'title' && !TREE_CVS_MODES.includes(key)) errors.push(`${path}: unknown mode "${key}".`);
+  }
+  for (const mode of TREE_CVS_MODES) {
+    const settings = cvsCheck[mode];
+    if (settings === undefined) continue;
+    const modePath = `${path}.${mode}`;
+    if (!isNonEmptyString(settings?.intro)) errors.push(`${modePath}: missing intro.`);
+    if (!isNonEmptyString(settings?.otherStatus)) errors.push(`${modePath}: missing otherStatus.`);
+    if (settings?.noMatch !== undefined && !isNonEmptyString(settings.noMatch)) errors.push(`${modePath}: noMatch must be text.`);
+    if (!Array.isArray(settings?.statuses)) {
+      errors.push(`${modePath}: expected a statuses array.`);
+      continue;
+    }
+    const seen = new Set();
+    settings.statuses.forEach((entry, index) => {
+      const entryPath = `${modePath}.statuses[${index}]`;
+      if (!Array.isArray(entry?.labels) || !entry.labels.length || !entry.labels.every(isNonEmptyString)) {
+        errors.push(`${entryPath}: expected a non-empty list of CVS status labels.`);
+      } else {
+        for (const label of entry.labels) {
+          const key = normalizeCvsStatus(label);
+          if (seen.has(key)) errors.push(`${entryPath}: status "${label}" is listed twice.`);
+          seen.add(key);
+        }
+      }
+      if (!isNonEmptyString(entry?.text)) errors.push(`${entryPath}: missing text.`);
+      if (entry?.tone !== undefined && !TREE_CVS_TONES.includes(entry.tone)) {
+        errors.push(`${entryPath}: unsupported tone "${entry.tone}".`);
+      }
+    });
+  }
 }
 
 function findDuplicates(values) {
@@ -548,10 +592,15 @@ export function validateProjectData({
         if (!ALLOWED_OUTCOMES.has(node.outcome)) {
           errors.push(`${nodePath}: unsupported outcome "${node?.outcome ?? ''}".`);
         }
+        if (node.cvsCheck !== undefined && !tree.cvsCheck?.[node.cvsCheck]) {
+          errors.push(`${nodePath}: cvsCheck "${node.cvsCheck}" has no texts in the tree's cvsCheck.`);
+        }
       } else {
         errors.push(`${nodePath}: unsupported node type "${node?.type ?? ''}".`);
       }
     });
+
+    if (tree.cvsCheck !== undefined) validateTreeCvsCheck(tree.cvsCheck, `${treePath} cvsCheck`, errors);
 
     for (const relatedChapter of asArray(tree.relatedChapter)) {
       if (!chapterIdSet.has(relatedChapter)) {

@@ -596,268 +596,461 @@
       "relatedChapter": "annex1",
       "relatedSection": null,
       "category": "events",
-      "description": "Determine if a Third Party Organised Educational Event requires prior submission to the Conference Vetting System (CVS).",
+      "description": "Check in a few questions whether support for a Third Party Organised Educational Event needs a CVS decision under Annex I, and look up the Event’s current status in CVS.",
+      "cvsCheck": {
+        "title": "Check the Event in CVS",
+        "required": {
+          "intro": "This support needs a positive CVS decision. Find the Event, and the right edition, in CVS to see its current status.",
+          "statuses": [
+            {
+              "labels": [
+                "Compliant"
+              ],
+              "tone": "positive",
+              "text": "CVS has assessed the Event as Compliant. The decision is binding on all Member Companies, and the CVS requirement for this support is met. The Code and local laws and regulations still apply to the support itself."
+            },
+            {
+              "labels": [
+                "Pre-Cleared"
+              ],
+              "tone": "caution",
+              "text": "The Event has been Pre-Cleared: only its geographic location and venue have received preliminary approval. A final Compliant assessment of the whole Event is still needed before this support can be provided."
+            },
+            {
+              "labels": [
+                "To be reviewed",
+                "Under Review",
+                "Waiting for information",
+                "Under Correction Notice",
+                "Under Appeal"
+              ],
+              "tone": "caution",
+              "text": "The Event has not yet received a final CVS assessment (status “{status}”). Do not make a definitive commitment or provide this support unless and until the Event is assessed Compliant."
+            },
+            {
+              "labels": [
+                "Not Pre-cleared"
+              ],
+              "tone": "negative",
+              "text": "The Event was Not Pre-cleared: its geographic location or venue did not meet the applicable requirements. This support needs a positive CVS decision, so it cannot be provided while the Event has this status."
+            },
+            {
+              "labels": [
+                "Not Compliant"
+              ],
+              "tone": "negative",
+              "text": "CVS has assessed the Event as Not Compliant. The decision is binding on all Member Companies, so this support, which needs a positive CVS decision, cannot be provided."
+            },
+            {
+              "labels": [
+                "Not assessed - Late Submission",
+                "Not assessed - Insufficient information"
+              ],
+              "tone": "negative",
+              "text": "CVS did not assess the Event (status “{status}”), so there is no positive CVS decision and this support cannot be provided."
+            },
+            {
+              "labels": [
+                "Not assessed - Out Of Scope"
+              ],
+              "tone": "caution",
+              "text": "CVS has concluded that the Event is outside its scope, although your answers describe an international Event. Clarify the Event’s audience with the organiser. Being outside CVS scope does not make the support permitted: the Code and local laws and regulations still apply."
+            }
+          ],
+          "otherStatus": "“{status}” is not a CVS status this tree recognises. Check its meaning in CVS before relying on it.",
+          "noMatch": "Based on your answers, the Event requires CVS assessment, but no matching Event was found. Submit the Event to CVS as soon as possible, or ask the organiser to do so. Do not provide this support unless and until the Event has been assessed Compliant."
+        },
+        "national": {
+          "intro": "You expect a national Event. Check whether it has been submitted to CVS anyway: a CVS record suggests that the organiser or another Member Company expects Delegates from more than one country.",
+          "statuses": [
+            {
+              "labels": [
+                "Not assessed - Out Of Scope"
+              ],
+              "tone": "positive",
+              "text": "CVS has assessed the Event as outside its scope, which is consistent with a national Event."
+            }
+          ],
+          "otherStatus": "You have indicated that this is a national Event, but the Event has been submitted to CVS (status “{status}”). The organiser or another Member Company may have different information about the countries from which HCP Delegates are expected to attend. Clarify the Event’s intended audience with the organiser and consider refraining from making a definitive commitment to provide support until the position is clear."
+        }
+      },
       "nodes": [
         {
           "id": "start",
           "type": "question",
-          "text": "What type of support or activity is the Member Company planning?",
-          "helpText": "Select the primary category of support provided to the Third Party Organised Educational Event.",
+          "text": "Where will the Event take place?",
+          "helpText": "The MedTech Europe Geographic Area covers the countries of the European Economic Area and the other countries where Member Associations are located (Annex III), including the countries covered by Mecomed. For Events in countries covered by Mecomed, CVS applies Mecomed’s guidelines. A hybrid Event, held in person with sessions also broadcast online, counts as held in person.",
           "options": [
             {
-              "label": "Educational Grant",
-              "next": "q_grant_type"
+              "label": "In the MedTech Europe Geographic Area",
+              "next": "q_audience"
             },
             {
-              "label": "Commercial Activity",
-              "next": "q_commercial_type"
+              "label": "Outside the MedTech Europe Geographic Area",
+              "next": "q_area_hcps"
             },
             {
-              "label": "Direct Sponsorship of HCPs",
-              "next": "q_sponsorship_role"
+              "label": "Online only (a Virtual Event)",
+              "next": "q_support_virtual"
             }
           ]
         },
         {
-          "id": "q_grant_type",
+          "id": "q_audience",
           "type": "question",
-          "text": "What is the specific nature of the Educational Grant?",
+          "text": "Do you expect HCP Delegates from more than one country in the MedTech Europe Geographic Area to attend the Event?",
+          "helpText": "Count the HCPs attending as Delegates, including poster and abstract presenters, but not the Faculty. Answer on the information available to your company, for example from the organiser, from your own support arrangements or from previous editions of the Event. You do not need to provide evidence. For a national Event, the result lets you check whether it has been submitted to CVS anyway.",
           "options": [
             {
-              "label": "To support the general running of a conference",
-              "next": "q_loc_grant_general"
+              "label": "Yes: HCPs from at least two countries of the Area (an international Event)",
+              "next": "q_support_international"
             },
             {
-              "label": "To support HCP attendance to the conference",
-              "next": "q_loc_grant_hcp"
+              "label": "No: local HCPs only, from the country where the Event takes place (a national Event)",
+              "next": "q_support_national"
             },
             {
-              "label": "To support Faculty",
-              "next": "q_loc_grant_faculty"
+              "label": "No: local HCPs, and HCPs from outside the Area",
+              "next": "res_audience_unclassified"
+            },
+            {
+              "label": "I don’t know",
+              "next": "res_more_info"
             }
           ]
         },
         {
-          "id": "q_commercial_type",
+          "id": "q_area_hcps",
           "type": "question",
-          "text": "What is the specific Commercial Activity?",
+          "text": "Will HCPs registered and practising in the MedTech Europe Geographic Area attend the Event, as speakers or Delegates?",
+          "helpText": "The Code applies to interactions with HCPs and Healthcare Organisations from the Area wherever the Event takes place.",
           "options": [
             {
-              "label": "Consultancy agreement for speakers in satellite symposia",
-              "next": "q_loc_fac_sat"
+              "label": "Yes",
+              "next": "q_support_outside_area_hcps"
             },
             {
-              "label": "Booths / advertising",
-              "next": "q_loc_booth"
+              "label": "No",
+              "next": "q_support_outside_no_area_hcps"
             },
             {
-              "label": "Attendance of Member Company Representatives",
+              "label": "I don’t know",
+              "next": "res_more_info"
+            }
+          ]
+        },
+        {
+          "id": "q_support_national",
+          "type": "question",
+          "text": "What does the company plan to provide?",
+          "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
+          "options": [
+            {
+              "label": "Educational Grant to support the general running of the conference",
+              "next": "res_national"
+            },
+            {
+              "label": "Educational Grant that includes funds to support HCPs’ attendance",
+              "next": "res_national"
+            },
+            {
+              "label": "Educational Grant that includes funds to support Faculty",
+              "next": "res_national"
+            },
+            {
+              "label": "Consultancy agreement with a speaker in the company’s satellite symposium",
+              "next": "res_national"
+            },
+            {
+              "label": "Attendance of Member Company representatives (company staff)",
               "next": "res_prior_review"
+            },
+            {
+              "label": "Booth or advertising",
+              "next": "res_national"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
+              "next": "res_direct_not_allowed"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Faculty (active participation)",
+              "next": "res_direct_not_allowed"
             }
           ]
         },
         {
-          "id": "q_loc_grant_general",
+          "id": "q_support_international",
           "type": "question",
-          "text": "What is the location and audience scope of the event?",
-          "helpText": "Identify if the event is National or International, and if it is inside or outside the MedTech Europe Geographic Area.",
+          "text": "What does the company plan to provide?",
+          "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
           "options": [
             {
-              "label": "IN MTE Area: National (delegates are local HCPs only)",
-              "next": "res_national_grant"
-            },
-            {
-              "label": "IN MTE Area: International (delegates from >=2 MTE area countries)",
+              "label": "Educational Grant to support the general running of the conference",
               "next": "res_subject_to_cvs"
             },
             {
-              "label": "OUTSIDE MTE Area: International (MTE area HCPs attend)",
-              "next": "res_allowed_not_cvs"
-            },
-            {
-              "label": "OUTSIDE MTE Area: International (No MTE area HCPs attend)",
-              "next": "res_out_of_scope"
-            }
-          ]
-        },
-        {
-          "id": "q_loc_grant_hcp",
-          "type": "question",
-          "text": "What is the location and audience scope of the event?",
-          "options": [
-            {
-              "label": "IN MTE Area: National (delegates are local HCPs only)",
-              "next": "res_national_grant"
-            },
-            {
-              "label": "IN MTE Area: International (delegates from >=2 MTE area countries)",
+              "label": "Educational Grant that includes funds to support HCPs’ attendance",
               "next": "res_subject_to_cvs"
             },
             {
-              "label": "OUTSIDE MTE Area: International (MTE area HCPs attend)",
+              "label": "Educational Grant that includes funds to support Faculty",
               "next": "res_subject_to_cvs"
             },
             {
-              "label": "OUTSIDE MTE Area: International (No MTE area HCPs attend)",
-              "next": "res_na"
-            }
-          ]
-        },
-        {
-          "id": "q_loc_grant_faculty",
-          "type": "question",
-          "text": "What is the location and audience scope of the event?",
-          "options": [
-            {
-              "label": "IN MTE Area: National (delegates are local HCPs only)",
-              "next": "res_national_grant"
-            },
-            {
-              "label": "IN MTE Area: International (delegates from >=2 MTE area countries)",
+              "label": "Consultancy agreement with a speaker in the company’s satellite symposium",
               "next": "res_subject_to_cvs"
             },
             {
-              "label": "OUTSIDE MTE Area: International (MTE area HCPs attend)",
-              "next": "res_allowed_not_cvs"
-            },
-            {
-              "label": "OUTSIDE MTE Area: International (No MTE area HCPs attend)",
-              "next": "res_na"
-            }
-          ]
-        },
-        {
-          "id": "q_loc_fac_sat",
-          "type": "question",
-          "text": "What is the location and audience scope of the event?",
-          "options": [
-            {
-              "label": "IN MTE Area: National (delegates are local HCPs only)",
-              "next": "res_national_grant"
-            },
-            {
-              "label": "IN MTE Area: International (delegates from >=2 MTE area countries)",
-              "next": "res_subject_to_cvs"
-            },
-            {
-              "label": "OUTSIDE MTE Area: International (MTE area HCPs attend)",
-              "next": "res_allowed_not_cvs"
-            },
-            {
-              "label": "OUTSIDE MTE Area: International (No MTE area HCPs attend)",
-              "next": "res_na"
-            }
-          ]
-        },
-        {
-          "id": "q_loc_booth",
-          "type": "question",
-          "text": "What is the location and audience scope of the event?",
-          "options": [
-            {
-              "label": "IN MTE Area: National (delegates are local HCPs only)",
-              "next": "res_national_grant"
-            },
-            {
-              "label": "IN MTE Area: International (delegates from >=2 MTE area countries)",
-              "next": "res_subject_to_cvs"
-            },
-            {
-              "label": "OUTSIDE MTE Area: International (MTE area HCPs attend)",
-              "next": "res_allowed_not_cvs"
-            },
-            {
-              "label": "OUTSIDE MTE Area: International (No MTE area HCPs attend)",
+              "label": "Attendance of Member Company representatives (company staff)",
               "next": "res_prior_review"
+            },
+            {
+              "label": "Booth or advertising",
+              "next": "res_subject_to_cvs"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
+              "next": "res_direct_not_allowed"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Faculty (active participation)",
+              "next": "res_direct_not_allowed"
             }
           ]
         },
         {
-          "id": "q_loc_sponsorship",
+          "id": "q_support_outside_area_hcps",
           "type": "question",
-          "text": "What is the location and audience scope of the event?",
+          "text": "What does the company plan to provide?",
+          "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
           "options": [
             {
-              "label": "IN MTE Area: National (delegates are local HCPs only)",
-              "next": "res_not_allowed"
+              "label": "Educational Grant to support the general running of the conference",
+              "next": "res_allowed_outside"
             },
             {
-              "label": "IN MTE Area: International (delegates from >=2 MTE area countries)",
-              "next": "res_not_allowed"
+              "label": "Educational Grant that includes funds to support HCPs’ attendance",
+              "next": "q_grant_funds_area_hcps"
             },
             {
-              "label": "OUTSIDE MTE Area: International (MTE area HCPs attend)",
-              "next": "res_not_allowed"
+              "label": "Educational Grant that includes funds to support Faculty",
+              "next": "res_allowed_outside"
             },
             {
-              "label": "OUTSIDE MTE Area: International (No MTE area HCPs attend)",
+              "label": "Consultancy agreement with a speaker in the company’s satellite symposium",
+              "next": "res_allowed_outside"
+            },
+            {
+              "label": "Attendance of Member Company representatives (company staff)",
+              "next": "res_prior_review"
+            },
+            {
+              "label": "Booth or advertising",
+              "next": "res_allowed_outside"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
+              "next": "res_direct_not_allowed"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Faculty (active participation)",
+              "next": "res_direct_not_allowed"
+            }
+          ]
+        },
+        {
+          "id": "q_support_outside_no_area_hcps",
+          "type": "question",
+          "text": "What does the company plan to provide?",
+          "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
+          "options": [
+            {
+              "label": "Educational Grant to support the general running of the conference",
+              "next": "res_out_of_scope_grant"
+            },
+            {
+              "label": "Educational Grant that includes funds to support HCPs’ attendance",
+              "next": "res_na_grant"
+            },
+            {
+              "label": "Educational Grant that includes funds to support Faculty",
+              "next": "res_na_grant"
+            },
+            {
+              "label": "Consultancy agreement with a speaker in the company’s satellite symposium",
+              "next": "res_na"
+            },
+            {
+              "label": "Attendance of Member Company representatives (company staff)",
+              "next": "res_prior_review"
+            },
+            {
+              "label": "Booth or advertising",
+              "next": "res_prior_review"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
+              "next": "res_na"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Faculty (active participation)",
               "next": "res_na"
             }
           ]
         },
         {
-          "id": "res_national_grant",
+          "id": "q_support_virtual",
+          "type": "question",
+          "text": "What does the company plan to provide?",
+          "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
+          "options": [
+            {
+              "label": "Educational Grant to support the general running of the conference",
+              "next": "res_virtual"
+            },
+            {
+              "label": "Educational Grant that includes funds to support HCPs’ attendance",
+              "next": "res_virtual"
+            },
+            {
+              "label": "Educational Grant that includes funds to support Faculty",
+              "next": "res_virtual"
+            },
+            {
+              "label": "Consultancy agreement with a speaker in the company’s satellite symposium",
+              "next": "res_virtual"
+            },
+            {
+              "label": "Attendance of Member Company representatives (company staff)",
+              "next": "res_prior_review"
+            },
+            {
+              "label": "Booth or advertising",
+              "next": "res_virtual"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
+              "next": "res_virtual_direct"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Faculty (active participation)",
+              "next": "res_virtual_direct"
+            }
+          ]
+        },
+        {
+          "id": "q_grant_funds_area_hcps",
+          "type": "question",
+          "text": "Will the grant fund the attendance of HCPs registered and practising in the MedTech Europe Geographic Area?",
+          "helpText": "For an Event held outside the Area, a grant that funds HCPs’ attendance needs a CVS decision only when HCPs from the Area benefit from it (Annex I, footnote 3).",
+          "options": [
+            {
+              "label": "Yes",
+              "next": "res_subject_to_cvs"
+            },
+            {
+              "label": "No",
+              "next": "res_grant_no_area_beneficiaries"
+            },
+            {
+              "label": "I don’t know",
+              "next": "res_more_info"
+            }
+          ]
+        },
+        {
+          "id": "res_national",
           "type": "result",
           "outcome": "not-required",
-          "text": "No CVS decision is required, but the Code and local laws and regulations still apply, including Chapter 1 (General Criteria for Events). The company assesses the Event against the same criteria that CVS would use.",
-          "reference": "Annex I — National Events"
+          "text": "CVS approval not required but the Code and local laws and regulations still apply. The company checks the Event itself against the Code, including Chapter 1 (General Criteria for Events).",
+          "reference": "Annex I — National Events",
+          "cvsCheck": "national"
         },
         {
           "id": "res_subject_to_cvs",
           "type": "result",
           "outcome": "conditional",
-          "text": "Subject to CVS decision. The company may provide this support only after the Event receives a positive CVS decision.",
-          "reference": "Annex I — International Events"
+          "text": "Subject to CVS decision. The company may provide this support only once CVS has assessed the Event as Compliant.",
+          "reference": "Annex I — International Events",
+          "cvsCheck": "required"
         },
         {
-          "id": "res_allowed_not_cvs",
+          "id": "res_allowed_outside",
           "type": "result",
           "outcome": "not-required",
-          "text": "Allowed. Not subject to CVS decision.",
+          "text": "Allowed. Not subject to CVS decision. The Code and local laws and regulations still apply.",
           "reference": "Annex I — International Events"
         },
         {
-          "id": "res_prior_review",
+          "id": "res_grant_no_area_beneficiaries",
           "type": "result",
-          "outcome": "prior-review",
-          "text": "Member Company prior internal review against Code principles required.",
-          "reference": "Annex I"
+          "outcome": "not-required",
+          "text": "No CVS decision is needed, because the grant does not fund the attendance of HCPs from the MedTech Europe Geographic Area (Annex I, footnote 3). The Code applies to the grant only if it goes to a Healthcare Organisation located in the Area (Annex I, footnote 5).",
+          "reference": "Annex I — Footnotes"
         },
         {
-          "id": "res_not_allowed",
-          "type": "result",
-          "outcome": "non-compliant",
-          "text": "Not allowed. Annex I does not allow direct sponsorship of HCPs registered and practising in the MedTech Europe Geographic Area, whether as Delegates or as Faculty in the main programme, and a positive CVS decision does not change this. The company can support the Event through an Educational Grant instead. Procedure trainings and the company's own satellite symposium or booth have their own rules.",
-          "reference": "Annex I — Direct Sponsorship"
-        },
-        {
-          "id": "res_out_of_scope",
+          "id": "res_out_of_scope_grant",
           "type": "result",
           "outcome": "out-of-scope",
-          "text": "Out of scope of the application of the Code.",
-          "reference": "Annex I — Out of scope"
+          "text": "Out of scope of the application of the Code, unless the grant goes to a Healthcare Organisation located in the MedTech Europe Geographic Area: the Code then applies, but no CVS decision is needed (Annex I, footnote 5).",
+          "reference": "Annex I — Footnotes"
+        },
+        {
+          "id": "res_na_grant",
+          "type": "result",
+          "outcome": "not-applicable",
+          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, the Code does not apply to this support, unless the grant goes to a Healthcare Organisation located in the Area. No CVS decision is needed then (Annex I, footnote 5).",
+          "reference": "Annex I — Footnotes"
         },
         {
           "id": "res_na",
           "type": "result",
           "outcome": "not-applicable",
-          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, the Code does not apply to this support, unless the recipient is a Healthcare Organisation located in the Area (Annex I, footnote 5).",
+          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, as speakers or Delegates, the Code does not apply to this support.",
           "reference": "Annex I"
         },
         {
-          "id": "q_sponsorship_role",
-          "type": "question",
-          "text": "What is the intended role of the sponsored HCP?",
-          "options": [
-            {
-              "label": "Delegates (passive participation)",
-              "next": "q_loc_sponsorship"
-            },
-            {
-              "label": "Speaker/Faculty in the main programme",
-              "next": "q_loc_sponsorship"
-            }
-          ]
+          "id": "res_prior_review",
+          "type": "result",
+          "outcome": "prior-review",
+          "text": "Member Company prior internal review against Code principles required. Before going ahead, the company reviews internally whether this is appropriate under the Code’s principles, in particular image and perception, whatever the Event’s CVS status.",
+          "reference": "Q&A 16"
+        },
+        {
+          "id": "res_direct_not_allowed",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "Not allowed. Annex I does not allow direct sponsorship of HCPs registered and practising in the MedTech Europe Geographic Area, whether as Delegates or as Faculty in the main programme, and a positive CVS decision does not change this. The company can support the Event through an Educational Grant instead. The company’s own satellite symposium or booth, and procedure trainings that meet the Annex VII criteria, have their own rules; the TPPT Checker checks a procedure training’s agenda.",
+          "reference": "Annex I — Direct Sponsorship"
+        },
+        {
+          "id": "res_virtual",
+          "type": "result",
+          "outcome": "not-required",
+          "text": "No CVS decision is needed: Virtual Events are not subject to CVS. The Code and local laws and regulations still apply to the support.",
+          "reference": "Chapter 1, Section 7"
+        },
+        {
+          "id": "res_virtual_direct",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "Not allowed. The company may not directly sponsor HCPs to take part in a Third Party Organised Educational Event, as Delegates or as Faculty, and this applies to Virtual Events too. The company can support the Event through an Educational Grant instead.",
+          "reference": "Chapter 1, Section 7"
+        },
+        {
+          "id": "res_audience_unclassified",
+          "type": "result",
+          "outcome": "more-info",
+          "text": "Annex I does not classify this audience, which is neither local HCPs only nor Delegates from at least two countries of the MedTech Europe Geographic Area. Ask CVS whether the Event is within its scope before relying on either position.",
+          "reference": "Annex I"
+        },
+        {
+          "id": "res_more_info",
+          "type": "result",
+          "outcome": "more-info",
+          "text": "Whether a CVS decision is needed depends on this answer. Find out, for example from the organiser, then go back and answer it.",
+          "reference": "Annex I"
         }
       ]
     },

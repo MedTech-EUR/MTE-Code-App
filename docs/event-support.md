@@ -134,9 +134,15 @@ The requests to CVS carry no Cloudflare `cf` cache options. With `cf.cacheTtl`, 
 the page and drops its `Set-Cookie`, so the search POST arrives without a session and CVS
 redirects it to its login page. `wrangler dev` ignores `cf`, so only `tests/cvs.test.mjs` catches it.
 
-This reads HTML that CVS does not publish as an API, so a change to the CVS site stops the
-lookup (the parser fails visibly rather than guessing). Supplier permission and production
-traffic limits should be settled before relying on it in production.
+MedTech Europe owns the CVS data, which is public; IQVIA runs the CVS site as its supplier.
+Reading the site’s HTML is a stopgap until a CVS API is available: a change to the CVS site stops
+the lookup (the parser fails visibly rather than guessing). Production traffic limits should still
+be agreed with IQVIA before relying on it in production.
+
+The decision tree “When are CVS assessments required?” uses the same lookup under the results
+that depend on CVS (`src/components/TreeCvsCheck.jsx`). Its texts, keyed by the CVS 2.0 status
+labels, are the tree’s `cvsCheck` in `src/data/treeData.json`; `tests/annex1Tree.test.mjs` checks
+that the tree gives Annex I’s answer for every cell and has a text for every CVS 2.0 status.
 
 Run the Worker locally with `npm run dev:worker` and open `http://127.0.0.1:8787/event-support`
 (Vite alone, `npm run dev`, proxies `/api/cvs` to that Worker). For a narrow live check:

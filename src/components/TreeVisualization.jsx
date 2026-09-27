@@ -12,6 +12,7 @@ const OUTCOME_COLORS = {
   'not-applicable':{ bg: '#faf5ff', border: '#d8b4fe', text: '#6b21a8' },
   'prior-review':  { bg: '#faf5ff', border: '#d8b4fe', text: '#6b21a8' },
   'in-scope':      { bg: '#e0e7ff', border: '#a5b4fc', text: '#3730a3' },
+  'more-info':     { bg: '#f9fafb', border: '#d1d5db', text: '#1f2937' },
 };
 
 /* ------------------------------------------------------------------ */

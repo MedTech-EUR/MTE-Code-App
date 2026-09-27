@@ -22,4 +22,9 @@ cross-reference linking as the reader; terms and references open in the side pan
 from 1280px and in `DefinitionPopup` below that, and the Code opens in a new tab so the
 checker's answers are kept. See [`docs/event-support.md`](../../docs/event-support.md).
 
+`DecisionTree.jsx` shows a tree from `src/data/treeData.json`. A result that sets
+`cvsCheck` also shows `TreeCvsCheck.jsx`: the checker's CVS search (`CvsEventLookup.jsx`)
+and what the Event's live status means for that result, in the tree's own `cvsCheck` texts.
+“When are CVS assessments required?” uses it.
+
 For more details on how these components interact with the rest of the application, see the [Project Map](../../AGENTS.md#project-map).

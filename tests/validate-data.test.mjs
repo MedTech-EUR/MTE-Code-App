@@ -128,6 +128,31 @@ test('reports a broken tree target with its location', () => {
   assert.ok(result.errors.some((error) => error.includes('target node "missing-node" does not exist')));
 });
 
+test('checks a tree’s CVS check texts and the results that use them', () => {
+  const fixture = makeValidFixture();
+  const tree = fixture.treeData.trees[0];
+  tree.nodes[1].cvsCheck = 'required';
+  assert.ok(validateProjectData(fixture).errors.some((error) => error.includes('cvsCheck "required" has no texts')));
+
+  tree.cvsCheck = {
+    title: 'Check the Event in CVS',
+    required: {
+      intro: 'Find the Event.',
+      otherStatus: 'Unknown status {status}.',
+      statuses: [
+        { labels: ['Compliant'], text: 'Met.', tone: 'positive' },
+        { labels: ['Under Review', 'compliant'], text: 'Wait.', tone: 'bright' },
+      ],
+    },
+    guess: {},
+  };
+  const errors = validateProjectData(fixture).errors;
+  assert.ok(errors.some((error) => error.includes('unknown mode "guess"')));
+  assert.ok(errors.some((error) => error.includes('status "compliant" is listed twice')));
+  assert.ok(errors.some((error) => error.includes('unsupported tone "bright"')));
+  assert.ok(!errors.some((error) => error.includes('has no texts')));
+});
+
 test('reports quiz questions without exactly one correct option', () => {
   const fixture = makeValidFixture();
   fixture.quizData[0].options[1].isCorrect = true;

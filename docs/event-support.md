@@ -27,6 +27,12 @@ that falls back to its chapter. The validator also checks the structure: every s
 an existing Code section or an `ethicalmedtech.eu` guidance page, condition IDs must not clash
 with question IDs, and the Annex I and Annex VI tables must be complete.
 
+For a content review, `docs/event-support-wording-and-logic.docx` holds all the checker’s wording,
+each text labelled with where it lives, and a plain-language account of when each question and
+message appears (rules version 2026-09-26.2, exported on 27 September 2026). It is a snapshot:
+carry the reviewers’ approved changes into the JSON, or into the components for the screen texts
+it marks, as with the Code’s Word copy.
+
 Answers stay in memory while the checker is open: there is no account, no saved assessment and
 no local CVS database. Facts about the Event (its type, format, location, audience, and the
 procedure-training answers) are kept when another activity is chosen; answers that belong to

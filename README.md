@@ -90,7 +90,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 | `utils/resourceUtils.js` | Resolves approved local `resource:` links without changing their visible text |
 | `utils/eventSupportQuestions.js` | Which questions the event support checker asks, in order, for the answers so far |
 | `utils/eventSupportRules.js` | The event support checker's evaluator, conditions and answer updates; returns message IDs whose wording is in `eventSupportRules.json` |
-| `utils/eventSupportCvs.js` | Reads CVS status labels; the national-audience precaution |
+| `utils/eventSupportCvs.js` | Reads CVS status labels; the warning for a national Event found in CVS |
 | `utils/eventSupportText.js` | Links glossary terms and Code references in the checker's plain-text wording |
 | `utils/linkedTextEvents.js` | Click and key handling for glossary terms and reference links, shared by the readers and the checker |
 | `utils/cvsLookupClient.js` | Browser client for the CVS lookup: one current request, stale responses ignored |

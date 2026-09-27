@@ -150,15 +150,22 @@ test('the Code applies only to Member Companies and their affiliates', () => {
   assert.deepEqual(getQuestionIds(data, { activity: 'booth', member: 'no' }), ['member']);
 });
 
-test('Mecomed countries are in the Area: the Code applies and CVS refers to Mecomed', () => {
+test('Mecomed countries are in the Area: the Code applies and CVS applies Mecomed’s scope, national Events included', () => {
   const grant = event({ activity: 'grant-running', eventType: 'conference', eventArea: 'mecomed', ...ACTIVITY_DETAILS['grant-running'] });
   const result = evaluateEventSupport(data, confirmAll(grant));
   assert.equal(result.permission, 'conditional');
   assert.equal(result.cvsRequirement, 'mecomed');
   assert.equal(result.outcome, 'review');
   assert.ok(reasonIds(result).includes('mecomedCvs'));
+  assert.ok(result.sources.includes('mecomedCvs'));
   const direct = evaluateEventSupport(data, event({ activity: 'direct-delegate', eventType: 'conference', eventArea: 'mecomed' }));
   assert.equal(direct.outcome, 'not-permitted');
+  // A national Event is vetted too, so its CVS record is no contradiction.
+  const national = confirmAll({ ...grant, audience: 'local' });
+  assert.equal(assessProposal(data, national).cvsRequirement, 'mecomed');
+  assert.deepEqual(evaluateEventSupport(data, national, evidence('Under Review')).warnings, []);
+  assert.equal(evaluateEventSupport(data, national, evidence('Compliant')).outcome, 'permitted-confirmed');
+  assert.equal(evaluateEventSupport(data, national, evidence('Not Compliant')).outcome, 'not-permitted');
 });
 
 test('a recipient in the Area brings a grant for an Event abroad within the Code, without CVS', () => {
@@ -209,11 +216,27 @@ test('Virtual Events need no CVS decision, and HCPs attending them cannot be sup
   assert.deepEqual(speaker.expenses.map((expense) => `${expense.id}:${expense.state}`), ['fee:allowed', 'travel:not-allowed', 'meals:not-allowed']);
 });
 
+test('a Virtual Event is not assessed as an Event held outside the Area', () => {
+  const online = { format: 'virtual', eventArea: undefined, audience: undefined };
+  // Without HCPs from the Area, a booth comes within the Code only through an organiser in the Area.
+  const booth = event({ activity: 'booth', eventType: 'conference', ...online, areaAttendance: 'no', packageEducation: 'no' });
+  assert.ok(getQuestionIds(data, booth).includes('recipientInArea'));
+  assert.equal(evaluateEventSupport(data, { ...booth, recipientInArea: 'no' }).outcome, 'outside');
+  const organiserInArea = assessProposal(data, { ...booth, recipientInArea: 'yes' });
+  assert.equal(`${organiserInArea.permission}:${organiserInArea.cvsRequirement}`, 'conditional:none');
+  assert.equal(reasonIds(organiserInArea).includes('boothOutsideReview'), false);
+  // An attendance grant: HCPs from the Area bring it within the Code, and no CVS decision is needed.
+  const grant = assessProposal(data, event({ activity: 'grant-attendance', eventType: 'conference', ...online, beneficiariesInArea: 'yes', ...ACTIVITY_DETAILS['grant-attendance'] }));
+  assert.equal(grant.cvsRequirement, 'none');
+  assert.ok(reasonIds(grant).includes('virtualGrantAttendance'));
+  assert.equal(reasonIds(grant).includes('beneficiariesInArea'), false);
+});
+
 // ---- CVS evidence ------------------------------------------------------------------------------
 
 test('CVS statuses are read from the live list, ignoring case, spacing and the kind of dash', () => {
   const expected = {
-    Compliant: 'positive', 'Not Compliant': 'negative', 'Not Pre-cleared': 'negative', 'Pre-Cleared': 'pre-cleared',
+    Compliant: 'positive', 'Not Compliant': 'negative', 'Not Pre-cleared': 'not-pre-cleared', 'Pre-Cleared': 'pre-cleared',
     'Under Review': 'pending', 'Waiting for information': 'pending', 'To be reviewed': 'pending', 'Under Appeal': 'pending',
     'Under Correction Notice': 'pending', 'Not assessed - Late Submission': 'not-assessed',
     'Not assessed - Insufficient information': 'not-assessed', 'Not assessed - Out Of Scope': 'exempt',
@@ -235,11 +258,20 @@ test('a CVS decision is required, not a substitute for the Code', () => {
   assert.equal(evaluateEventSupport(data, event({ activity: 'direct-delegate', eventType: 'conference' }), evidence('Compliant')).outcome, 'not-permitted');
 });
 
-test('negative and missing CVS decisions are binding', () => {
-  const grant = confirmAll(event({ activity: 'grant-running', eventType: 'conference', audience: 'local', ...ACTIVITY_DETAILS['grant-running'] }));
+test('a negative CVS decision binds the support that Annex I makes subject to a CVS decision', () => {
+  const grant = confirmAll(event({ activity: 'grant-running', eventType: 'conference', ...ACTIVITY_DETAILS['grant-running'] }));
   const negative = evaluateEventSupport(data, grant, evidence('Not Compliant'));
   assert.equal(negative.outcome, 'not-permitted');
   assert.ok(reasonIds(negative).includes('cvsNegativeBinding'));
+  const notPreCleared = evaluateEventSupport(data, grant, evidence('Not Pre-cleared'));
+  assert.equal(notPreCleared.outcome, 'not-permitted');
+  assert.ok(reasonIds(notPreCleared).includes('cvsNotPreCleared'));
+  // Outside the Area, with HCPs from the Area, Annex I allows a booth without a CVS decision.
+  const booth = confirmAll(event({ activity: 'booth', eventType: 'conference', packageEducation: 'no', eventArea: 'out', audience: undefined, areaAttendance: 'yes' }));
+  const allowed = evaluateEventSupport(data, booth, evidence('Not Compliant'));
+  assert.equal(allowed.outcome, 'permitted-confirmed');
+  assert.ok(reasonIds(allowed).includes('cvsNegativeNotNeeded'));
+  assert.ok(reasonIds(evaluateEventSupport(data, booth, evidence('Not Pre-cleared'))).includes('cvsNotPreClearedNotNeeded'));
   const attendance = evaluateEventSupport(data, confirmAll(event({ activity: 'company-attendance', eventType: 'conference' })), evidence('Not Compliant'));
   assert.equal(attendance.outcome, 'review');
   assert.ok(reasonIds(attendance).includes('cvsNegativeAttendance'));
@@ -268,20 +300,13 @@ test('if the CVS decision is not available yet, a grant can make it a pre-condit
 
 // ---- The requested national-audience precaution -----------------------------------------------
 
-for (const [raw, messageId] of [
-  ['Under Review', 'nationalRecordPending'], ['Pre-Cleared', 'nationalRecordPending'],
-  ['Not assessed - Late Submission', 'nationalRecordPending'], ['A new status', 'nationalRecordPending'],
-  ['Compliant', 'nationalRecordPositive'], ['Not Compliant', 'nationalRecordNegative'],
-]) {
-  test(`a national-audience answer with a CVS record “${raw}” keeps the warning`, () => {
+for (const raw of ['Under Review', 'Pre-Cleared', 'Not assessed - Late Submission', 'A new status', 'Compliant', 'Not Compliant', 'Not Pre-cleared']) {
+  test(`a national Event with a CVS record “${raw}” gets the contradiction warning`, () => {
     const booth = confirmAll(event({ activity: 'booth', eventType: 'conference', audience: 'local', packageEducation: 'no' }));
     const result = evaluateEventSupport(data, booth, evidence(raw));
-    if (raw === 'Not Compliant') {
-      assert.equal(result.outcome, 'not-permitted');
-      return;
-    }
     assert.equal(result.warnings[0].id, 'national-cvs-record');
-    assert.equal(result.warnings[0].messageId, messageId);
+    assert.equal(result.warnings[0].messageId, 'nationalRecord');
+    assert.equal(result.outcome, 'review');
     assert.equal(result.ready, false);
   });
 }
@@ -295,11 +320,11 @@ test('only the two named “Not assessed” labels lift the national-audience wa
   }
 });
 
-test('no match, or no search, does not confirm that a national Event is outside CVS scope', () => {
+test('a national Event not found in CVS relies on the company’s own assessment', () => {
   const booth = confirmAll(event({ activity: 'booth', eventType: 'conference', audience: 'local', packageEducation: 'no' }));
   const result = evaluateEventSupport(data, booth);
-  assert.equal(result.warnings[0].id, 'scope-unconfirmed');
-  assert.equal(result.outcome, 'review');
+  assert.deepEqual(result.warnings, []);
+  assert.equal(result.outcome, 'permitted-confirmed');
 });
 
 // ---- Grants ------------------------------------------------------------------------------------
@@ -351,6 +376,16 @@ test('a training that does not qualify is assessed as a conference', () => {
   assert.equal(getQuestionIds(data, event({ activity: 'direct-delegate', eventType: 'tppt', ...qualifiedTraining, procedureSkills: 'no' })).includes('clinicalVenue'), false);
 });
 
+test('direct support stops at a programme that fails the Annex VII thresholds; a grant goes on', () => {
+  const sessions = [{ title: 'Talk', type: 'General Educational', durationMinutes: 100 }, { title: 'Lab', type: 'Hands-on', durationMinutes: 20 }];
+  const failing = event({ activity: 'direct-delegate', eventType: 'tppt', handsOnChanged: 'no', sessions });
+  assert.equal(getQuestionIds(data, failing).at(-1), 'sessions');
+  const result = evaluateEventSupport(data, failing);
+  assert.equal(result.outcome, 'not-permitted');
+  assert.deepEqual(result.missing, []);
+  assert.ok(getQuestionIds(data, updateEventAnswer(data, failing, 'activity', 'grant-running')).includes('recipient'));
+});
+
 test('a qualifying training allows direct support, with CVS for international Events', () => {
   const training = event({ activity: 'direct-delegate', eventType: 'tppt', ...qualifiedTraining, expenses: ['registration', 'travel', 'accommodation'] });
   const international = evaluateEventSupport(data, confirmAll(training), evidence('Compliant'));
@@ -392,6 +427,16 @@ test('a Delegate is never paid a fee, and the fee option is not offered', () => 
   const expenses = getEventQuestions(data, delegate).find((question) => question.id === 'expenses');
   assert.equal(expenses.options.some(([value]) => value === 'fee'), false);
   assert.equal(assessProposal(data, { ...delegate, expenses: ['fee'] }).expenses[0].state, 'not-allowed');
+});
+
+test('company attendance: the same Annex I answer everywhere, so its location and audience are not asked', () => {
+  const attendance = { activity: 'company-attendance', member: 'yes', eventType: 'conference', format: 'in-person', intermediary: 'no' };
+  assert.deepEqual(getQuestionIds(data, attendance), ['member', 'eventType', 'format', 'intermediary']);
+  const result = evaluateEventSupport(data, confirmAll(attendance));
+  assert.equal(result.outcome, 'review');
+  assert.equal(new Set(data.annex1Text['company-attendance']).size, 1, 'Annex I gives the same text in every column');
+  const quote = result.reasons.find((reason) => reason.id === 'annex1AllColumns');
+  assert.equal(quote.params.text, data.annex1Text['company-attendance'][0]);
 });
 
 // ---- Other interactions ----------------------------------------------------------------------
@@ -492,11 +537,11 @@ function* walk(answers, depth = 0) {
 }
 
 const WALK_STATUSES = [
-  null, 'Compliant', 'Under Review', 'Not Compliant', 'Pre-Cleared',
+  null, 'Compliant', 'Under Review', 'Not Compliant', 'Pre-Cleared', 'Not Pre-cleared',
   'Not assessed - Late Submission', 'Not assessed - Out Of Scope', 'A new status',
 ];
-// Shown by the answer's CVS card rather than as reasons.
-const CVS_CARD_MESSAGES = ['cvsRequired', 'cvsNotRequired', 'cvsInternal', 'cvsUnknown', 'cvsMecomed', 'cvsBindingCovered'];
+// Shown by the answer itself (its CVS card, disclaimer and additional considerations), not as reasons.
+const ANSWER_MESSAGES = ['cvsRequired', 'cvsNotRequired', 'cvsInternal', 'cvsUnknown', 'cvsMecomed', 'cvsBindingCovered', 'codeDisclaimer', 'additionalConsiderations'];
 
 test('every path through the questions gives a consistent, fully worded answer', () => {
   const messages = new Set(Object.keys(data.messages));
@@ -510,7 +555,7 @@ test('every path through the questions gives a consistent, fully worded answer',
         {
           const result = evaluateEventSupport(data, variant, status ? evidence(status) : null);
           const where = `${JSON.stringify(variant)} / ${status}`;
-          assert.ok(data.outcomes[result.outcome], `${where}: outcome ${result.outcome}`);
+          assert.ok(data.outcomes[result.outcome] && data.outcomeTexts[result.outcome], `${where}: outcome ${result.outcome}`);
           for (const reason of result.reasons) {
             assert.ok(messages.has(reason.id), `${where}: message ${reason.id}`);
             seenReasons.add(reason.id);
@@ -539,8 +584,8 @@ test('every path through the questions gives a consistent, fully worded answer',
   assert.ok(paths > 1000, `only ${paths} paths explored`);
   // The walk reaches almost every reason; the rest are reached by the targeted tests above.
   const unreached = Object.keys(data.messages).filter((id) => !seenReasons.has(id)
-    && !CVS_CARD_MESSAGES.includes(id)
-    && !/^(exp|national|scopeUnconfirmed|conditions|outcomeIntro|missingActivity|chooseEventType)/.test(id));
+    && !ANSWER_MESSAGES.includes(id)
+    && !/^(exp|national|conditions|missingActivity|chooseEventType)/.test(id));
   assert.deepEqual(unreached, []);
 });
 
@@ -580,12 +625,18 @@ test('the rules file passes validation, and broken rules are reported', () => {
   broken.conditions[1].id = 'member';
   broken.messages.research = 'See Chapter 42.';
   broken.conferenceMatrix.booth = ['conditional:none'];
+  broken.sources.cvsGuidance = { url: 'https://example.com/cvs.pdf', label: 'Unofficial copy' };
+  delete broken.outcomeTexts.review;
+  broken.outcomeTexts.permitted = 'See Chapter 42, Section 1.';
   const errors = validateRules(broken).join('\n');
   assert.match(errors, /sources\.scope/);
   assert.match(errors, /unknown tag "nowhere"/);
   assert.match(errors, /also a question ID/);
   assert.match(errors, /"Chapter 42" does not match anything/);
   assert.match(errors, /conferenceMatrix\.booth/);
+  assert.match(errors, /sources\.cvsGuidance: guidance sources need a label and an ethicalmedtech\.eu or mecomed\.com URL/);
+  assert.match(errors, /outcomes\.review: missing heading or outcomeTexts entry/);
+  assert.match(errors, /outcomeTexts\.permitted: "Chapter 42, Section 1" does not match anything/);
 });
 
 // ---- Live CVS lookups ---------------------------------------------------------------------------

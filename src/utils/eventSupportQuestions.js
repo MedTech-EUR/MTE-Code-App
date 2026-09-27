@@ -3,6 +3,7 @@
 // are relevant. A question is asked only when its answer can change the result, so the list
 // stops as soon as the answers establish that the Code does not apply or that the support is
 // not permitted.
+import { calculateTpptEligibility } from './tpptParser.js';
 
 export const isKnown = (value) => value !== undefined && value !== null && value !== '' && value !== 'unknown';
 
@@ -81,7 +82,9 @@ function scopeQuestionIds(ctx, answers) {
     return answers.beneficiariesInArea === 'no' ? ['beneficiariesInArea', 'recipientInArea'] : ['beneficiariesInArea'];
   }
   if (DIRECT_SUPPORT.includes(id) || id === 'satellite') return ['supportedHcpInArea'];
-  if (answers.areaAttendance === 'no' && (id === 'grant-running' || id === 'grant-faculty')) {
+  // Without HCPs from the Area, a grant (and a booth at a Virtual Event, which is outside CVS)
+  // comes within the Code through a recipient in the Area.
+  if (answers.areaAttendance === 'no' && (id === 'grant-running' || id === 'grant-faculty' || (id === 'booth' && ctx.virtual))) {
     return ['areaAttendance', 'recipientInArea'];
   }
   return ['areaAttendance'];
@@ -95,9 +98,17 @@ export function isOutsideScope(ctx, answers) {
   const areaHcps = getAreaHcpsAnswer(ctx, answers);
   if (areaHcps !== 'no') return false;
   const id = ctx.activity.id;
-  if (id === 'booth') return false; // Annex I asks for internal review here, not "out of scope".
+  // Annex I asks for internal review at an Event outside the Area, not "out of scope". A Virtual
+  // Event is not held outside the Area: the Code's scope decides (Annex I, footnote 5).
+  if (id === 'booth') return ctx.virtual && answers.recipientInArea === 'no';
   if (['grant-running', 'grant-attendance', 'grant-faculty'].includes(id)) return answers.recipientInArea === 'no';
   return true;
+}
+
+// A complete programme below the Annex VII thresholds: the Event cannot qualify, whatever else.
+export function tpptAgendaFails(answers) {
+  const agenda = calculateTpptEligibility(answers.sessions || []);
+  return agenda.valid && agenda.total > 0 && !agenda.passesAgenda;
 }
 
 // Questions about whether a procedure training qualifies, up to the first criterion not met.
@@ -105,6 +116,7 @@ function tpptQuestionIds(answers) {
   const ids = ['handsOnChanged'];
   if (answers.handsOnChanged === 'yes') return ids;
   ids.push('sessions');
+  if (tpptAgendaFails(answers)) return ids;
   for (const id of TPPT_CRITERIA) {
     if (id === 'streamingFollowed' && !answers.sessions?.some((session) => session.type === 'Streaming')) continue;
     ids.push(id);
@@ -175,6 +187,8 @@ export function getQuestionIds(data, answers) {
     if (!isKnown(answers.facultyRole)) return ids;
   }
   ids.push('format');
+  // Annex I gives company attendance the same answer wherever the Event is and whoever attends.
+  if (activity.id === 'company-attendance') return withIntermediary();
   if (!ctx.virtual) ids.push('eventArea');
   const locationKnown = ctx.virtual || isKnown(answers.eventArea);
   if (!locationKnown) return ids;
@@ -198,7 +212,7 @@ export function getQuestionIds(data, answers) {
   if (ctx.tpptDirect) {
     const tpptIds = tpptQuestionIds(answers);
     ids.push(...tpptIds);
-    const failed = TPPT_CRITERIA.some((id) => answers[id] === 'no' && tpptIds.includes(id));
+    const failed = tpptAgendaFails(answers) || TPPT_CRITERIA.some((id) => answers[id] === 'no' && tpptIds.includes(id));
     // Hands-on part cancelled: Faculty are then treated as at a conference and cannot be paid.
     if (failed || (answers.handsOnChanged === 'yes' && ctx.role === 'faculty')) return ids;
   }

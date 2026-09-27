@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-26.2",
+  "version": "2026-09-27.1",
   "codeVersion": "September 2024",
   "sources": {
     "scope": { "chapter": "scope", "section": 0 },
@@ -53,12 +53,17 @@
     "cvsGuidance": {
       "url": "https://www.ethicalmedtech.eu/wp-content/uploads/2025/01/CVS-2.0-Training_Slides_deck-v3.0-incl-2025-features-to-upload.pdf",
       "label": "CVS 2.0 training (January 2025): scope, statuses and submission"
+    },
+    "mecomedCvs": {
+      "url": "https://www.mecomed.com/ethical-practices/cvs",
+      "label": "CVS – Mecomed: scope and submission"
     }
   },
   "cvsStatuses": {
     "exempt": ["Not assessed - Out of scope", "Not assessed - National event"],
     "positive": ["Compliant"],
-    "negative": ["Not Compliant", "Not Pre-cleared"],
+    "negative": ["Not Compliant"],
+    "notPreCleared": ["Not Pre-cleared"],
     "notAssessed": ["Not assessed - Late Submission", "Not assessed - Insufficient information"],
     "preCleared": ["Pre-Cleared"],
     "pending": [
@@ -89,7 +94,7 @@
     {
       "id": "grant-attendance",
       "group": "event",
-      "label": "Provide an Educational Grant to support the attendance of HCPs to an Event",
+      "label": "Provide an Educational Grant to support HCP attendance at an Event",
       "description": "The Healthcare Organisation receiving the grant chooses the HCPs who benefit.",
       "eventTypes": ["conference", "tppt"],
       "sources": ["annex1", "educationalGrants"]
@@ -121,15 +126,15 @@
     {
       "id": "company-attendance",
       "group": "event",
-      "label": "Send company employees to attend an Event",
-      "description": "Company staff attend the Event themselves.",
+      "label": "Send company employees or representatives to attend an Event",
+      "description": "Company employees or representatives attend the Event themselves. An HCP engaged by the company, for example as a consultant, is not company staff: choose an option for engaging or compensating an HCP instead.",
       "eventTypes": ["conference", "tppt"],
       "sources": ["annex1", "conferences"]
     },
     {
       "id": "direct-delegate",
       "group": "event",
-      "label": "Cover/reimburse the costs of attendance of an HCP’s to attend an event as as a Delegate",
+      "label": "Cover or reimburse an HCP’s costs of attending an Event as a Delegate",
       "description": "Registration, travel, accommodation or meals for an HCP who attends an Event without being a speaker.",
       "eventTypes": ["conference", "tppt", "company-training", "company-business"],
       "sources": ["annex1", "annex6"]
@@ -146,7 +151,7 @@
       "id": "in-kind",
       "group": "event",
       "label": "Support an Event organised by individual HCPs",
-      "description": "No legal entity, such as a Healthcare Organisation or PCO organises the Event.",
+      "description": "No legal entity, such as a Healthcare Organisation or PCO, organises the Event.",
       "eventTypes": ["conference", "tppt"],
       "sources": ["tppt"]
     },
@@ -343,12 +348,12 @@
     },
     "audience": {
       "type": "choice",
-      "label": "Where do the Event’s HCP Delegates come from?",
-      "help": "Count the audience: HCPs attending as Delegates, including poster and abstract presenters, but not the Faculty. If you answer that all Delegates are local, the checker still compares your answer with the Event’s record in CVS.",
+      "label": "Do you expect HCP Delegates from more than one country in the MedTech Europe Geographic Area to attend the Event?",
+      "help": "Count the HCPs attending as Delegates, including poster and abstract presenters, but not the Faculty. Answer on the information available to your company, for example from the organiser, from your own support arrangements or from previous editions of the Event. You do not need to provide evidence. If you answer that the Event is national, the checker still compares your answer with the Event’s record in CVS.",
       "options": [
-        ["local", "Only from the country where the Event takes place"],
-        ["international", "From at least two countries of the MedTech Europe Geographic Area"],
-        ["other", "Another mix, such as local HCPs and HCPs from outside the Area"],
+        ["international", "Yes: HCPs from at least two countries of the Area (an international Event)"],
+        ["local", "No: local HCPs only, from the country where the Event takes place (a national Event)"],
+        ["other", "No: local HCPs, and HCPs from outside the Area"],
         ["unknown", "I don’t know"]
       ]
     },
@@ -816,22 +821,36 @@
     "not-allowed": "Not permitted",
     "check": "Needs checking"
   },
+  "outcomeTexts": {
+    "not-permitted": "Based on your answers, the assessed support would not be appropriate under the MedTech Europe Code. This conclusion concerns the interaction selected. Other forms of support may be subject to different rules.",
+    "not-permitted-as-proposed": "Based on your answers, the assessed support would not be appropriate under the MedTech Europe Code as proposed. This conclusion concerns the interaction selected. Other forms of support may be subject to different rules.",
+    "outside": "Based on your answers, the MedTech Europe Code does not apply to the assessed support. Other laws, regulations and codes may still apply.",
+    "handoff": "Other chapters of the MedTech Europe Code set the requirements for this support, as explained below.",
+    "cvs-needed": "Based on your answers, the assessed support needs a positive CVS decision before it can be provided under the MedTech Europe Code. Other requirements may apply under national laws, regulations, professional codes and your company’s policies.",
+    "more-info": "The information provided is not sufficient to determine whether the assessed support would be appropriate under the MedTech Europe Code. Resolve the points below before making a definitive commitment.",
+    "review": "Based on your answers, the assessed support needs internal review against the MedTech Europe Code before the company commits to it. Other requirements may apply under national laws, regulations, professional codes and your company’s policies.",
+    "permitted": "Based on your answers, and provided they are accurate and complete, it would be appropriate under the MedTech Europe Code to provide the assessed support if the conditions below are met. Other requirements may apply under national laws, regulations, professional codes and your company’s policies.",
+    "permitted-confirmed": "Based on your answers, and provided they are accurate and complete, it would be appropriate under the MedTech Europe Code to provide the assessed support. Other requirements may apply under national laws, regulations, professional codes and your company’s policies."
+  },
   "messages": {
-    "outcomeIntro": "This is the Code’s position on the proposal as described. It is not company approval: internal review and local requirements still apply.",
+    "codeDisclaimer": "This answer combines many rules of the Code, and the Code and its guidance change from time to time. Whenever you are unsure, check the text of the Code itself: the provisions this answer relies on are listed under Sources.",
+    "additionalConsiderations": "Less common circumstances may affect this result, including an Event organised by individual HCPs without a Healthcare Organisation or other legal entity, childcare or Guest arrangements, entertainment or social activities, unusual registration packages, and support that links an Educational Grant to commercial benefits. Review any such circumstances separately before proceeding.",
     "notMember": "The Code applies to Member Companies of MedTech Europe and their affiliated companies, for interactions linked at least in part to Medical Technologies. A national association’s code or other rules may still apply.",
     "outsideArea": "The Code does not apply: the activity takes place outside the MedTech Europe Geographic Area and does not involve HCPs or Healthcare Organisations registered, practising or located there (Annex I, footnote 5). Other laws and codes may still apply.",
     "outsideSupportedHcp": "The Code does not apply to paying an HCP who is not registered and practising in the MedTech Europe Geographic Area, for an Event held outside the Area. Other laws and codes may still apply.",
     "research": "Research funding and royalties are not event support. Chapter 6 (Research) and Chapter 7 (Royalties) set their own requirements.",
     "annex1Cell": "For {column}, Annex I says: “{text}”.",
+    "annex1AllColumns": "Whatever the Event’s location and audience, Annex I says: “{text}”.",
     "annex6Cell": "For {role} at {setting}, Annex VI says: “{text}”.",
     "audienceUnclassified": "Annex I does not classify this audience, which is neither local HCPs only nor Delegates from at least two countries of the Area. Ask CVS whether the Event is within its scope before relying on either position.",
-    "mecomedCvs": "The Event takes place in a country covered by Mecomed, which is part of the MedTech Europe Geographic Area, so the Code applies. For Events in Mecomed countries, CVS refers companies to Mecomed’s guidelines: check which vetting applies before providing this support.",
+    "mecomedCvs": "The Event takes place in a country covered by Mecomed, which is part of the MedTech Europe Geographic Area, so the Code applies. CVS applies Mecomed’s guidelines to Events in Mecomed countries, and Mecomed’s CVS scope covers national Events as well as regional and international ones (CVS – Mecomed). Find the Event in CVS and check Mecomed’s guidelines before providing this support.",
     "directSponsorshipBan": "The Code does not allow direct sponsorship of HCPs to attend a Third Party Organised Educational Conference, whether as Delegates or as Faculty in its programme (Chapter 2, Annex I and Annex VI). A positive CVS decision does not change this. The company can support the Event through an Educational Grant instead, or engage speakers for its own satellite symposium or booth.",
     "posterIsDelegate": "Poster and abstract presenters are Delegates, not Faculty (Annex VI).",
     "recipientInAreaApplies": "The Code applies because the recipient organisation is located in the MedTech Europe Geographic Area (Annex I, footnote 5).",
     "noAreaHcpsNoCvs": "No CVS decision is needed, because no HCPs from the Area attend.",
     "beneficiariesNotInArea": "The grant does not fund the attendance of HCPs from the Area, so no CVS decision is needed for it (Annex I, footnote 3).",
     "beneficiariesInArea": "For an Event held outside the Area, a grant that funds the attendance of HCPs registered and practising in the Area needs a positive CVS decision (Annex I, footnote 3).",
+    "virtualGrantAttendance": "The Code applies because the grant funds the attendance of HCPs registered and practising in the MedTech Europe Geographic Area.",
     "companyAttendanceReview": "Annex I requires the company to review its attendance internally against the Code’s principles before attending, whatever the Event’s CVS status (Q&A 16).",
     "boothOutsideReview": "When no HCPs from the MedTech Europe Geographic Area take part, Annex I requires the company’s prior internal review of booths and advertising against the Code’s principles.",
     "grantPackageSplit": "An Educational Grant cannot give the company anything in return. Put the booth, advertising or other commercial elements in a separate commercial agreement, and check each part separately (Q&A 29).",
@@ -883,24 +902,23 @@
     "cvsNotRequired": "This support does not need a CVS decision on the answers given. Chapter 1 and local rules still apply.",
     "cvsInternal": "Annex I requires the company’s prior internal review instead of a CVS decision.",
     "cvsUnknown": "Whether a CVS decision is needed depends on facts still to be confirmed.",
-    "cvsMecomed": "CVS refers Events in Mecomed countries to Mecomed’s guidelines.",
-    "cvsMissing": "No CVS decision has been confirmed for this Event. Find it in CVS and check that its status is Compliant. Events must be submitted to CVS at least 50 days before they start (CVS guidance).",
-    "cvsPending": "CVS has not given a final decision for this Event yet (status “{status}”). Wait for a Compliant decision before providing the support.",
-    "cvsPreCleared": "“Pre-Cleared” means that CVS has accepted only the Event’s location and venue. The support needs the final Compliant decision.",
+    "cvsMecomed": "CVS vets Events in Mecomed countries under Mecomed’s guidelines, national Events included.",
+    "cvsMissing": "No CVS decision has been confirmed for this Event. Find it in CVS and check that its status is Compliant. If it is not in CVS, submit it as soon as possible or ask the organiser to do so: Member Companies may submit Events themselves (Q&A 32), at least 50 days before the Event starts (CVS guidance). Do not provide this support unless and until the Event has been assessed Compliant.",
+    "cvsPending": "The Event has not yet received a final CVS assessment (status “{status}”). Do not make a definitive commitment or provide this support unless and until the Event is assessed Compliant.",
+    "cvsPreCleared": "The Event has been Pre-Cleared: only its geographic location and venue have received preliminary approval. A final Compliant assessment of the whole Event is still needed before this support can be provided.",
     "cvsPositive": "CVS has assessed this Event as Compliant. The decision is binding on all Member Companies. CVS decides on the Event itself, such as its location, venue, programme and social programme; it does not assess the company’s own arrangements.",
-    "cvsNegativeBinding": "CVS has assessed this Event as “{status}”. CVS decisions are binding on all Member Companies, so the company may not support the Event.",
+    "cvsNegativeBinding": "CVS has assessed this Event as “{status}”. The decision is binding on all Member Companies, so this support, which needs a positive CVS decision, cannot be provided.",
+    "cvsNotPreCleared": "The Event was Not Pre-cleared: its geographic location or venue did not meet the applicable requirements. This support needs a positive CVS decision, so it cannot be provided while the Event has this status.",
+    "cvsNegativeNotNeeded": "CVS has assessed this Event as “{status}”. Annex I does not make this support subject to a CVS decision, so the decision does not rule it out on its own. Find out why CVS reached it, for example because of the Event’s location, venue or programme, and check those points against the Code before going ahead.",
+    "cvsNotPreClearedNotNeeded": "The Event was Not Pre-cleared: its geographic location or venue did not meet the applicable requirements. Annex I does not make this support subject to a CVS decision, so this status does not rule it out on its own, but the Code’s requirements for the location and venue still apply: check them before going ahead.",
     "cvsNegativeAttendance": "CVS has assessed this Event as “{status}”. Company attendance at such an Event is not automatically excluded, but it needs the internal review described in Q&A 16.",
     "cvsNotAssessed": "CVS did not assess this Event (status “{status}”), so the positive CVS decision this support needs does not exist.",
     "cvsScopeDisagrees": "CVS records this Event as “{status}”, but your answers place the support within CVS scope. Confirm the Event’s audience and scope with CVS before proceeding.",
     "cvsUnrecognised": "The checker does not recognise the CVS status “{status}”. Check its meaning on the CVS site.",
     "cvsBindingCovered": "Covered by the Event’s Compliant CVS decision, which is binding on all Member Companies.",
     "nationalRecordTitle": "Check the Event’s CVS record",
-    "nationalRecordPending": "This Event has a CVS record with status “{status}”. You indicated that its Delegates are local HCPs only, but it may still be within CVS scope, and a negative decision could still be issued. Confirm the Event’s CVS scope and current decision before proceeding.",
-    "nationalRecordNegative": "This Event has a CVS record with status “{status}”. You indicated that its Delegates are local HCPs only, but it may still be within CVS scope, and a negative decision is already recorded. Confirm the Event’s CVS scope and current decision before proceeding.",
-    "nationalRecordPositive": "This Event has a CVS record with status “{status}”. You indicated that its Delegates are local HCPs only, but it may still be within CVS scope. Its current decision is positive, but the record means its scope should still be confirmed. Confirm the Event’s CVS scope and current decision before proceeding.",
+    "nationalRecord": "You have indicated that this is a national Event, but the Event has been submitted to CVS (status “{status}”). The organiser or another Member Company may have different information about the countries from which HCP Delegates are expected to attend. Clarify the Event’s intended audience with the organiser and consider refraining from making a definitive commitment to provide support until the position is clear.",
     "nationalRecordNote": "This compares your answer with the live CVS record; it does not replace the Code’s rules.",
-    "scopeUnconfirmedTitle": "CVS scope not confirmed",
-    "scopeUnconfirmed": "You indicated that the Event’s Delegates are local HCPs only. That answer, a search with no match or a failed lookup does not confirm that the Event is outside CVS scope.",
     "conditionsNotMet": "A Code requirement listed below is not met. Change the proposal so that it is met, then check again.",
     "conditionsNeedReview": "A requirement listed below that allows for judgement is not met. This needs internal review.",
     "expensesNeeded": "Select what the company would pay for.",

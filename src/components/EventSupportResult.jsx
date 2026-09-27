@@ -67,15 +67,20 @@ export default function EventSupportResult({ data, result, glossaryMap }) {
   const missing = result.missing.map((item) => (item.question ? data.questions[item.question].label : formatMessage(data, item.id)));
   const sources = result.sources.map((key) => describeSource(data, key)).filter(Boolean).sort(bySourceOrder);
 
+  // Less common circumstances that can change an answer about a third-party Event.
+  const showConsiderations = Boolean(result.context?.thirdParty) && !['outside', 'handoff'].includes(result.permission);
+
   // Every text in reading order, so each glossary term is linked once in the whole answer.
   const texts = [
-    data.messages.outcomeIntro,
+    data.outcomeTexts[result.outcome],
+    data.messages.codeDisclaimer,
     ...result.warnings.flatMap((warning) => [formatMessage(data, warning.messageId, warning.params), warning.noteId ? formatMessage(data, warning.noteId) : '']),
     ...result.reasons.map((reason) => formatMessage(data, reason.id, reason.params)),
     formatMessage(data, cvsCardId),
     ...missing,
     ...result.expenses.map((expense) => formatMessage(data, expense.reason)),
     ...result.conditions.map((condition) => condition.label),
+    showConsiderations ? data.messages.additionalConsiderations : '',
   ];
   const markup = useCheckerText(texts, glossaryMap);
   let cursor = 0;
@@ -84,13 +89,14 @@ export default function EventSupportResult({ data, result, glossaryMap }) {
     cursor += count;
     return slice;
   };
-  const [introMarkup] = take();
+  const [introMarkup, disclaimerMarkup] = take(2);
   const warningMarkup = take(result.warnings.length * 2);
   const reasonMarkup = take(result.reasons.length);
   const [cvsCardMarkup] = take();
   const missingMarkup = take(missing.length);
   const expenseMarkup = take(result.expenses.length);
   const conditionMarkup = take(result.conditions.length);
+  const [considerationsMarkup] = take();
 
   return (
     <section className="space-y-5" aria-label="Support assessment">
@@ -100,6 +106,7 @@ export default function EventSupportResult({ data, result, glossaryMap }) {
           <div>
             <h2 className="text-xl font-bold">{data.outcomes[result.outcome]}</h2>
             <p className="mt-2 text-sm" dangerouslySetInnerHTML={introMarkup} />
+            <p className="mt-3 text-xs leading-relaxed opacity-90" dangerouslySetInnerHTML={disclaimerMarkup} />
           </div>
         </div>
       </div>
@@ -199,6 +206,19 @@ export default function EventSupportResult({ data, result, glossaryMap }) {
             })}
           </ul>
         </div>
+      )}
+
+      {showConsiderations && (
+        <>
+          <details className="rounded-xl border border-slate-200 bg-white p-5 print:hidden">
+            <summary className="cursor-pointer font-semibold text-slate-800">Additional considerations</summary>
+            <p className="mt-3 text-sm leading-relaxed text-slate-700" dangerouslySetInnerHTML={considerationsMarkup} />
+          </details>
+          <div className="hidden rounded-xl border border-slate-200 bg-white p-5 print:block">
+            <h3 className="font-semibold text-slate-800">Additional considerations</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-700" dangerouslySetInnerHTML={considerationsMarkup} />
+          </div>
+        </>
       )}
 
       {sources.length > 0 && (

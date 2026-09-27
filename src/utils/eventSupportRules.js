@@ -2,7 +2,7 @@
 // third-party Event, to its live CVS status. It returns message and source IDs; the wording is
 // in src/data/eventSupportRules.json, so the text can be corrected without touching the logic.
 import { calculateTpptEligibility } from './tpptParser.js';
-import { classifyCvsStatus, getCvsScopeWarning, getScopeUnconfirmedWarning } from './eventSupportCvs.js';
+import { classifyCvsStatus, getCvsScopeWarning } from './eventSupportCvs.js';
 import {
   getActivity,
   getAreaHcpsAnswer,
@@ -152,22 +152,31 @@ function quoteAnnex6(data, api, setting, role) {
   }, 'annex6');
 }
 
-// A CVS decision is never needed for a Virtual Event; for Events in Mecomed countries CVS refers
-// companies to Mecomed's own guidelines.
-function setCvsRequirement(result, api, ctx, answers, cvs) {
+// Whether CVS vets this kind of support at an international Event (Annex I's second column).
+const vettedByCvs = (data, row) => data.conferenceMatrix[row][1].endsWith(':required');
+
+// For Events in Mecomed countries CVS applies Mecomed's guidelines, whose scope covers national
+// Events as well as international ones: support that CVS vets needs Mecomed's vetting whatever
+// the audience.
+function setMecomedCvs(result, api, ctx, answers, vetted) {
+  if (ctx.virtual || answers.eventArea !== 'mecomed' || !vetted) return false;
+  result.cvsRequirement = 'mecomed';
+  api.reason('mecomedCvs', null, ['geography', 'cvsGuidance', 'mecomedCvs']);
+  return true;
+}
+
+// A CVS decision is never needed for a Virtual Event.
+function setCvsRequirement(result, api, ctx, answers, cvs, vetted = cvs === 'required') {
   if (ctx.virtual) {
     result.cvsRequirement = 'none';
     return;
   }
-  if (cvs === 'required' && answers.eventArea === 'mecomed') {
-    result.cvsRequirement = 'mecomed';
-    api.reason('mecomedCvs', null, ['geography', 'cvsGuidance']);
-    return;
-  }
+  if (setMecomedCvs(result, api, ctx, answers, vetted)) return;
   result.cvsRequirement = cvs;
 }
 
-function setUnclassifiedCvs(result, api, ctx, answers) {
+function setUnclassifiedCvs(result, api, ctx, answers, vetted = false) {
+  if (setMecomedCvs(result, api, ctx, answers, vetted)) return;
   result.cvsRequirement = ctx.virtual ? 'none' : 'unknown';
   if (ctx.inArea && answers.audience === 'other') api.reason('audienceUnclassified', null, ['annex1', 'cvsGuidance']);
 }
@@ -277,11 +286,11 @@ function assessDirectSupport(data, answers, ctx, api, result) {
   }
   // Cross-border and international procedure trainings are submitted to CVS.
   const column = annex1Column(ctx, answers);
-  if (column === 0) result.cvsRequirement = 'none';
+  if (column === 0) setCvsRequirement(result, api, ctx, answers, 'none', true);
   else if (column === 1 || column === 2) {
     api.reason('tpptCvs', null, 'tpptGuidance');
     setCvsRequirement(result, api, ctx, answers, 'required');
-  } else setUnclassifiedCvs(result, api, ctx, answers);
+  } else setUnclassifiedCvs(result, api, ctx, answers, true);
   api.allow();
   let context = 'services';
   if (qualification.state === 'changed') context = 'tppt-changed';
@@ -295,8 +304,9 @@ function assessSatelliteSpeaker(data, answers, ctx, api, result) {
   quoteAnnex6(data, api, 'satellite', 'faculty');
   quoteAnnex1(data, api, ctx, 'satellite', column);
   const cell = annex1Cell(data, 'satellite', column);
-  if (cell && column !== 3) setCvsRequirement(result, api, ctx, answers, cell.cvs);
-  else setUnclassifiedCvs(result, api, ctx, answers);
+  const vetted = vettedByCvs(data, 'satellite');
+  if (cell && column !== 3) setCvsRequirement(result, api, ctx, answers, cell.cvs, vetted);
+  else setUnclassifiedCvs(result, api, ctx, answers, vetted);
   api.allow();
   assessExpenses(answers, ctx, api, result, 'satellite');
 }
@@ -327,15 +337,20 @@ function assessGrant(data, answers, ctx, api, result) {
     cell = null;
     if (answers.recipientInArea === 'yes') {
       api.reason('recipientInAreaApplies', null, 'annex1Footnotes');
-      api.reason(id === 'grant-attendance' ? 'beneficiariesNotInArea' : 'noAreaHcpsNoCvs', null, 'annex1Footnotes');
+      if (!ctx.virtual) api.reason(id === 'grant-attendance' ? 'beneficiariesNotInArea' : 'noAreaHcpsNoCvs', null, 'annex1Footnotes');
       cell = { permission: 'conditional', cvs: 'none' };
     }
   } else {
-    if (column === 2 && id === 'grant-attendance') api.reason('beneficiariesInArea', null, 'annex1Footnotes');
+    // A Virtual Event is outside CVS: HCPs from the Area bring the grant within the Code, nothing more.
+    if (column === 2 && id === 'grant-attendance') {
+      if (ctx.virtual) api.reason('virtualGrantAttendance', null, 'scope');
+      else api.reason('beneficiariesInArea', null, 'annex1Footnotes');
+    }
     quoteAnnex1(data, api, ctx, id, column);
   }
-  if (cell) setCvsRequirement(result, api, ctx, answers, cell.cvs);
-  else setUnclassifiedCvs(result, api, ctx, answers);
+  const vetted = vettedByCvs(data, id);
+  if (cell) setCvsRequirement(result, api, ctx, answers, cell.cvs, vetted);
+  else setUnclassifiedCvs(result, api, ctx, answers, vetted);
   api.allow();
 }
 
@@ -343,14 +358,23 @@ function assessBooth(data, answers, ctx, api, result) {
   if (answers.packageEducation === 'yes') api.review('boothPackageSplit', null, 'educationalGrants');
   const column = annex1Column(ctx, answers);
   quoteAnnex1(data, api, ctx, 'booth', column);
+  if (column === 3 && ctx.virtual) {
+    // A Virtual Event is outside CVS and is not an Event held outside the Area: the Code applies
+    // through the organiser in the Area (Annex I, footnote 5).
+    if (answers.recipientInArea === 'yes') api.reason('recipientInAreaApplies', null, 'annex1Footnotes');
+    result.cvsRequirement = 'none';
+    api.allow();
+    return;
+  }
   if (column === 3) {
     api.review('boothOutsideReview', null, 'annex1');
     result.cvsRequirement = 'internal';
     return;
   }
   const cell = annex1Cell(data, 'booth', column);
-  if (cell) setCvsRequirement(result, api, ctx, answers, cell.cvs);
-  else setUnclassifiedCvs(result, api, ctx, answers);
+  const vetted = vettedByCvs(data, 'booth');
+  if (cell) setCvsRequirement(result, api, ctx, answers, cell.cvs, vetted);
+  else setUnclassifiedCvs(result, api, ctx, answers, vetted);
   api.allow();
 }
 
@@ -365,10 +389,11 @@ function assessInKind(data, answers, ctx, api, result) {
   // For CVS, In Kind support to the Event is treated like support for its general running.
   const column = annex1Column(ctx, answers);
   const cell = annex1Cell(data, 'grant-running', column);
+  const vetted = vettedByCvs(data, 'grant-running');
   if (cell && column !== 3) {
     if (cell.cvs === 'required' && !ctx.virtual) api.reason('inKindCvs', null, ['cvs', 'annex1']);
-    setCvsRequirement(result, api, ctx, answers, cell.cvs);
-  } else setUnclassifiedCvs(result, api, ctx, answers);
+    setCvsRequirement(result, api, ctx, answers, cell.cvs, vetted);
+  } else setUnclassifiedCvs(result, api, ctx, answers, vetted);
   api.allow();
 }
 
@@ -378,7 +403,7 @@ function assessThirdPartyEvent(data, answers, ctx, api, result) {
   if (ctx.virtual) api.reason('virtualNoCvs', null, ['virtualEvents', 'virtualGuidance']);
   if (id === 'company-attendance') {
     api.review('companyAttendanceReview', null, 'conferences');
-    quoteAnnex1(data, api, ctx, id, annex1Column(ctx, answers));
+    if (!ctx.virtual) api.reason('annex1AllColumns', { text: data.annex1Text[id][0] }, 'annex1');
     result.cvsRequirement = 'internal';
     return;
   }
@@ -594,27 +619,43 @@ function applyCvsEvidence(data, answers, result, api, evidence) {
   const state = classifyCvsStatus(data, evidence.status?.raw);
   const params = { status: evidence.status.raw };
   result.cvsState = state;
-  if (state === 'negative') {
-    if (id === 'company-attendance') api.review('cvsNegativeAttendance', params, ['conferences', 'cvs']);
-    else api.prohibit('cvsNegativeBinding', params, 'cvs', 'rule');
+  const decision = ['positive', 'negative', 'not-pre-cleared'].includes(state);
+
+  // A CVS decision binds through Annex I (Q&A 16): support that Annex I does not make subject to
+  // a CVS decision is not ruled out by a negative one, but the answer says why to look closer.
+  if (!['required', 'mecomed', 'unknown'].includes(result.cvsRequirement)) {
+    if (id === 'company-attendance' && ['negative', 'not-pre-cleared'].includes(state)) {
+      api.review('cvsNegativeAttendance', params, ['conferences', 'cvs']);
+    } else if (state === 'negative') api.reason('cvsNegativeNotNeeded', params, ['annex1', 'cvs']);
+    else if (state === 'not-pre-cleared') api.reason('cvsNotPreClearedNotNeeded', null, ['annex1', 'cvsGuidance']);
+    else if (state === 'positive') api.reason('cvsPositive', null, 'cvs');
     return;
   }
+
+  // A decision settles an audience Annex I does not classify, and Mecomed's vetting: CVS has decided.
+  if (decision && result.cvsRequirement !== 'required') {
+    result.cvsRequirement = 'required';
+    result.reasons = result.reasons.filter((reason) => reason.id !== 'audienceUnclassified');
+  }
   if (state === 'positive') {
-    // A Compliant decision settles an audience Annex I does not classify: CVS has decided.
-    if (result.cvsRequirement === 'unknown') {
-      result.cvsRequirement = 'required';
-      result.reasons = result.reasons.filter((reason) => reason.id !== 'audienceUnclassified');
-    }
     api.reason('cvsPositive', null, 'cvs');
     return;
   }
-  if (result.cvsRequirement !== 'required') return;
+  if (state === 'negative') {
+    api.prohibit('cvsNegativeBinding', params, 'cvs', 'rule');
+    return;
+  }
+  if (state === 'not-pre-cleared') {
+    api.prohibit('cvsNotPreCleared', null, ['cvs', 'cvsGuidance'], 'rule');
+    return;
+  }
+  if (result.cvsRequirement === 'unknown') return;
   if (state === 'not-assessed') api.prohibit('cvsNotAssessed', params, ['cvs', 'cvsGuidance'], 'rule');
   else if (state === 'exempt') api.review('cvsScopeDisagrees', params, ['annex1', 'cvsGuidance']);
   else if (state === 'pre-cleared') api.reason('cvsPreCleared', null, 'cvsGuidance');
   else if (state === 'pending') api.reason('cvsPending', params, 'cvs');
   else api.reason('cvsUnrecognised', params, 'cvsGuidance');
-  if (GRANTS.includes(id) && !['not-assessed'].includes(state)) api.reason('grantPreCondition', null, 'educationalGrants');
+  if (GRANTS.includes(id) && state !== 'not-assessed') api.reason('grantPreCondition', null, 'educationalGrants');
 }
 
 function applyConditions(data, answers, result, api, proposal) {
@@ -637,7 +678,7 @@ function applyConditions(data, answers, result, api, proposal) {
 function applyWarnings(data, answers, result, evidence) {
   const ctx = result.context;
   if (!ctx || ['prohibited', 'outside', 'handoff'].includes(result.permission)) return;
-  const warning = getCvsScopeWarning(data, ctx, answers, evidence) || getScopeUnconfirmedWarning(ctx, answers, evidence);
+  const warning = getCvsScopeWarning(data, ctx, answers, evidence);
   if (warning) result.warnings.push(warning);
 }
 

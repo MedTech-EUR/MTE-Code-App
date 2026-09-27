@@ -22,6 +22,15 @@ const STAGE_LABELS = {
   answer: 'Your answer',
 };
 
+// The CVS step's introduction, by what the answers say about the need for a CVS decision.
+const CVS_INTROS = {
+  required: 'This support needs a positive CVS decision. Find the Event, and the right edition, in CVS.',
+  mecomed: 'CVS vets Events in Mecomed countries under Mecomed’s guidelines, national Events included. Find the Event, and the right edition, in CVS.',
+  unknown: 'Whether this support needs a CVS decision is not settled by your answers. If the Event is in CVS, its decision settles it.',
+};
+const CVS_INTRO_NATIONAL = 'You expect a national Event. Check whether it has been submitted to CVS anyway: a CVS record suggests that the organiser or another Member Company expects Delegates from more than one country.';
+const CVS_INTRO_NOT_NEEDED = 'This support does not need a CVS decision on your answers. If the Event is in CVS, check its status anyway: your answer says what it means.';
+
 const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-[#7654A1] px-5 py-3 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-40';
 const secondary = 'inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 hover:border-[#7654A1]';
 // Code references in the checker's text ("Chapter 4, Section 3") look like the reader's.
@@ -274,11 +283,8 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
     setAssessedAt(null);
   };
 
-  const cvsIntro = result.cvsRequirement === 'required'
-    ? 'This support needs a positive CVS decision. Find the Event, and the right edition, in CVS.'
-    : answers.audience === 'local'
-      ? 'You indicated that the Event’s Delegates are local HCPs only. Check whether the Event has a CVS record: if it does, it may still be within CVS scope.'
-      : 'If the Event has a CVS record, check its status: a CVS decision is binding on all Member Companies.';
+  const cvsIntro = CVS_INTROS[result.cvsRequirement]
+    || (answers.audience === 'local' ? CVS_INTRO_NATIONAL : CVS_INTRO_NOT_NEEDED);
   const alternatives = data.activities.filter((item) => item.id !== answers.activity
     && item.group === activity?.group
     && (!context.eventType || context.eventType === 'unknown' || !item.eventTypes.length || item.eventTypes.includes(context.eventType)));
@@ -308,7 +314,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
               Can we support this event?
             </h1>
             <p className="mt-3 text-slate-600">
-              Interactive guide to asess specific scenarios on whether support to an Event can be provided.
+              Check whether a company may support an Event under the MedTech Europe Code.
             </p>
           </div>
 

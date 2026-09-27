@@ -285,7 +285,9 @@ function validateCrossReferences({ chapters, transparencyDocuments, trees }, err
   return linked;
 }
 
-const EVENT_SUPPORT_CVS_STATUS_LISTS = ['exempt', 'positive', 'negative', 'notAssessed', 'preCleared', 'pending'];
+const EVENT_SUPPORT_CVS_STATUS_LISTS = ['exempt', 'positive', 'negative', 'notPreCleared', 'notAssessed', 'preCleared', 'pending'];
+// Published guidance the checker may cite: MedTech Europe's, and Mecomed's for its own CVS scope.
+const EVENT_SUPPORT_GUIDANCE_SITES = ['https://www.ethicalmedtech.eu/', 'https://www.mecomed.com/'];
 const EVENT_SUPPORT_ANNEX1_ROWS = [
   'grant-running', 'grant-attendance', 'grant-faculty', 'satellite',
   'company-attendance', 'booth', 'direct-delegate', 'direct-faculty',
@@ -310,8 +312,8 @@ function validateEventSupportRules(rules, chapters, errors, warnings) {
   const sources = rules.sources && typeof rules.sources === 'object' ? rules.sources : {};
   for (const [key, source] of Object.entries(sources)) {
     if (source?.url !== undefined) {
-      if (!isNonEmptyString(source.label) || !String(source.url).startsWith('https://www.ethicalmedtech.eu/')) {
-        errors.push(`${path} sources.${key}: guidance sources need a label and an ethicalmedtech.eu URL.`);
+      if (!isNonEmptyString(source.label) || !EVENT_SUPPORT_GUIDANCE_SITES.some((site) => String(source.url).startsWith(site))) {
+        errors.push(`${path} sources.${key}: guidance sources need a label and an ethicalmedtech.eu or mecomed.com URL.`);
       }
     } else if (!chapters.find((chapter) => chapter?.id === source?.chapter)?.sections?.[source?.section]) {
       errors.push(`${path} sources.${key}: chapter "${source?.chapter}" has no section ${source?.section}.`);
@@ -323,6 +325,12 @@ function validateEventSupportRules(rules, chapters, errors, warnings) {
       if (!sources[key]) errors.push(`${itemPath}: unknown source "${key}".`);
     }
   };
+
+  // Every outcome has a heading and the sentence that opens the answer.
+  const outcomeTexts = rules.outcomeTexts && typeof rules.outcomeTexts === 'object' ? rules.outcomeTexts : {};
+  for (const [id, heading] of Object.entries(rules.outcomes || {})) {
+    if (!isNonEmptyString(heading) || !isNonEmptyString(outcomeTexts[id])) errors.push(`${path} outcomes.${id}: missing heading or outcomeTexts entry.`);
+  }
 
   const questions = rules.questions && typeof rules.questions === 'object' ? rules.questions : {};
   for (const [id, question] of Object.entries(questions)) {
@@ -420,6 +428,7 @@ function validateEventSupportRules(rules, chapters, errors, warnings) {
   });
   const texts = [
     ...Object.entries(rules.messages || {}).map(([id, text]) => [`messages.${id}`, text]),
+    ...Object.entries(outcomeTexts).map(([id, text]) => [`outcomeTexts.${id}`, text]),
     ...Object.entries(questions).flatMap(([id, question]) => [[`questions.${id}.label`, question?.label], [`questions.${id}.help`, question?.help]]),
     ...conditions.map((condition, conditionIndex) => [`conditions[${conditionIndex}].label`, condition?.label]),
   ];

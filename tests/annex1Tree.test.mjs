@@ -64,16 +64,29 @@ test('online Events are outside CVS; direct sponsorship stays not allowed', () =
   });
 });
 
-test('an audience Annex I does not classify, or an unknown answer, gives no CVS position', () => {
-  for (const path of [[WHERE.area, AUDIENCE.mixed], [WHERE.area, AUDIENCE.unknown], [WHERE.outside, AREA_HCPS.unknown], [WHERE.outside, AREA_HCPS.yes, 1, 2]]) {
+test('an unknown answer gives no CVS position', () => {
+  for (const path of [[WHERE.area, AUDIENCE.unknown], [WHERE.outside, AREA_HCPS.unknown], [WHERE.outside, AREA_HCPS.yes, 1, 2]]) {
     assert.equal(follow(...path).outcome, 'more-info', JSON.stringify(path));
   }
+});
+
+test('local HCPs plus HCPs from outside the Area: formally national, with a suggestion to check with CVS', () => {
+  ROWS.forEach((row, index) => {
+    const national = follow(WHERE.area, AUDIENCE.national, index);
+    const mixed = follow(WHERE.area, AUDIENCE.mixed, index);
+    if (national.id === 'res_national') {
+      assert.equal(mixed.id, 'res_national_mixed', row);
+      assert.match(mixed.text, /^Formally a national Event/, row);
+    } else {
+      assert.equal(mixed.id, national.id, row);
+    }
+  });
 });
 
 test('the CVS check appears exactly where the answer depends on CVS', () => {
   for (const result of tree.nodes.filter((item) => item.type === 'result')) {
     if (result.text.startsWith('Subject to CVS decision')) assert.equal(result.cvsCheck, 'required', result.id);
-    else if (result.id === 'res_national') assert.equal(result.cvsCheck, 'national');
+    else if (result.id === 'res_national' || result.id === 'res_national_mixed') assert.equal(result.cvsCheck, 'national', result.id);
     else assert.equal(result.cvsCheck, undefined, result.id);
   }
 });

@@ -46,17 +46,18 @@
         {
           "id": "q_tpi_check",
           "type": "question",
-          "text": "Is the Third Party Intermediary acting on behalf of the Member Company in connection with the sale, promotion, or other activity involving the Member Company products?",
+          "text": "Does your company have a contractual relationship with the Third Party Intermediary (for example a distribution, agency or service agreement)?",
           "options": [
             {
-              "label": "Yes, they are acting on our behalf (direct or implicit oversight)",
+              "label": "Yes, we have a contract with them",
               "next": "q_hcp_region"
             },
             {
-              "label": "No, they are acting entirely independently for their own business",
+              "label": "No, they are a true reseller: they buy and resell our products with no contract with us",
               "next": "res_tpi_independent"
             }
-          ]
+          ],
+          "helpText": "Chapter 10 covers any entity or person that markets, sells, promotes or otherwise brings the company’s products to end-users. Where the company has a contract with them, it must impose obligations to comply with the Code."
         },
         {
           "id": "q_hcp_region",
@@ -65,7 +66,7 @@
           "helpText": "Coverage is determined by the location of the HCP/HCO, regardless of where the actual activity takes place.",
           "options": [
             {
-              "label": "In a MedTech Europe Country (EEA, UK, Switzerland, Turkey, Israel, associated states)",
+              "label": "In a MedTech Europe Country (the EEA and the other countries in Annex III, e.g. the UK, Switzerland, Turkey, Israel)",
               "next": "res_in_scope_hcp"
             },
             {
@@ -77,15 +78,11 @@
               "next": "res_in_scope_hcp"
             },
             {
-              "label": "In South Africa",
+              "label": "Rest of the World (e.g. North/South America, Asia Pacific, South Africa)",
               "next": "q_activity_region"
             },
             {
-              "label": "Rest of the World (e.g., North/South America, Asia Pacific)",
-              "next": "q_activity_region"
-            },
-            {
-              "label": "No specific HCP/HCO involved (e.g., organizing a general event locally)",
+              "label": "No specific HCP/HCO involved (e.g. organising a general event locally)",
               "next": "q_activity_region"
             }
           ]
@@ -97,19 +94,15 @@
           "helpText": "The actual physical location of the event/interaction determines if the Code applies to the activity itself.",
           "options": [
             {
-              "label": "In a MedTech Europe Country (EEA, UK, Switzerland, Turkey, Israel, etc.)",
+              "label": "In a MedTech Europe Country (the EEA and the other countries in Annex III, e.g. the UK, Switzerland, Turkey, Israel)",
               "next": "res_in_scope_activity"
             },
             {
-              "label": "In a Mecomed Territory (Africa, Middle East, Iran, Pakistan)",
+              "label": "In a Mecomed Territory (Africa excluding South Africa, Middle East, Iran, Pakistan)",
               "next": "res_in_scope_activity"
             },
             {
-              "label": "In South Africa",
-              "next": "res_samed"
-            },
-            {
-              "label": "Rest of the World (e.g., Americas, APAC)",
+              "label": "Rest of the World (e.g. Americas, Asia Pacific, South Africa)",
               "next": "res_out_of_scope"
             }
           ]
@@ -118,43 +111,36 @@
           "id": "res_not_medtech",
           "type": "result",
           "outcome": "out-of-scope",
-          "text": "OUT OF SCOPE. The Code does not apply to interactions linked exclusively to non-Medical Technology products or services.",
+          "text": "OUT OF SCOPE. The Code does not apply to interactions linked exclusively to non-Medical Technology products or services. It does apply as soon as an interaction is linked, even in part, to Medical Technologies, and another business unit or affiliate cannot be used to get around it.",
           "reference": "Scope — Q&A 2"
         },
         {
           "id": "res_tpi_independent",
           "type": "result",
           "outcome": "not-applicable",
-          "text": "NOT APPLICABLE. If the TPI is acting completely independently, the Code does not directly govern the Member Company. However, monitor Chapter 10 liability closely.",
+          "text": "NOT APPLICABLE. A true reseller with no contractual relationship with the company acts for its own business, and the Code does not directly govern its activities. As soon as the company enters into a contract with it, Chapter 10 applies: the contract must impose obligations to comply with the Code, with appropriate oversight.",
           "reference": "Chapter 10"
         },
         {
           "id": "res_in_scope_hcp",
           "type": "result",
           "outcome": "in-scope",
-          "text": "IN SCOPE. Because the HCP/HCO is registered in the MedTech Europe Geographic Area, the Code applies as a minimum standard, regardless of where the activity takes place. Note: Even if a non-European subsidiary initiates this, the activity is deemed attributable to the Member Company.",
+          "text": "IN SCOPE. Because the HCP/HCO is registered in the MedTech Europe Geographic Area, the Code applies as a minimum standard, regardless of where the activity takes place. An activity of an affiliated company located outside the Area is deemed attributable to the Member Company, and an intermediary acting under contract must be bound to comply with the Code (Chapter 10).",
           "reference": "Scope — Section 1"
         },
         {
           "id": "res_in_scope_activity",
           "type": "result",
           "outcome": "in-scope",
-          "text": "IN SCOPE. Even though the HCPs/HCOs are from outside the territory, the Activity takes place within the MedTech Europe Geographic Area. The Code applies to the event arrangements.",
+          "text": "IN SCOPE. Even though the HCPs/HCOs are from outside the Area, the Activity takes place within the MedTech Europe Geographic Area, so the Code applies to it.",
           "reference": "Scope — Section 1"
-        },
-        {
-          "id": "res_samed",
-          "type": "result",
-          "outcome": "not-applicable",
-          "text": "SAMED EXCEPTION. Interactions taking place in South Africa, or with South African HCPs locally, are governed by the South African MedTech industry code (SAMED) and are outside the scope of the MTE Code.",
-          "reference": "Annex III"
         },
         {
           "id": "res_out_of_scope",
           "type": "result",
           "outcome": "out-of-scope",
-          "text": "OUT OF SCOPE. Both the HCP/HCO and the intended Activity are located entirely outside of the MedTech Europe Geographic Area. The MedTech Europe Code does not apply.",
-          "reference": "Scope — Q&A 1"
+          "text": "OUT OF SCOPE. Both the HCP/HCO and the intended Activity are located entirely outside of the MedTech Europe Geographic Area. The MedTech Europe Code does not apply, but local laws, regulations and codes (in South Africa, for example, the SAMED code) and your company’s own policies still do.",
+          "reference": "Scope — Section 1"
         }
       ]
     },
@@ -169,24 +155,44 @@
         {
           "id": "start",
           "type": "question",
-          "text": "Is the event taking place in a country where MedTech Europe's Code of Ethical Business Practice applies?",
-          "helpText": "The Code applies to interactions (by Member Companies of MedTech Europe) with Healthcare Professionals (HCPs) in Europe. See Scope chapter.",
+          "text": "Does the Code apply to this Event?",
+          "helpText": "The Code applies to interactions with HCPs and HCOs registered and practising in the MedTech Europe Geographic Area wherever the Event takes place, and to Events held in the Area wherever the HCPs come from.",
           "options": [
             {
-              "label": "Yes",
+              "label": "Yes: the Event takes place in the MedTech Europe Geographic Area, or HCPs registered and practising in the Area attend it",
+              "next": "q_format"
+            },
+            {
+              "label": "No: the Event takes place outside the Area and no HCPs from the Area attend it",
+              "next": "result-out-of-scope"
+            },
+            {
+              "label": "I’m not sure",
+              "next": "result-check-scope"
+            }
+          ]
+        },
+        {
+          "id": "q_format",
+          "type": "question",
+          "text": "Will the Event be held in person?",
+          "helpText": "An Event held in person and also broadcast online is not a Virtual Event: it must meet all the requirements for in-person Events.",
+          "options": [
+            {
+              "label": "Yes, in person (including a hybrid Event, broadcast online as well)",
               "next": "q2"
             },
             {
-              "label": "No / Unsure",
-              "next": "result-out-of-scope"
+              "label": "No, online only (a Virtual Event)",
+              "next": "result-virtual"
             }
           ]
         },
         {
           "id": "q2",
           "type": "question",
-          "text": "Is the event venue located in a city or town that is a recognised scientific, educational, or business centre?",
-          "helpText": "Venues should be chosen for their appropriateness to the event, and not for their leisure or entertainment attributes.",
+          "text": "Is the Event location in or near a city or town that is a recognised scientific or business centre, suitable for an Event conducive to the exchange of ideas and the transmission of knowledge?",
+          "helpText": "The location and venue should not become the main attraction of the Event.",
           "options": [
             {
               "label": "Yes",
@@ -201,69 +207,150 @@
         {
           "id": "q3",
           "type": "question",
-          "text": "Does the selected/proposed venue have a reputation primarily as a leisure or entertainment destination (e.g. ski resort, beach resort, theme park)?",
-          "helpText": "Even if located near a scientific centre, the venue itself must not be known primarily for leisure.",
+          "text": "Which of these best describes the venue?",
+          "helpText": "The perceived image of the location and venue must not be luxury, tourist/holiday-oriented or that of an Entertainment venue.",
           "options": [
             {
-              "label": "Yes — it is primarily a leisure venue",
-              "next": "result-fail-leisure"
+              "label": "A cruise ship, or a hotel with an on-site casino",
+              "next": "result-fail-never"
             },
             {
-              "label": "No — it is appropriate for a professional event",
+              "label": "A hotel or resort renowned for its leisure or entertainment facilities, or centred on recreation or sport (e.g. golf, private beach, ski or water sports)",
+              "next": "q_leisure_exception"
+            },
+            {
+              "label": "A luxury venue, or one whose image is tourist/holiday-oriented or that of an Entertainment venue",
+              "next": "result-fail-image"
+            },
+            {
+              "label": "None of these: a venue suited to professional meetings",
               "next": "q4"
+            }
+          ]
+        },
+        {
+          "id": "q_leisure_exception",
+          "type": "question",
+          "text": "Is the venue well adapted to business meetings, and is there a compelling need to use it, for example a lack of alternative venues or genuine safety or security issues?",
+          "helpText": "Q&A 5 allows narrow exceptions to the rule against leisure venues, in an otherwise compliant geographic location.",
+          "options": [
+            {
+              "label": "Yes, and the need is documented",
+              "next": "result-leisure-exception"
+            },
+            {
+              "label": "No",
+              "next": "result-fail-leisure"
             }
           ]
         },
         {
           "id": "q4",
           "type": "question",
-          "text": "Is the event taking place during the peak tourist season for this location?",
-          "helpText": "Events in seasonal vacation destinations during peak season may create the appearance of impropriety, even if the venue is otherwise appropriate. In Europe, the ski season is considered to run from December 20 - March 31 and the summer season from June 15 - September 15. Equivalent, seasonally adjusted dates apply in other regions of the world.",
+          "text": "Is the location renowned as a seasonal vacation or holiday destination (e.g. a ski, island or beach resort), and does the Event fall, even in part, within that season?",
+          "helpText": "The time of year must not be associated with a touristic season for the location. In Europe, the ski season is considered to run from December 20 - March 31 and the summer season from June 15 - September 15. Equivalent, seasonally adjusted dates apply in other regions of the world.",
           "options": [
             {
-              "label": "Yes — during peak season",
+              "label": "Yes, the Event falls within the season, at least in part",
               "next": "result-fail-season"
             },
             {
-              "label": "No — outside peak season",
+              "label": "No",
+              "next": "q_access"
+            }
+          ]
+        },
+        {
+          "id": "q_access",
+          "type": "question",
+          "text": "Is the location central, given where most invited participants live, and easy to reach (close to an airport and/or train station with appropriate international connections and reliable ground transport to the venue)?",
+          "options": [
+            {
+              "label": "Yes",
               "next": "result-pass"
+            },
+            {
+              "label": "No",
+              "next": "result-access"
             }
           ]
         },
         {
           "id": "result-out-of-scope",
           "type": "result",
-          "outcome": "conditional",
-          "text": "The MedTech Europe Code may not directly apply, but local regulations and your company's own code of conduct should still be followed.",
-          "reference": "Scope — Geographic applicability of the Code"
+          "outcome": "out-of-scope",
+          "text": "The MedTech Europe Code does not apply to this Event, but local laws, regulations and codes and your company’s own policies should still be followed.",
+          "reference": "Scope — Section 1"
+        },
+        {
+          "id": "result-check-scope",
+          "type": "result",
+          "outcome": "more-info",
+          "text": "Whether the Code applies depends on where the Event takes place and where the attending HCPs are registered and practising. Use the “Is this interaction in scope of the Code?” tree first, then come back.",
+          "reference": "Scope — Section 1"
+        },
+        {
+          "id": "result-virtual",
+          "type": "result",
+          "outcome": "not-applicable",
+          "text": "The location and venue criteria concern in-person Events. A Virtual Event must still comply with any part of the Code that by its nature applies to it, for example the programme requirements and Chapters 2, 3 and 4.",
+          "reference": "Chapter 1, Section 7"
         },
         {
           "id": "result-fail-location",
           "type": "result",
+          "outcome": "conditional",
+          "text": "STRONGLY RECOMMENDED. The Event location and venue should be in or near a city or town which is a recognised scientific or business centre, suitable for an Event conducive to the exchange of ideas and the transmission of knowledge. Choose such a location, or document why this one is justified.",
+          "reference": "Chapter 1, Section 2"
+        },
+        {
+          "id": "result-fail-never",
+          "type": "result",
           "outcome": "non-compliant",
-          "text": "The venue location does not meet Code requirements. Events must be held in recognised scientific, educational, or business centres.",
-          "reference": "Chapter 1, Section 2 — Event Location and Venue"
+          "text": "NOT ALLOWED. For reasons of perception, cruise ships and hotels with on-site casinos are under no circumstances compliant with the Code, either as an Event venue or for HCPs’ accommodation.",
+          "reference": "Chapter 1 — Q&A 5"
+        },
+        {
+          "id": "result-fail-image",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED. The perceived image of the location and venue must not be luxury, tourist/holiday-oriented or that of an Entertainment venue. Member Companies may not pay for HCPs’ lodging at top category or luxury hotels either.",
+          "reference": "Chapter 1, Section 2"
         },
         {
           "id": "result-fail-leisure",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "Venues known primarily for leisure or entertainment are not compliant, regardless of their geographic location.",
-          "reference": "Chapter 1, Section 2 — Appropriateness of Venue"
+          "text": "In principle NOT ALLOWED. It is not appropriate for a Member Company to organise or support Events at hotels or resorts renowned for their entertainment facilities or centred around recreational or sporting activities, unless there is a compelling need to use the venue.",
+          "reference": "Chapter 1 — Q&A 5"
+        },
+        {
+          "id": "result-leisure-exception",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "A NARROW EXCEPTION MAY BE CONSIDERED. The Event’s promotional material must not feature the venue’s leisure aspects; the agenda must leave HCPs no time to use the leisure facilities during any significant part of a normal working day; and the company may not pay for their use. Accommodation separate from the venue may be required. The other location criteria, including the season, still apply.",
+          "reference": "Chapter 1 — Q&A 5"
         },
         {
           "id": "result-fail-season",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "Holding an event during peak tourist season at a vacation-associated location creates an appearance of impropriety.",
-          "reference": "Chapter 1, Q&A 7 — Seasonal considerations"
+          "text": "NOT ALLOWED. Member Companies must not support or organise Events at seasonal vacation destinations during the season in question, even if only in part.",
+          "reference": "Chapter 1 — Q&A 7"
+        },
+        {
+          "id": "result-access",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "STRONGLY RECOMMENDED. The Code requires the company to take into account both a central location for the majority of participants and ease of access. Choose a location that meets them, or document why this one is justified.",
+          "reference": "Chapter 1 — Q&A 6"
         },
         {
           "id": "result-pass",
           "type": "result",
           "outcome": "compliant",
-          "text": "Based on these criteria, the event location appears to meet Code requirements. Ensure all other event criteria (hospitality, faculty, etc.) are also compliant.",
-          "reference": "Chapter 1 — General Criteria for Events"
+          "text": "No issue found on these points: the location and venue appear to meet Chapter 1, Section 2. Also check the rest of Chapter 1 to be sure: the programme, reasonable hospitality (no top category or luxury hotels), travel, no Guests, Employer Notification, and a CVS decision where one is needed.",
+          "reference": "Chapter 1, Section 2"
         }
       ]
     },
@@ -273,17 +360,17 @@
       "relatedChapter": "ch5",
       "relatedSection": null,
       "category": "consulting",
-      "description": "Evaluate whether a proposed consulting arrangement with a Healthcare Professional meets Code requirements.",
+      "description": "Evaluate whether a proposed consulting arrangement with a Healthcare Professional or Healthcare Organisation meets Code requirements.",
       "nodes": [
         {
           "id": "start",
           "type": "question",
-          "text": "Is there a documented, legitimate business need for the consulting services that is identified in advance?",
-          "helpText": "The need for the services must be clearly identified before selecting the consultant.",
+          "text": "Was a Legitimate Business Need for the services identified in advance, before the consultant was selected?",
+          "helpText": "Engaging a specific HCP or HCO for sales reasons is not a Legitimate Business Need.",
           "options": [
             {
               "label": "Yes",
-              "next": "q2"
+              "next": "q_independent"
             },
             {
               "label": "No",
@@ -292,26 +379,56 @@
           ]
         },
         {
-          "id": "q2",
+          "id": "q_independent",
           "type": "question",
-          "text": "Was the Healthcare Professional selected based on their qualifications and expertise relevant to the identified need?",
-          "helpText": "Selection must be based on qualifications, not on past or potential purchasing decisions.",
+          "text": "Was the consultant selected through the company’s independent decision-making/review process, including a documented, prior evaluation of the risks and of the consultant’s background?",
+          "helpText": "If the sales function has to be involved, the independent process must ensure the decision fulfils a Legitimate Business Need.",
           "options": [
             {
-              "label": "Yes — selected on merit",
+              "label": "Yes",
+              "next": "q2"
+            },
+            {
+              "label": "No",
+              "next": "result-fail-process"
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "type": "question",
+          "text": "Was the consultant selected on criteria directly related to the identified need, such as their qualifications, expertise and experience?",
+          "helpText": "The volume or value of business the consultant generates is not a relevant criterion.",
+          "options": [
+            {
+              "label": "Yes, selected on merit",
+              "next": "q_inducement"
+            },
+            {
+              "label": "No, selected for other reasons",
+              "next": "result-fail-selection"
+            }
+          ]
+        },
+        {
+          "id": "q_inducement",
+          "type": "question",
+          "text": "Is the engagement free of any link to the consultant’s past, present or future purchase, recommendation, prescription or use of the company’s products or services?",
+          "options": [
+            {
+              "label": "Yes, there is no such link",
               "next": "q3"
             },
             {
-              "label": "No — selected for other reasons",
-              "next": "result-fail-selection"
+              "label": "No, or it could act as an inducement",
+              "next": "result-fail-inducement"
             }
           ]
         },
         {
           "id": "q3",
           "type": "question",
-          "text": "Is there a written agreement signed by both parties that specifies the nature of the services, the deliverables, and the compensation?",
-          "helpText": "A written contract must be in place before services begin.",
+          "text": "Is there a written agreement, signed by the parties before the services start, that specifies the services, the basis for compensation and the expenses that can be claimed?",
           "options": [
             {
               "label": "Yes",
@@ -326,16 +443,30 @@
         {
           "id": "q4",
           "type": "question",
-          "text": "Is the compensation reasonable and reflective of fair market value for the services provided?",
-          "helpText": "Compensation must not be excessive and should reflect the consultant's actual time and expertise.",
+          "text": "Is the compensation reasonable, within any limits set by local law, and set at Fair Market Value using the company’s documented method for determining it?",
           "options": [
             {
-              "label": "Yes — fair market value",
+              "label": "Yes",
+              "next": "q_transparency"
+            },
+            {
+              "label": "No, or it may be excessive",
+              "next": "result-fail-compensation"
+            }
+          ]
+        },
+        {
+          "id": "q_transparency",
+          "type": "question",
+          "text": "Before the services start, have all required consents and approvals been obtained (for example from the hospital administration or the HCP’s superior), or, where no national rules apply, has Employer Notification been made?",
+          "options": [
+            {
+              "label": "Yes",
               "next": "result-pass"
             },
             {
-              "label": "No — may be excessive",
-              "next": "result-fail-compensation"
+              "label": "No",
+              "next": "result-fail-transparency"
             }
           ]
         },
@@ -343,36 +474,57 @@
           "id": "result-fail-need",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "A consulting arrangement must be based on a documented, legitimate business need identified before the consultant is selected.",
-          "reference": "Chapter 5 — Criteria for Consulting Arrangements"
+          "text": "NOT ALLOWED. Consulting Arrangements must be entered into only where a Legitimate Business Need for the services is identified in advance, before the consultant is selected.",
+          "reference": "Chapter 5, Section 2"
+        },
+        {
+          "id": "result-fail-process",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED. Member Companies shall select consultants through an independent decision-making/review process, with a documented, prior evaluation of the risks and of each prospective consultant’s background.",
+          "reference": "Chapter 5, Section 1"
         },
         {
           "id": "result-fail-selection",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "Consultants must be selected based on their qualifications and expertise, not on volume or value of business they generate.",
-          "reference": "Chapter 5 — Selection of Consultants"
+          "text": "NOT ALLOWED. Consultants must be selected on criteria directly related to the identified need and their qualifications, expertise and experience, not on the volume or value of business they generate.",
+          "reference": "Chapter 5, Section 2"
+        },
+        {
+          "id": "result-fail-inducement",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED. Consulting Arrangements shall not be contingent in any way on the consultant’s purchase, recommendation, prescription or use of the company’s products or services, and must not be an inducement to them.",
+          "reference": "Chapter 5, Section 1"
         },
         {
           "id": "result-fail-contract",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "A written agreement specifying services, deliverables, and compensation must be signed before services begin.",
-          "reference": "Chapter 5 — Written Agreements"
+          "text": "NOT ALLOWED. The arrangement must be documented in a written agreement, signed by the parties before the services start, specifying the services, the basis for compensation and which expenses can be claimed.",
+          "reference": "Chapter 5, Section 2"
         },
         {
           "id": "result-fail-compensation",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "Compensation must reflect fair market value. Excessive payments may be viewed as an inducement.",
-          "reference": "Chapter 5 — Fair Market Value"
+          "text": "NOT ALLOWED. Compensation must be reasonable, comply with local limits and reflect Fair Market Value, determined by a documented internal method. Excessive payments may be viewed as an inducement.",
+          "reference": "Chapter 5, Section 3"
+        },
+        {
+          "id": "result-fail-transparency",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED YET. All required consents and approvals shall be obtained before the services start. Where no national requirements apply, the company shall require Employer Notification disclosing the purpose and scope of the arrangement.",
+          "reference": "Chapter 5, Section 4"
         },
         {
           "id": "result-pass",
           "type": "result",
           "outcome": "compliant",
-          "text": "Based on these criteria, the consulting arrangement appears to meet Code requirements. Ensure proper documentation is maintained throughout the engagement.",
-          "reference": "Chapter 5 — Consulting Arrangements"
+          "text": "No issue found on these points. Also check, to be sure: no more consultants than reasonably needed; potential conflicts of interest considered; records kept of the services and of how the company used them; the venue, hospitality and travel for meetings follow Chapter 1; the consultant must disclose their status as a consultant in related publications and presentations; and the arrangement is permitted under local law. These rules also apply to HCOs, and when a consultant declines a fee.",
+          "reference": "Chapter 5, Section 2"
         }
       ]
     },
@@ -391,7 +543,7 @@
           "id": "start",
           "type": "question",
           "text": "What type of event is the direct support intended for?",
-          "helpText": "Support rules differ significantly depending on the event type.",
+          "helpText": "Support rules differ significantly depending on the event type. Signs of a Third Party Organised Event: it is open beyond the company’s customers, a third party sets the agenda and chooses the attendees (or HCPs self-select), it has CME accreditation or a broad focus. Single-sponsored events are often Company Events.",
           "options": [
             {
               "label": "Third Party Organised Educational Conference (TPOE)",
@@ -399,11 +551,31 @@
             },
             {
               "label": "Third Party Organised Procedure Training meeting",
-              "next": "res_proc_training_allowed"
+              "next": "q_tppt_criteria"
             },
             {
               "label": "Company Event",
               "next": "q_company_event_type"
+            }
+          ]
+        },
+        {
+          "id": "q_tppt_criteria",
+          "type": "question",
+          "text": "Does the training meet the criteria for a Third Party Organised Procedure Training?",
+          "helpText": "Practical sessions must make up more than 50% of the programme and hands-on sessions at least one third, focused on medical procedures rather than products. A training organised in connection with, adjacent to or at the same time as a larger conference does not qualify (Annex VII, Q&A 18).",
+          "options": [
+            {
+              "label": "Yes: it stands alone, is mostly practical and is held mainly in a clinical environment",
+              "next": "res_proc_training_allowed"
+            },
+            {
+              "label": "No, or it is held with, next to or at the same time as a larger conference",
+              "next": "res_tppt_not_qualified"
+            },
+            {
+              "label": "I don’t know",
+              "next": "res_tppt_check"
             }
           ]
         },
@@ -431,7 +603,7 @@
           "id": "q_tpoe_sat_role",
           "type": "question",
           "text": "What is the intended role of the Healthcare Professional at the Satellite Symposium or Booth?",
-          "helpText": "Faculty are those considered speakers or moderators needing preparation. Delegates attend passively.",
+          "helpText": "Faculty are podium speakers, moderators or chairs who present during the Event and prepare in advance. Delegates attend passively; poster and abstract presenters count as Delegates.",
           "options": [
             {
               "label": "Faculty / Speaker",
@@ -479,7 +651,7 @@
           "id": "q_comp_training_role",
           "type": "question",
           "text": "What is the intended role of the Healthcare Professional across the events?",
-          "helpText": "Faculty/Speakers present or moderate. Delegates attend passively.",
+          "helpText": "Faculty are podium speakers, moderators or chairs who present during the Event and prepare in advance. Delegates attend passively; poster and abstract presenters count as Delegates.",
           "options": [
             {
               "label": "Faculty / Speaker",
@@ -511,7 +683,7 @@
           "id": "q_comp_sales_notime_role",
           "type": "question",
           "text": "What is the intended role of the Healthcare Professional?",
-          "helpText": "Faculty/Speakers present or moderate. Delegates attend passively.",
+          "helpText": "Faculty are podium speakers, moderators or chairs who present during the Event and prepare in advance. Delegates attend passively; poster and abstract presenters count as Delegates.",
           "options": [
             {
               "label": "Faculty / Speaker",
@@ -527,7 +699,7 @@
           "id": "q_comp_sales_time_role",
           "type": "question",
           "text": "What is the intended role of the Healthcare Professional across the events?",
-          "helpText": "Faculty/Speakers present or moderate. Delegates attend passively.",
+          "helpText": "Faculty are podium speakers, moderators or chairs who present during the Event and prepare in advance. Delegates attend passively; poster and abstract presenters count as Delegates.",
           "options": [
             {
               "label": "Faculty / Speaker",
@@ -543,15 +715,29 @@
           "id": "res_tpoe_main_fail",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "Direct support for HCP attendance at the Main Event / Independent Scientific Program of a Third Party Organised Educational Conference is strictly prohibited for both Faculty/Speakers and Delegates.",
+          "text": "NOT ALLOWED. Direct support for HCP attendance at the Main Event / Independent Scientific Program of a Third Party Organised Educational Conference is prohibited for both Faculty/Speakers and Delegates. The company can support the Conference through an Educational Grant instead.",
           "reference": "Annex VI — Third Party Organised Educational Conference"
         },
         {
           "id": "res_proc_training_allowed",
           "type": "result",
           "outcome": "compliant",
-          "text": "Direct support for HCP attendance at a Third Party Organised Procedure Training meeting is allowed for both Faculty/Speakers and Delegates.",
-          "reference": "Annex VI — Third Party Organised Procedure Training meeting"
+          "text": "Direct support for HCP attendance at a Third Party Organised Procedure Training meeting is allowed for both Faculty/Speakers and Delegates. The training must still meet Chapter 1 (General Criteria for Events) and, where applicable, have CVS approval. If its hands-on part is cancelled or made virtual, it no longer qualifies, and travel may not be paid.",
+          "reference": "Chapter 2, Section 2"
+        },
+        {
+          "id": "res_tppt_not_qualified",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED. A training that does not meet the criteria is not a Third Party Organised Procedure Training. Treat it as a Third Party Organised Educational Conference: direct support for HCP attendance at its main programme is not allowed, for Faculty or Delegates. Support it through an Educational Grant instead.",
+          "reference": "Annex VII"
+        },
+        {
+          "id": "res_tppt_check",
+          "type": "result",
+          "outcome": "more-info",
+          "text": "Whether direct support is allowed depends on whether the training qualifies as a Procedure Training. Check its agenda with the TPPT Checker, then come back and answer.",
+          "reference": "Annex VII"
         },
         {
           "id": "res_comp_training_notime",
@@ -571,14 +757,14 @@
           "id": "res_allowed_faculty",
           "type": "result",
           "outcome": "compliant",
-          "text": "Direct support for HCP attendance is ALLOWED for Faculty/Speakers.",
+          "text": "Direct support for HCP attendance is ALLOWED for Faculty/Speakers. Engage them under a written consulting agreement that meets Chapter 5 (Consulting Arrangements).",
           "reference": "Annex VI — Direct support for HCP attendance"
         },
         {
           "id": "res_allowed_faculty_agreement",
           "type": "result",
           "outcome": "compliant",
-          "text": "Direct support for HCP attendance is ALLOWED for Faculty/Speakers, provided a consulting agreement is required and in place.",
+          "text": "Direct support for HCP attendance is ALLOWED for Faculty/Speakers. A consulting agreement is required (Chapter 5).",
           "reference": "Annex VI — Direct support for HCP attendance"
         },
         {
@@ -711,7 +897,7 @@
             },
             {
               "label": "No: local HCPs, and HCPs from outside the Area",
-              "next": "res_audience_unclassified"
+              "next": "q_support_mixed"
             },
             {
               "label": "I don’t know",
@@ -722,8 +908,8 @@
         {
           "id": "q_area_hcps",
           "type": "question",
-          "text": "Will HCPs registered and practising in the MedTech Europe Geographic Area attend the Event, as speakers or Delegates?",
-          "helpText": "The Code applies to interactions with HCPs and Healthcare Organisations from the Area wherever the Event takes place.",
+          "text": "Will Member Companies support HCPs registered and practising in the MedTech Europe Geographic Area to attend the Event, for example through a grant that funds their attendance or a consultancy agreement as a speaker?",
+          "helpText": "For an Event held outside the Area, what matters is whether Member Companies support the attendance of HCPs from the Area, not whether such HCPs attend at their own cost (Annex I, footnote 3). The Code applies to interactions with HCPs and Healthcare Organisations from the Area wherever the Event takes place.",
           "options": [
             {
               "label": "Yes",
@@ -808,6 +994,46 @@
             {
               "label": "Booth or advertising",
               "next": "res_subject_to_cvs"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
+              "next": "res_direct_not_allowed"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Faculty (active participation)",
+              "next": "res_direct_not_allowed"
+            }
+          ]
+        },
+        {
+          "id": "q_support_mixed",
+          "type": "question",
+          "text": "What does the company plan to provide?",
+          "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
+          "options": [
+            {
+              "label": "Educational Grant to support the general running of the conference",
+              "next": "res_national_mixed"
+            },
+            {
+              "label": "Educational Grant that includes funds to support HCPs’ attendance",
+              "next": "res_national_mixed"
+            },
+            {
+              "label": "Educational Grant that includes funds to support Faculty",
+              "next": "res_national_mixed"
+            },
+            {
+              "label": "Consultancy agreement with a speaker in the company’s satellite symposium",
+              "next": "res_national_mixed"
+            },
+            {
+              "label": "Attendance of Member Company representatives (company staff)",
+              "next": "res_prior_review"
+            },
+            {
+              "label": "Booth or advertising",
+              "next": "res_national_mixed"
             },
             {
               "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
@@ -968,6 +1194,14 @@
           "cvsCheck": "national"
         },
         {
+          "id": "res_national_mixed",
+          "type": "result",
+          "outcome": "not-required",
+          "text": "Formally a national Event: CVS approval is not required, but the Code and local laws and regulations still apply. Because HCPs from outside the Area also attend, it may be worth checking with CVS whether it considers the Event within its scope before relying on this. The company checks the Event itself against the Code, including Chapter 1 (General Criteria for Events).",
+          "reference": "Annex I — National Events",
+          "cvsCheck": "national"
+        },
+        {
           "id": "res_subject_to_cvs",
           "type": "result",
           "outcome": "conditional",
@@ -1000,14 +1234,14 @@
           "id": "res_na_grant",
           "type": "result",
           "outcome": "not-applicable",
-          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, the Code does not apply to this support, unless the grant goes to a Healthcare Organisation located in the Area. No CVS decision is needed then (Annex I, footnote 5).",
+          "text": "Annex I marks this N/A: when Member Companies support no HCPs from the MedTech Europe Geographic Area to attend an Event held outside the Area, the Code does not apply to this support, unless the grant goes to a Healthcare Organisation located in the Area. No CVS decision is needed then (Annex I, footnote 5).",
           "reference": "Annex I — Footnotes"
         },
         {
           "id": "res_na",
           "type": "result",
           "outcome": "not-applicable",
-          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, as speakers or Delegates, the Code does not apply to this support.",
+          "text": "Annex I marks this N/A: when Member Companies support no HCPs from the MedTech Europe Geographic Area, as speakers or Delegates, to attend an Event held outside the Area, the Code does not apply to this support.",
           "reference": "Annex I"
         },
         {
@@ -1039,13 +1273,6 @@
           "reference": "Chapter 1, Section 7"
         },
         {
-          "id": "res_audience_unclassified",
-          "type": "result",
-          "outcome": "more-info",
-          "text": "Annex I does not classify this audience, which is neither local HCPs only nor Delegates from at least two countries of the MedTech Europe Geographic Area. Ask CVS whether the Event is within its scope before relying on either position.",
-          "reference": "Annex I"
-        },
-        {
           "id": "res_more_info",
           "type": "result",
           "outcome": "more-info",
@@ -1066,7 +1293,7 @@
           "id": "start",
           "type": "question",
           "text": "General Criteria: Who is deciding upon, or approving, the provision of these funds?",
-          "helpText": "Chapter 4 explicitly mandates an independent review process to mitigate corruption risks.",
+          "helpText": "Chapter 4 requires an independent decision-making/review process, with criteria that are not sales or commercially oriented, for example led by the legal, finance or compliance function.",
           "options": [
             {
               "label": "The Sales or Commercial function is making/approving the decision",
@@ -1089,7 +1316,26 @@
             },
             {
               "label": "No, there is no commercial tie",
+              "next": "q_request"
+            }
+          ]
+        },
+        {
+          "id": "q_request",
+          "type": "question",
+          "text": "General Criteria: How did the request for the funds reach the company?",
+          "options": [
+            {
+              "label": "A written request from the organisation, or a documented initiative of the company",
               "next": "q_entity_target"
+            },
+            {
+              "label": "From an HCP who is an employee or officer of the organisation, in writing on its behalf",
+              "next": "q_entity_target"
+            },
+            {
+              "label": "From an HCP, in their own name",
+              "next": "res_no_hcp_request"
             }
           ]
         },
@@ -1103,26 +1349,27 @@
               "next": "res_no_individual"
             },
             {
-              "label": "An HCP designated charity (in lieu of paying the HCP a professional fee)",
+              "label": "A charity chosen or requested by an HCP (for example instead of a professional fee)",
               "next": "res_no_lieu_of_fee"
             },
             {
-              "label": "For-profit organisation (e.g., standalone commercial PCO)",
-              "next": "res_for_profit"
+              "label": "A Professional Conference Organiser or other for-profit company that is not an HCO",
+              "next": "q_pco_purpose"
             },
             {
               "label": "Patient Organisation",
               "next": "res_patient_org"
             },
             {
-              "label": "Non-profit Hospital or Healthcare Organisation (HCO)",
+              "label": "Hospital or other Healthcare Organisation (HCO)",
               "next": "q_hco_purpose"
             },
             {
-              "label": "Charitable or philanthropic organisation",
+              "label": "Charitable or philanthropic organisation that is not an HCO",
               "next": "q_charity_purpose"
             }
-          ]
+          ],
+          "helpText": "A Healthcare Organisation is any healthcare, medical or scientific organisation, whatever its legal form: for example a hospital, clinic, foundation, university or learned society (but not a patient organisation). A charity that meets this definition is an HCO."
         },
         {
           "id": "q_hco_purpose",
@@ -1134,11 +1381,55 @@
               "next": "q_hco_hardship"
             },
             {
-              "label": "Educational Grant (e.g., supporting third-party events, or fellowships)",
+              "label": "Educational Grant (e.g. supporting third-party events, or fellowships)",
               "next": "q_grant_conditions"
             },
             {
-              "label": "To cover the HCO normal overhead or routine operational costs",
+              "label": "Research Grant",
+              "next": "res_research"
+            },
+            {
+              "label": "To cover the HCO’s normal overheads or routine operating costs",
+              "next": "q_overhead_exception"
+            }
+          ]
+        },
+        {
+          "id": "q_pco_purpose",
+          "type": "question",
+          "text": "What will the funds pay for?",
+          "helpText": "A for-profit organiser acting independently of any HCO cannot receive an Educational Grant, but funds earmarked for education are treated like one.",
+          "options": [
+            {
+              "label": "A commercial sponsorship: booth space, advertising or other consideration for the company",
+              "next": "res_pco_commercial"
+            },
+            {
+              "label": "Funds earmarked for education, e.g. HCP Delegate places and expenses",
+              "next": "res_pco_education"
+            }
+          ]
+        },
+        {
+          "id": "q_overhead_exception",
+          "type": "question",
+          "text": "Does one of these exceptions apply (and local law does not prohibit it)?",
+          "helpText": "Routine costs are those that would fall under the HCO’s normal budget. An activity is not necessarily non-routine because it cannot run without funding.",
+          "options": [
+            {
+              "label": "A value-add in a lawful tender, related to that tender’s requirements",
+              "next": "res_overhead_exception"
+            },
+            {
+              "label": "A Scholarship or Fellowship",
+              "next": "res_overhead_exception"
+            },
+            {
+              "label": "A legitimate educational programme that improves patient safety or outcomes beyond normal hospital capacity",
+              "next": "res_overhead_exception"
+            },
+            {
+              "label": "None of these",
               "next": "res_no_overhead"
             }
           ]
@@ -1154,26 +1445,31 @@
             },
             {
               "label": "Educational Grant (for advancement of medical education)",
-              "next": "q_grant_conditions"
+              "next": "res_no_grant_charity"
             },
             {
               "label": "We are participating in their fundraiser (e.g., charity dinner, golf tournament)",
               "next": "q_fundraiser"
             }
-          ]
+          ],
+          "helpText": "Charitable Donations may be made only to charities or non-profit entities whose main purposes are charitable or philanthropic and which are objectively engaged in such activities."
         },
         {
           "id": "q_hco_hardship",
           "type": "question",
-          "text": "Are these Charitable Donations intended to address a demonstrated Financial Hardship of the non-profit hospital/HCO?",
-          "helpText": "Hospitals are not philanthropic entities by nature. Donations to them are strictly limited.",
+          "text": "Is the Charitable Donation to the hospital/HCO permitted in one of these ways?",
+          "helpText": "Financial Hardship means extreme and unavoidable financial distress, outside the HCO’s control, where it cannot operate and patient care is jeopardised. Distress caused by mismanagement does not count. It must be documented and objectively substantiated.",
           "options": [
             {
-              "label": "Yes, there is documented hardship (and it benefits patients or specific needs)",
+              "label": "Demonstrated Financial Hardship, and the donation benefits patients or is limited to specific needs identified in advance",
               "next": "q_donation_conditions"
             },
             {
-              "label": "No, it is a general Charitable Donation to support the hospital",
+              "label": "The donation is explicitly permitted by applicable national law",
+              "next": "q_donation_conditions"
+            },
+            {
+              "label": "Neither: it is a general donation to support the hospital",
               "next": "res_no_general_hco_donation"
             }
           ]
@@ -1223,16 +1519,16 @@
               "next": "res_no_hcp_selection"
             },
             {
-              "label": "We want to direct the educational program content or select the Faculty",
+              "label": "We want to direct the educational programme content or select the Faculty (beyond recommending speakers or commenting when expressly asked)",
               "next": "res_no_program_control"
             },
             {
-              "label": "We will provide parameters/objective criteria (e.g., specialty, country) for the HCO to allocate funds",
+              "label": "We will provide objective criteria (e.g. specialty, country, years of practice) for the HCO to allocate the funds",
               "next": "q_grant_identifiable"
             },
             {
-              "label": "No control requested. We simply require a written agreement and proof of intended use",
-              "next": "res_grant_allowed"
+              "label": "No control: the HCO decides, under a written agreement that specifies the intended purpose and lets us verify its use",
+              "next": "q_grant_event"
             }
           ]
         },
@@ -1248,7 +1544,22 @@
             },
             {
               "label": "No, the ultimate HCP beneficiaries are completely unknown to us",
-              "next": "res_grant_criteria_allowed"
+              "next": "q_grant_event"
+            }
+          ]
+        },
+        {
+          "id": "q_grant_event",
+          "type": "question",
+          "text": "Does the grant support a Third Party Organised Educational Event (its general running, HCPs’ attendance or Faculty)?",
+          "options": [
+            {
+              "label": "Yes",
+              "next": "res_grant_event"
+            },
+            {
+              "label": "No (e.g. a Scholarship, Fellowship or public awareness campaign)",
+              "next": "res_grant_allowed"
             }
           ]
         },
@@ -1257,34 +1568,48 @@
           "type": "result",
           "outcome": "non-compliant",
           "text": "NOT ALLOWED. The Member Company sales and/or commercial function shall not decide upon and/or approve decisions to provide Grants or Charitable Donations. An independent review process is mandatory.",
-          "reference": "Chapter 4 — General Principles (e)"
+          "reference": "Chapter 4, Section 1"
         },
         {
           "id": "res_no_commercial_link",
           "type": "result",
           "outcome": "non-compliant",
           "text": "NOT ALLOWED. Grants and Donations shall NEVER be contingent in any way on past, present or potential future purchase, lease, or recommendation of products.",
-          "reference": "Chapter 4 — General Principles (b)"
+          "reference": "Chapter 4, Section 1"
+        },
+        {
+          "id": "res_no_hcp_request",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED. Grants and Charitable Donations shall not be provided in response to requests made by HCPs, unless the HCP is an employee or officer of the qualifying organisation and submits the request in writing on its behalf.",
+          "reference": "Chapter 4, Section 1"
         },
         {
           "id": "res_no_individual",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "NOT ALLOWED. A Member Company shall not provide Grants or Charitable Donations to individual Healthcare Professionals. Funds must go directly to a qualifying entity.",
-          "reference": "Chapter 4 — General Principles (c)"
+          "text": "NOT ALLOWED. A Member Company shall not provide Grants or Charitable Donations to individual Healthcare Professionals, or in the name of an HCP. Funds must go directly to the qualifying organisation.",
+          "reference": "Chapter 4, Section 1"
         },
         {
           "id": "res_no_lieu_of_fee",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "NOT ALLOWED. It is not appropriate to support the favourite charity of a Healthcare Professional in response to a request by that HCP in lieu of a professional fee.",
+          "text": "NOT ALLOWED. It is not appropriate to support the favourite charity of a Healthcare Professional in response to a request by that HCP, whatever the reason, for example in lieu of a professional fee.",
           "reference": "Chapter 4 — Q&A 28"
         },
         {
-          "id": "res_for_profit",
+          "id": "res_pco_commercial",
           "type": "result",
-          "outcome": "out-of-scope",
-          "text": "OUT OF SCOPE. For-profit organisations (like commercial PCOs) do not fall within the definition of Educational Grants or Donations. Such arrangements are generally commercial agreements.",
+          "outcome": "conditional",
+          "text": "ALLOWED AS A COMMERCIAL SPONSORSHIP, not a Grant. Document it in a written commercial agreement and follow Chapter 2 (Third Party Organised Educational Events), including a CVS decision where Annex I requires one.",
+          "reference": "Chapter 4 — Q&A 35"
+        },
+        {
+          "id": "res_pco_education",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "ALLOWED ONLY UNDER THE EDUCATIONAL GRANT RULES. All the Code provisions governing Educational Grants apply: the organiser alone selects the HCPs, the Event must have CVS approval where applicable, and the company publicly discloses the funding. Funds may not go to a travel agency directly.",
           "reference": "Chapter 4 — Q&A 35"
         },
         {
@@ -1304,16 +1629,37 @@
         {
           "id": "res_no_overhead",
           "type": "result",
-          "outcome": "non-compliant",
-          "text": "NOT ALLOWED. Member Companies must not cover an HCO normal overhead or routine costs of operation.",
+          "outcome": "conditional",
+          "text": "STRONGLY RECOMMENDED AGAINST. As a matter of principle, Member Companies should not cover an HCO’s normal overheads or routine costs of operation, and none of the exceptions in Q&A 36 applies.",
           "reference": "Chapter 4 — Q&A 36"
+        },
+        {
+          "id": "res_overhead_exception",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "A Q&A 36 EXCEPTION MAY APPLY. A tender value-add must relate to that specific tender; Scholarships and Fellowships go only to HCOs where HCPs are in training, with no company involvement in selection; an educational programme must be transparent to the hospital administration, limited in time, above normal capacity, brand-agnostic and must not promote the HCO. The rules for Educational Grants still apply.",
+          "reference": "Chapter 4 — Q&A 36"
+        },
+        {
+          "id": "res_research",
+          "type": "result",
+          "outcome": "not-applicable",
+          "text": "Research Grants are covered by Chapter 6 (Research), not by this tree.",
+          "reference": "Chapter 6"
+        },
+        {
+          "id": "res_no_grant_charity",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED. An Educational Grant can only be provided to a Healthcare Organisation. If the charity also qualifies as an HCO (for example a foundation active in healthcare), go back and choose “Hospital or other Healthcare Organisation”.",
+          "reference": "Glossary"
         },
         {
           "id": "res_no_control",
           "type": "result",
           "outcome": "non-compliant",
           "text": "NOT ALLOWED. Member Companies shall have no control over the specific, final use of funds they provide as Charitable Donations.",
-          "reference": "Chapter 4 — Charitable Donations"
+          "reference": "Chapter 4, Section 2"
         },
         {
           "id": "res_donation_broad",
@@ -1326,57 +1672,57 @@
           "id": "res_donation_allowed",
           "type": "result",
           "outcome": "compliant",
-          "text": "COMPLIANT. Charitable Donations to philanthropic entities (or HCOs under demonstrated hardship) are ALLOWED without specific final controls.",
-          "reference": "Chapter 4"
+          "text": "COMPLIANT on these points. Charitable Donations to charitable or philanthropic organisations (or to hospitals in the permitted cases) are allowed without control over their final use. Also check: a written request with enough information for an objective evaluation, a written agreement signed before the donation, payment made to the organisation in its own name, and the company identified as the donor.",
+          "reference": "Chapter 4, Section 2"
         },
         {
           "id": "res_no_fundraiser_hcps",
           "type": "result",
           "outcome": "non-compliant",
           "text": "NOT ALLOWED. A Member Company shall not invite HCPs to attend a fundraiser at its expense, nor suggest names of HCPs to the sponsoring organisation.",
-          "reference": "Chapter 4 — Fundraisers"
+          "reference": "Chapter 4, Section 2"
         },
         {
           "id": "res_fundraiser_allowed",
           "type": "result",
           "outcome": "compliant",
           "text": "COMPLIANT. Participating in fundraisers is ALLOWED provided tickets are used by employees or returned, and no HCPs are subsidized by the Member Company.",
-          "reference": "Chapter 4 — Fundraisers"
+          "reference": "Chapter 4, Section 2"
         },
         {
           "id": "res_no_hcp_selection",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "NOT ALLOWED. The receiving HCO must be solely responsible for HCP selection. Member Companies must not proactively seek to receive the names of HCP beneficiaries.",
-          "reference": "Chapter 4 — Educational Grants (1)"
+          "text": "NOT ALLOWED. The receiving HCO shall be solely responsible for selecting the HCPs, and the grant agreement must say so. Member Companies should not proactively seek to receive the names of the HCP beneficiaries either (except where required by law, or after the Event for audit purposes).",
+          "reference": "Chapter 4, Section 3"
         },
         {
           "id": "res_no_program_control",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "NOT ALLOWED. Member Companies shall not have any detailed involvement in determining the educational program content or selecting Faculty.",
-          "reference": "Chapter 4 — Educational Grants (2)"
+          "text": "NOT ALLOWED. The recipient HCO is solely responsible for the programme content and the selection of Faculty. Member Companies may recommend speakers or comment on the programme only if expressly asked.",
+          "reference": "Chapter 4, Section 3"
         },
         {
           "id": "res_no_identifiable",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "NOT ALLOWED. Grants are prohibited if the geographical/specialty criteria or chosen hospital department are so narrow that the final beneficiaries are identifiable upfront.",
-          "reference": "Chapter 4 — Q&A 30 & 31"
-        },
-        {
-          "id": "res_grant_criteria_allowed",
-          "type": "result",
-          "outcome": "compliant",
-          "text": "COMPLIANT. Providing objective criteria to assist the HCO is ALLOWED, provided the metrics are relevant to educational needs and do not effectively identify individual HCPs.",
-          "reference": "Chapter 4 — Q&A 33"
+          "text": "NOT ALLOWED. Member Companies should not receive or be able to determine the names of the final HCP beneficiaries. Criteria or a hospital department so narrow that the beneficiaries are identifiable upfront defeat this (Q&As 30 and 31).",
+          "reference": "Chapter 4 — Q&A 31"
         },
         {
           "id": "res_grant_allowed",
           "type": "result",
           "outcome": "compliant",
-          "text": "COMPLIANT. Providing Educational Grants is ALLOWED, provided a written agreement secures your right to verify intended use.",
-          "reference": "Chapter 4 — Educational Grants"
+          "text": "COMPLIANT on these points. The written agreement must specify the intended purpose, let the company verify the grant is used for it, and state that the HCO alone selects the beneficiaries. Also check: the grant is publicly disclosed under the Disclosure Guidelines; Scholarships and Fellowships go only to HCOs where HCPs are in training; public awareness campaigns do not promote the company’s products or specific HCOs; repeated grants to the same recipient are reviewed for perception risk.",
+          "reference": "Chapter 4, Section 3"
+        },
+        {
+          "id": "res_grant_event",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "ALLOWED ON THESE POINTS, SUBJECT TO THE EVENT. The Event must meet Chapter 1 (General Criteria for Events) and, where Annex I requires it, have a positive CVS decision: use the Conference Vetting System check. The written agreement must specify the intended purpose, let the company verify its use, and state that the HCO alone selects participants, programme and Faculty. Also check: public disclosure of the grant, and funds not paid to a travel agency directly.",
+          "reference": "Chapter 4, Section 3"
         }
       ]
     },
@@ -1404,6 +1750,10 @@
             {
               "label": "Educational item, Promotional item, or Event Prize",
               "next": "q_intent_triggers"
+            },
+            {
+              "label": "Another gift (e.g. flowers, wine, a hamper or a personal present)",
+              "next": "res_no_gift"
             }
           ]
         },
@@ -1419,7 +1769,7 @@
             },
             {
               "label": "It is being provided in response to a proactive request made by an HCP",
-              "next": "res_no_improper_intent"
+              "next": "res_request_items"
             },
             {
               "label": "It is an incentive to purchase products, or a gift in lieu of a declined consulting fee",
@@ -1452,7 +1802,7 @@
           "text": "What is the monetary value of the item being provided locally?",
           "options": [
             {
-              "label": "It is of Modest / Inexpensive value (within limits of national laws/codes)",
+              "label": "It is of Modest / Inexpensive value (within the limits of national laws, codes and Member Association guidelines)",
               "next": "q_hcp_item_nature"
             },
             {
@@ -1464,8 +1814,8 @@
         {
           "id": "q_hcp_item_nature",
           "type": "question",
-          "text": "Does the modest-value item relate to the HCP practice, benefit patients, or serve a genuine educational function without being mainly for personal use?",
-          "helpText": "For example, stationary or clinical wipes vs. food, alcohol or home/car items.",
+          "text": "Does the item relate to the HCPs’ practice, benefit patients or serve a genuine educational function, without being intended mainly for personal use?",
+          "helpText": "For example, stationery or clinical wipes, as opposed to food, alcohol or items for the home or car.",
           "options": [
             {
               "label": "Yes, it is relevant to their practice/educational and NOT mainly for personal use",
@@ -1495,14 +1845,14 @@
         {
           "id": "q_hco_greater_value_conditions",
           "type": "question",
-          "text": "Does the higher value item serve a genuine educational function/benefit patients AND directly relate to the therapeutic area of the Member Company?",
+          "text": "Does the higher value item serve a genuine educational function for the HCPs at the HCO, AND benefit patients, AND relate to the therapeutic areas in which the Member Company is interested or involved?",
           "options": [
             {
-              "label": "Yes, it relates to our therapeutic area and serves an educational/patient benefit",
+              "label": "Yes, all three",
               "next": "q_hco_overhead_check"
             },
             {
-              "label": "No, it is unrelated or given to HCPs purely for personal use",
+              "label": "No to at least one of them, or it is for HCPs’ personal use",
               "next": "res_no_hco_unrelated"
             }
           ]
@@ -1530,6 +1880,13 @@
           "reference": "Chapter 8"
         },
         {
+          "id": "res_no_gift",
+          "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED. It is generally prohibited to provide gifts to HCPs and HCOs. Only inexpensive educational or promotional items that meet Chapter 8 may be given.",
+          "reference": "Chapter 8"
+        },
+        {
           "id": "res_out_of_scope_samples",
           "type": "result",
           "outcome": "not-applicable",
@@ -1540,8 +1897,15 @@
           "id": "res_no_improper_intent",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "NOT ALLOWED. Items must not mark life events, be given in response to HCP requests, act as commercial incentives, or replace consulting fees (even if declined).",
+          "text": "NOT ALLOWED. Items must not be given to mark significant life events, must not improperly reward or incentivise the use of the company’s products, and may not replace a declined consulting fee (Q&A 42).",
           "reference": "Chapter 8 / Q&A 42"
+        },
+        {
+          "id": "res_request_items",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "STRONGLY RECOMMENDED AGAINST. No educational or promotional items should be provided in response to requests made by Healthcare Professionals.",
+          "reference": "Chapter 8"
         },
         {
           "id": "res_no_high_value_hcp",
@@ -1561,28 +1925,28 @@
           "id": "res_hcp_allowed",
           "type": "result",
           "outcome": "compliant",
-          "text": "COMPLIANT. Modest-value items related to practice or education are ALLOWED. Prize draws/competitions at events distributing such items are also permissible.",
+          "text": "COMPLIANT on these points. Modest-value items related to practice, patients or education are allowed. A prize in a draw or competition at an Event must meet the same rules and national laws.",
           "reference": "Chapter 8"
         },
         {
           "id": "res_no_hco_unrelated",
           "type": "result",
           "outcome": "non-compliant",
-          "text": "NOT ALLOWED. Educational items of greater value to an HCO must strictly relate to the therapeutic areas the Member Company is involved in.",
-          "reference": "Q&A 43"
+          "text": "NOT ALLOWED. An educational item of greater value may be given to an HCO only if it serves a genuine educational function for its HCPs, benefits patients and relates to the company’s therapeutic areas, and not for HCPs’ personal use.",
+          "reference": "Chapter 8"
         },
         {
           "id": "res_no_overhead_items",
           "type": "result",
-          "outcome": "non-compliant",
-          "text": "NOT ALLOWED. Member Companies cannot provide higher value educational items that simply offset the HCO normal overhead or routine operational costs.",
+          "outcome": "conditional",
+          "text": "STRONGLY RECOMMENDED AGAINST. Higher value educational items should not be part of the HCO’s normal overheads or routine costs of operation.",
           "reference": "Chapter 8"
         },
         {
           "id": "res_hco_greater_value_allowed",
           "type": "result",
           "outcome": "compliant",
-          "text": "COMPLIANT. A Member Company may occasionally provide educational items of greater value to an HCO provided appropriate records are maintained.",
+          "text": "COMPLIANT on these points. A Member Company may occasionally provide an educational item of greater value to an HCO, and must keep appropriate records of it.",
           "reference": "Chapter 8"
         }
       ]
@@ -1599,7 +1963,7 @@
           "id": "start",
           "type": "question",
           "text": "Does the contractual documentation with the Third Party Intermediary (TPI) explicitly impose obligations to comply with the Code and other applicable guidelines?",
-          "helpText": "Local laws permitting, this is a mandatory requirement to limit Member Company liability.",
+          "helpText": "Where local laws and regulations allow it, this is mandatory.",
           "options": [
             {
               "label": "Yes, compliance obligations and appropriate oversight mechanisms are formally contracted",
@@ -1608,6 +1972,10 @@
             {
               "label": "No, the contract does not include specific compliance obligations",
               "next": "res_mandatory_fail"
+            },
+            {
+              "label": "Local laws and regulations do not allow such obligations",
+              "next": "res_local_law"
             }
           ]
         },
@@ -1615,7 +1983,7 @@
           "id": "q_dd_risk",
           "type": "question",
           "text": "Has the Member Company performed a Risk Assessment and robust Due Diligence process on the TPI?",
-          "helpText": "Assessing risk profiles and local market requirements is highly recommended prior to engagement.",
+          "helpText": "The Code recommends assessing the country and the intermediary’s risk profile, and a risk-based due diligence programme before engagement and at renewal.",
           "options": [
             {
               "label": "Yes, we perform rigorous pre-engagement and renewal due diligence",
@@ -1631,7 +1999,7 @@
           "id": "q_training_oversight",
           "type": "question",
           "text": "Does the Member Company maintain an assessment of the TPI training needs, provide necessary training, AND exercise risk-based monitoring?",
-          "helpText": "Member Companies are expected to audit and train intermediaries.",
+          "helpText": "The Code recommends regular training on the rules for the intermediary’s activity, and risk-based routine monitoring or auditing.",
           "options": [
             {
               "label": "Yes, we oversee their training and actively monitor their compliance",
@@ -1651,24 +2019,31 @@
           "reference": "Chapter 10"
         },
         {
+          "id": "res_local_law",
+          "type": "result",
+          "outcome": "consult-legal",
+          "text": "The contractual obligation applies only where local laws and regulations allow it. Take legal advice, and apply the recommended risk assessment, due diligence, training and oversight as far as the law allows.",
+          "reference": "Chapter 10"
+        },
+        {
           "id": "res_dd_fail",
           "type": "result",
           "outcome": "conditional",
-          "text": "HIGH RISK. While the contract may be sound, the Code strongly requires that Member Companies evaluate risk profiles and perform robust due diligence to identify and mitigate risks.",
-          "reference": "Chapter 10 — Risk Assessment & Due diligence"
+          "text": "STRONGLY RECOMMENDED. Member Companies should evaluate the risk profile of the intermediary and perform a robust, risk-based due diligence process before engaging it, at renewal and, where useful, during the engagement.",
+          "reference": "Chapter 10"
         },
         {
           "id": "res_oversight_fail",
           "type": "result",
           "outcome": "conditional",
-          "text": "HIGH RISK. The Code strongly recommends assessing training needs, providing regular training, and performing risk-based routine monitoring of TPIs to prevent liability.",
-          "reference": "Chapter 10 — Training & Oversight"
+          "text": "STRONGLY RECOMMENDED. Member Companies should keep an up-to-date assessment of the intermediary’s training needs, train it regularly, and perform risk-based routine monitoring, auditing or other assessment of its compliance.",
+          "reference": "Chapter 10"
         },
         {
           "id": "res_compliant_tpi",
           "type": "result",
           "outcome": "compliant",
-          "text": "COMPLIANT. The TPI arrangement includes mandatory contractual obligations and strictly follows the recommended due diligence, training, and oversight processes.",
+          "text": "No issue found on these points. Also consider, to be sure: contract terms the Code encourages (compliance with laws, codes and company policies; independent audit rights, with access to books and records; early termination for non-compliance), regular confirmation of compliance from the intermediary, and corrective action if it fails to comply.",
           "reference": "Chapter 10"
         }
       ]

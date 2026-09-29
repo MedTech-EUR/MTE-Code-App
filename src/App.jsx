@@ -30,6 +30,7 @@ import {
   findReferenceTarget,
   getReferenceAnchor,
   getReferenceHref,
+  getReferencePreviewHtml,
   getReferenceTarget,
   referenceKey,
 } from './utils/crossReferences';
@@ -233,7 +234,7 @@ const App = () => {
       const preview = describeReferenceTarget(target);
       setActiveDefinition({
         term: [preview.location, preview.title].filter(Boolean).join(' › '),
-        definition: preview.html,
+        definition: getReferencePreviewHtml(preview),
         action: { href: getReferenceHref(target), label: 'Open in the Code in a new tab' },
       });
     } else navigateToReference(target);

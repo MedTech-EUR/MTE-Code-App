@@ -5,6 +5,7 @@ import { REFERENCE_INDEX } from '../data/referenceIndex';
 import {
   describeReferenceTarget,
   getReferenceHref,
+  getReferencePreviewHtml,
   isPlainLinkClick,
   resolveTreeReference,
 } from '../utils/crossReferences';
@@ -29,9 +30,10 @@ const ResultReference = ({ reference, onOpenReference }) => {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const preview = target ? describeReferenceTarget(target) : null;
+  const previewHtml = getReferencePreviewHtml(preview);
   const previewMarkup = useMemo(
-    () => ({ __html: DOMPurify.sanitize(preview?.html || '') }),
-    [preview?.html],
+    () => ({ __html: DOMPurify.sanitize(previewHtml) }),
+    [previewHtml],
   );
 
   return (

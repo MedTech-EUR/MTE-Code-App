@@ -75,17 +75,6 @@ function addPublication(index, {
 
   units.forEach((unit) => {
     const unitLabel = describeUnit(unit);
-    const unitTarget = {
-      publication,
-      documentId,
-      unitId: unit.id,
-      kind: 'unit',
-      title: unitLabel,
-      ownTitle: unit.title || '',
-      location: documentTitle,
-      summaryHtml: unit.summary || '',
-      firstSectionHtml: unit.sections?.[0]?.legalText || '',
-    };
     const sections = (unit.sections || []).map((section, sectionIndex) => {
       const sectionId = section.computedId || generateSectionId(unit.id, section.title, sectionIndex);
       const sectionTarget = {
@@ -95,8 +84,14 @@ function addPublication(index, {
         sectionId,
         kind: 'section',
         title: section.title || unitLabel,
+        ownTitle: section.title || '',
         location: unitLabel,
         html: section.legalText || '',
+        qas: (section.qas || []).map((qa) => ({
+          label: qa.label || '',
+          questionHtml: qa.q || '',
+          answerHtml: qa.a || '',
+        })),
       };
       (section.qas || []).forEach((qa, qaIndex) => {
         const number = readQaNumber(qa);
@@ -120,6 +115,17 @@ function addPublication(index, {
         target: sectionTarget,
       };
     });
+    const unitTarget = {
+      publication,
+      documentId,
+      unitId: unit.id,
+      kind: 'unit',
+      title: unitLabel,
+      ownTitle: unit.title || '',
+      location: documentTitle,
+      summaryHtml: unit.summary || '',
+      sections: sections.map((section) => section.target),
+    };
     scope.units.set(unit.id, { target: unitTarget, sections });
 
     const chapterNumber = /^\d+$/.test(String(unit.icon ?? ''))
@@ -497,7 +503,11 @@ export function resolveTreeReference(reference, index) {
 }
 
 /**
- * Content for the side panel's preview of a target: { label, title, location, html, actionLabel }.
+ * Content for the side panel's view of a target:
+ * { label, title, location, html, actionLabel, sections?, qas? }.
+ * html is shown straight away: a Q&A, a section's text, or a chapter's summary (empty when the
+ * chapter has none). A section also lists its Q&As, and a chapter each of its sections in full
+ * ({ key, title, html, qas, target, href }), for the panel to expand on request.
  */
 export function describeReferenceTarget(target) {
   if (target.kind === 'qa') {
@@ -515,14 +525,30 @@ export function describeReferenceTarget(target) {
       title: target.title,
       location: target.location,
       html: target.html,
+      qas: target.qas,
       actionLabel: 'Go to this section',
     };
   }
   return {
-    label: target.summaryHtml ? 'Chapter summary' : 'Chapter',
+    label: 'Chapter',
     title: target.title,
     location: target.location,
-    html: target.summaryHtml || target.firstSectionHtml,
+    html: target.summaryHtml,
+    sections: target.sections.map((section) => ({
+      key: referenceKey(section),
+      // A chapter's only section is often untitled: it is the chapter's full text.
+      title: section.ownTitle || (target.sections.length === 1 ? 'Full text' : section.title),
+      html: section.html,
+      qas: section.qas,
+      target: section,
+      href: getReferenceHref(section),
+    })),
     actionLabel: 'Open this chapter',
   };
+}
+
+// Compact references in decision trees and the checker's small-screen dialog keep a chapter's
+// first section visible when it has no summary; the side panel can browse every section.
+export function getReferencePreviewHtml(preview) {
+  return preview?.html || preview?.sections?.[0]?.html || '';
 }

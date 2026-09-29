@@ -106,3 +106,11 @@ See `PROJECT_CHECKS.md` for detailed instructions and troubleshooting.
 - The Conference Vetting System check treats an Event in a Mecomed country like any Event in the Area: a national one gets "CVS approval not required", and a CVS record gets the national-Event warning. Since 2026-09-27 the checker follows Mecomed's own CVS scope, which covers national Events (https://www.mecomed.com/ethical-practices/cvs). Fix: give the tree's first question a Mecomed option, or at least say in its help that national Events in Mecomed countries are vetted too.
 - A CVS search downloads two pages of about 2.3 MB each (most of it the list of every EMT ID in the search form) and takes about 100–170 ms of Worker CPU time in local tests. Searches succeed on the branch preview, so the account's limit allows it, but the Workers Free plan allows 10 ms per request. Reading the first page only as far as its search token (in the first 4 KB) would make each search about 1–1.5 seconds faster and save about a third of the CPU time.
 - Resolved on 2026-09-26: the TPPT calculator accepted negative or blank durations, and the Annex I tree answered direct sponsorship as “CVS decision required”.
+
+## Found While Making References Expandable — 2026-09-26
+
+- References and defined terms in the text shown in the side panel are plain text, so a reader cannot follow a reference from inside an expanded chapter. Linking them needs a way back first: the panel shows one item at a time, and opening another would lose the rows the reader had expanded.
+
+## Found While Combining the Checker and Expandable References — 2026-09-29
+
+- Existing installed-app caches on local preview ports 8787 and 8788 served obsolete app shells referencing removed bundles, leaving the page blank. The server returned the current build, and an unused preview origin loaded it correctly. Include an upgrade check from older installed versions in future PWA work; do not clear readers' stored bookmarks or settings to work around it.

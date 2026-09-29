@@ -40,10 +40,10 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 | File | Role |
 |---|---|
 | `AppIcons.jsx` | Centralized icon registry (uses `lucide-react`) |
-| `ContextPanel.jsx` | Shown in the side panel beside the reader text on wide screens: one definition, or one referenced chapter, section or Q&A in full, at a time |
+| `ContextPanel.jsx` | Shown in the side panel beside the reader text on wide screens, one item at a time: a definition, a Q&A, a section (its text, with its Q&As on request) or a chapter (its summary and each section as an expandable row, with Expand all) |
 | `DecisionTree.jsx` | Interactive step-by-step decision tree; on wide screens the answers are listed beside the question, and a result's cited provision can be previewed in place |
 | `DefinitionPopup.jsx` | Glossary term tooltip popup |
-| `DocumentReader.jsx` | Shared legal-document reader used by the Code and Transparency publications. Centres the text in the reading area and caps its line length (`--reader-measure`); from 1280px the side panel ("On This Page" and `ContextPanel`) is docked to the right edge of the window and can be resized |
+| `DocumentReader.jsx` | Shared legal-document reader used by the Code and Transparency publications. Centres the text in the reading area and caps its line length (`--reader-measure`); from 1280px the side panel ("On This Page" and `ContextPanel`) is docked to the right edge of the window and can be resized. The text and the panel keep the reader's place when a pane is resized (`useKeepReadingPosition.js`) |
 | `FullTextSection.jsx` | Renders a single legal text section with citation/link menu, bookmark, copy-text, and related-tree actions |
 | `Header.jsx` | Top bar with section-aware toolbar (Summary, Full Text, Q&A, Reader, Print) |
 | `Highlight.jsx` | Wraps matched words in highlight marks during search |
@@ -206,8 +206,8 @@ To facilitate heavy professional reference usage, the app includes several quali
 - **Next/Prev Navigation:** Large footer buttons at the bottom of every reader unit allow for linear reading without returning to the sidebar.
 - **Reader Settings:** An `Aa` button in the header opens a panel to customize font size, line spacing, paragraph spacing, line length (Narrow, Standard or Full) and the side panel (On or Off).
 - **Line Length:** The text is centred in the reading area and stops at 40 (Narrow) or 52 (Standard, the default) times the chosen text size, about 80 or 105 characters per line; Full fills the space between the panes.
-- **Resizable Panes:** From 1024px the sidebar is docked to the left edge of the window and, on Code and Transparency pages from 1280px, the side panel to the right edge. Drag a pane's inner edge to widen or narrow it, or focus the edge and use the arrow keys; double-click it to restore the default width. Widths are remembered, and the text always keeps at least 30rem.
-- **Cross-References:** References such as "Chapter 4" or "Section 3 of Chapter 4" become links when the text is displayed. On wide screens they preview in the side panel; elsewhere they open the referenced section. `npm run validate:data` reports any reference that does not resolve.
+- **Resizable Panes:** From 1024px the sidebar is docked to the left edge of the window and, on Code and Transparency pages from 1280px, the side panel to the right edge. Drag a pane's inner edge to widen or narrow it, or focus the edge and use the arrow keys; double-click it to restore the default width. Widths are remembered, the text always keeps at least 30rem, and the text and the side panel keep the reader's place as their lines rewrap.
+- **Cross-References:** References such as "Chapter 4" or "Section 3 of Chapter 4" become links when the text is displayed. On wide screens they open in the side panel: a Q&A in full, a section with its Q&As one click away, and a chapter as its summary and a row for each section, which expands to the section's full text and Q&As (or use Expand all). Elsewhere they open the referenced section. `npm run validate:data` reports any reference that does not resolve.
 
 ### 🖨️ Print & Export Mode
 The app features an optimized Print Mode. By pressing the **Print** icon in the header (or pressing `Ctrl+P`), the `index.css` `@media print` query strips away the Sidebar, Header, and interactive elements. It presents a clean, high-contrast, black-and-white view of the legal text — perfect for generating PDFs. Transparency printing includes every publication Q&A even when Q&As are hidden on screen; the non-normative Annex I CSV preview and interactive source/download controls are omitted.

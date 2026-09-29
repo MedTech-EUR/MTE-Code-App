@@ -8,6 +8,7 @@ import { ContextPanel } from './ContextPanel';
 import { ResizeHandle } from './ResizeHandle';
 import { highlightSearchTerm } from '../utils/textUtils';
 import { calculateScrollProgress } from '../utils/scrollProgressUtils';
+import { useKeepReadingPosition } from '../hooks/useKeepReadingPosition';
 
 export const DocumentReader = ({
   activeId,
@@ -68,6 +69,16 @@ export const DocumentReader = ({
 
   const progressBarRef = React.useRef(null);
   const scrollFrameRef = React.useRef(null);
+  const sidePaneScrollRef = React.useRef(null);
+
+  // Dragging a pane's edge rewraps the text and the side panel; both keep the reader's place.
+  useKeepReadingPosition(scrollRef);
+  useKeepReadingPosition(sidePaneScrollRef, showSidePane);
+
+  // Each item opens at its top, even when the panel was scrolled deep into the one before.
+  React.useLayoutEffect(() => {
+    sidePaneScrollRef.current?.scrollTo({ top: 0 });
+  }, [sidePaneItem?.key]);
 
   const handleScroll = (event) => {
     const scrollContainer = event.currentTarget;
@@ -277,7 +288,7 @@ export const DocumentReader = ({
         <aside
           id="side-pane"
           aria-label="Side panel"
-          className="hidden xl:flex flex-col relative shrink-0 w-[var(--side-pane-size)] h-full border-l border-gray-200 bg-slate-50 no-print"
+          className="@container hidden xl:flex flex-col relative shrink-0 w-[var(--side-pane-size)] h-full border-l border-gray-200 bg-slate-50 no-print"
         >
           <ResizeHandle
             edge="left"
@@ -285,32 +296,38 @@ export const DocumentReader = ({
             controls="side-pane"
             resize={sidePane.resize}
           />
-          <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-6 pt-8 pb-10">
-            {hasContentsList && (
-              <TableOfContents
-                sections={sections}
-                showSummary={showSummary && hasSummary}
-                collapsed={Boolean(sidePaneItem)}
-                onExpand={sidePane.onClose}
-              />
-            )}
-            {sidePaneItem ? (
-              <ContextPanel
-                item={sidePaneItem}
-                onClose={sidePane.onClose}
-                onOpenTarget={sidePane.onOpenTarget}
-              />
-            ) : (
-              <p
-                className={`flex gap-2 text-xs leading-relaxed text-gray-500 ${
-                  hasContentsList ? 'mt-8 pt-6 border-t border-gray-200' : ''
-                }`}
-              >
-                <AppIcon name="BookOpen" size={14} className="shrink-0 mt-0.5 text-gray-400" />
-                Select an underlined term or reference in the text to see its definition or a
-                preview here.
-              </p>
-            )}
+          {/* The padding is on the inner box, so an expanded section's heading can stay at the
+              very top of the panel as its text scrolls; a narrow panel keeps more room for text. */}
+          <div ref={sidePaneScrollRef} className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
+            <div className="px-3 pt-8 pb-10 @sm:px-6">
+              {hasContentsList && (
+                <TableOfContents
+                  sections={sections}
+                  showSummary={showSummary && hasSummary}
+                  collapsed={Boolean(sidePaneItem)}
+                  onExpand={sidePane.onClose}
+                />
+              )}
+              {sidePaneItem ? (
+                <ContextPanel
+                  key={sidePaneItem.key}
+                  item={sidePaneItem}
+                  onClose={sidePane.onClose}
+                  onOpenTarget={sidePane.onOpenTarget}
+                  resourceLinks={resourceLinks}
+                />
+              ) : (
+                <p
+                  className={`flex gap-2 text-xs leading-relaxed text-gray-500 ${
+                    hasContentsList ? 'mt-8 pt-6 border-t border-gray-200' : ''
+                  }`}
+                >
+                  <AppIcon name="BookOpen" size={14} className="shrink-0 mt-0.5 text-gray-400" />
+                  Select an underlined term or reference in the text to see its definition or a
+                  preview here.
+                </p>
+              )}
+            </div>
           </div>
         </aside>
       )}

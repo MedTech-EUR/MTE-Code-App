@@ -7,6 +7,7 @@ import {
   findCrossReferences,
   findReferenceTarget,
   getReferenceHref,
+  getReferencePreviewHtml,
   linkCrossReferences,
   resolveTreeReference,
 } from '../src/utils/crossReferences.js';
@@ -173,7 +174,7 @@ test('finds preview targets for search result anchors and describes them', () =>
   assert.doesNotMatch(describeReferenceTarget(qa).html, /Q&A 2:/);
 
   const chapter = findReferenceTarget(index, { publication: 'code', unitId: 'intro' });
-  assert.equal(describeReferenceTarget(chapter).label, 'Chapter summary');
+  assert.equal(describeReferenceTarget(chapter).label, 'Chapter');
   assert.equal(describeReferenceTarget(chapter).html, '<p>What the rules are for.</p>');
 
   const section = findReferenceTarget(index, {
@@ -183,4 +184,50 @@ test('finds preview targets for search result anchors and describes them', () =>
     anchor: 'g-ch1-2-applicability',
   });
   assert.equal(section.location, 'Chapter 1: Scope');
+});
+
+test('describes a chapter with each of its sections in full, and a section with its Q&As', () => {
+  const chapter = describeReferenceTarget(findReferenceTarget(index, { publication: 'code', unitId: 'ch1' }));
+
+  // No summary: the panel opens the first section instead.
+  assert.equal(chapter.html, '');
+  assert.deepEqual(chapter.sections.map(({ title, html, href }) => [title, html, href]), [
+    ['Introductory Text', '<p>Events.</p>', '/code/ch1#ch1-introductory-text'],
+    ['1. Venues', '<p>Venues.</p>', '/code/ch1#ch1-1-venues'],
+    ['2. Travel', '<p>Travel.</p>', '/code/ch1#ch1-2-travel'],
+  ]);
+  assert.deepEqual(chapter.sections[2].qas, [{ label: '', questionHtml: 'Q&A 2: Which class?', answerHtml: 'Economy.' }]);
+  assert.equal(chapter.sections[2].target.kind, 'section');
+
+  // A chapter's only, untitled section is its full text.
+  const annex = describeReferenceTarget(findReferenceTarget(index, {
+    publication: 'transparency',
+    documentId: 'guidelines',
+    unitId: 'g-annex1',
+  }));
+  assert.deepEqual(annex.sections.map(({ title, href }) => [title, href]), [
+    ['Full text', '/transparency/guidelines/g-annex1#g-annex1-section-0'],
+  ]);
+
+  const section = describeReferenceTarget(findReferenceTarget(index, {
+    publication: 'transparency',
+    documentId: 'guidelines',
+    unitId: 'g-ch1',
+    anchor: 'g-ch1-1-scope',
+  }));
+  assert.equal(section.html, '<p>Scope.</p>');
+  assert.deepEqual(section.qas, [{ label: 'Q&A 3', questionHtml: 'Q: Who?', answerHtml: 'Members.' }]);
+});
+
+test('compact reference previews retain text when a chapter has no summary', () => {
+  const describe = (unitId, anchor) => describeReferenceTarget(findReferenceTarget(index, {
+    publication: 'code', unitId, anchor,
+  }));
+
+  assert.equal(getReferencePreviewHtml(describe('intro')), '<p>What the rules are for.</p>');
+  assert.equal(getReferencePreviewHtml(describe('ch1')), '<p>Events.</p>');
+  assert.equal(getReferencePreviewHtml(describe('ch1', 'ch1-2-travel')), '<p>Travel.</p>');
+  assert.match(getReferencePreviewHtml(describe('ch1', 'ch1-2-travel-qa-1')), /Economy\./);
+  assert.equal(getReferencePreviewHtml(null), '');
+  assert.equal(getReferencePreviewHtml({ html: '', sections: [] }), '');
 });

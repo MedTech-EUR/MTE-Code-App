@@ -7,6 +7,7 @@ import EventSupportAgenda from './EventSupportAgenda';
 import EventSupportResult, { optionLabel } from './EventSupportResult';
 import { useCvsLookup } from '../hooks/useCvsLookup';
 import { useCheckerText } from '../hooks/useCheckerText';
+import { useKeepReadingPosition } from '../hooks/useKeepReadingPosition';
 import EVENT_SUPPORT_DATA from '../data/eventSupportRules.json';
 import { evaluateEventSupport, getConditionQuestions, updateEventAnswer } from '../utils/eventSupportRules';
 import { getContext, getEventQuestions } from '../utils/eventSupportQuestions';
@@ -138,10 +139,18 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
   const [preparing, setPreparing] = useState(false);
   const [identityNotice, setIdentityNotice] = useState(false);
   const headingRef = useRef(null);
+  const sidePaneScrollRef = useRef(null);
   const mounted = useRef(true);
   const eventIdentity = useRef(null);
   const assessmentRequest = useRef(0);
   const lookup = useCvsLookup();
+
+  useKeepReadingPosition(scrollRef);
+  useKeepReadingPosition(sidePaneScrollRef, Boolean(sidePane));
+
+  useEffect(() => {
+    sidePaneScrollRef.current?.scrollTo({ top: 0 });
+  }, [sidePane?.item?.key]);
 
   const result = useMemo(() => evaluateEventSupport(data, answers, lookup.status), [answers, lookup.status]);
   const eventQuestions = useMemo(() => getEventQuestions(data, answers), [answers]);
@@ -494,18 +503,20 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
         <aside
           id="side-pane"
           aria-label="Side panel"
-          className="hidden xl:flex flex-col relative shrink-0 w-[var(--side-pane-size)] h-full border-l border-gray-200 bg-slate-50 no-print"
+          className="@container hidden xl:flex flex-col relative shrink-0 w-[var(--side-pane-size)] h-full border-l border-gray-200 bg-slate-50 no-print"
         >
           <ResizeHandle edge="left" label="Resize the side panel" controls="side-pane" resize={sidePane.resize} />
-          <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-6 pt-8 pb-10">
-            {sidePane.item ? (
-              <ContextPanel item={sidePane.item} onClose={sidePane.onClose} onOpenTarget={sidePane.onOpenTarget} />
-            ) : (
-              <p className="flex gap-2 text-xs leading-relaxed text-gray-500">
-                <AppIcon name="BookOpen" size={14} className="shrink-0 mt-0.5 text-gray-400" />
-                Select an underlined term or a reference to the Code to see its definition or text here.
-              </p>
-            )}
+          <div ref={sidePaneScrollRef} className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
+            <div className="px-3 pt-8 pb-10 @sm:px-6">
+              {sidePane.item ? (
+                <ContextPanel key={sidePane.item.key} item={sidePane.item} onClose={sidePane.onClose} onOpenTarget={sidePane.onOpenTarget} />
+              ) : (
+                <p className="flex gap-2 text-xs leading-relaxed text-gray-500">
+                  <AppIcon name="BookOpen" size={14} className="shrink-0 mt-0.5 text-gray-400" />
+                  Select an underlined term or a reference to the Code to see its definition or text here.
+                </p>
+              )}
+            </div>
           </div>
         </aside>
       )}

@@ -293,7 +293,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
   };
 
   const cvsIntro = CVS_INTROS[result.cvsRequirement]
-    || (answers.audience === 'local' ? CVS_INTRO_NATIONAL : CVS_INTRO_NOT_NEEDED);
+    || (['local', 'other'].includes(answers.audience) ? CVS_INTRO_NATIONAL : CVS_INTRO_NOT_NEEDED);
   const alternatives = data.activities.filter((item) => item.id !== answers.activity
     && item.group === activity?.group
     && (!context.eventType || context.eventType === 'unknown' || !item.eventTypes.length || item.eventTypes.includes(context.eventType)));

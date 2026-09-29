@@ -32,8 +32,8 @@ must not clash with question IDs, and the Annex I and Annex VI tables must be co
 
 For a content review, `docs/event-support-wording-and-logic.docx` holds all the checker’s wording,
 each text labelled with where it lives, and a plain-language account of when each question and
-message appears (rules version 2026-09-27.2, exported on 27 September 2026, after the review of the
-previous copy). Its Part 9 holds the Conference Vetting System check’s wording (`treeData.json`),
+message appears (rules version 2026-09-29.1, updated on 29 September 2026 with the changes made
+after the review of the previous copy). Its Part 9 holds the Conference Vetting System check’s wording (`treeData.json`),
 which shares the checker’s national/international question and CVS search. It is a snapshot: carry
 the reviewers’ approved changes into the JSON, or into the components for the screen texts it
 marks, as with the Code’s Word copy, and regenerate it when the wording changes.
@@ -141,6 +141,13 @@ A national Event with no CVS record gets no warning. The live CVS status list (c
 label is kept as requested. Events in Mecomed countries get no warning, because Mecomed’s CVS
 scope covers national Events.
 
+An audience of local HCPs plus HCPs from outside the Area is formally national: its Delegates from
+the Area are local HCPs only, so Annex I’s national column applies. The answer says so, suggests
+checking with CVS, and a CVS record gets the same warning as for a national Event.
+
+For an Event held outside the Area, the Annex I column depends on whether Member Companies support
+HCPs from the Area (Annex I, footnote 3), not on whether such HCPs attend at their own cost.
+
 ### Mecomed
 
 Events in countries covered by Mecomed are in the MedTech Europe Geographic Area, so the Code
@@ -148,7 +155,15 @@ applies. CVS applies Mecomed’s guidelines to them, and Mecomed’s CVS scope c
 too, so support that CVS vets at an international Event (grants, booths, satellite symposia, In Kind
 support and procedure-training support) needs Mecomed’s vetting whatever the audience. The answer
 asks for internal review until the Event’s CVS record shows a decision: Compliant settles it, and a
-negative decision rules the support out.
+negative decision rules the support out. Mecomed exempts only local in-institution activities that
+meet all its conditions and public awareness campaigns; the answer lists them. The Conference
+Vetting System check tree follows the same scope, with a question on the two exemptions.
+
+### "Should" in the Code
+
+A requirement the Code words with “should” is treated as not allowed in principle: a condition
+based on it is “Not permitted” when it is not met. Only a requirement the Code itself calls a
+recommendation (such as training Third Party Intermediaries) leads to internal review.
 
 ### Live lookup
 

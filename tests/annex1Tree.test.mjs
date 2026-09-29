@@ -23,7 +23,7 @@ function follow(...choices) {
   return current;
 }
 
-const WHERE = { area: 0, outside: 1, online: 2 };
+const WHERE = { area: 0, mecomed: 1, outside: 2, online: 3 };
 const AUDIENCE = { international: 0, national: 1, mixed: 2, unknown: 3 };
 const AREA_HCPS = { yes: 0, no: 1, unknown: 2 };
 
@@ -52,6 +52,24 @@ test('outside the Area, an attendance grant that funds no HCPs from the Area nee
   assert.equal(result.id, 'res_grant_no_area_beneficiaries');
   assert.equal(result.outcome, 'not-required');
   assert.equal(result.cvsCheck, undefined);
+});
+
+test('in a Mecomed country, support CVS vets needs a CVS decision whatever the audience, unless Mecomed exempts the Event', () => {
+  const MECOMED = { inInstitution: 0, awareness: 1, neither: 2, unknown: 3 };
+  ROWS.forEach((row, index) => {
+    const result = follow(WHERE.mecomed, MECOMED.neither, index);
+    const international = follow(WHERE.area, AUDIENCE.international, index);
+    if (international.id === 'res_subject_to_cvs') {
+      assert.equal(result.id, 'res_mecomed_cvs', row);
+      assert.equal(result.cvsCheck, 'required', row);
+    } else {
+      assert.equal(result.id, international.id, row);
+    }
+  });
+  for (const exemption of [MECOMED.inInstitution, MECOMED.awareness]) {
+    assert.equal(follow(WHERE.mecomed, exemption).id, 'res_mecomed_exempt');
+  }
+  assert.equal(follow(WHERE.mecomed, MECOMED.unknown).outcome, 'more-info');
 });
 
 test('online Events are outside CVS; direct sponsorship stays not allowed', () => {

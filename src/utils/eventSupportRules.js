@@ -42,7 +42,7 @@ const ACTIVITY_ANSWERS = [
   'paymentRoute', 'packageMixed', 'packageEducation', 'expenses', 'accessRequired',
   'grantCoversAttendance', 'incrementalCosts', 'nonPortable', 'inKindType', 'identifiableAttendance',
   'mealGrantHospitality', 'demoKind', 'demoClinicalUse', 'proctorshipSetting', 'donationRecipient',
-  'fundraiserHcps',
+  'donationHcoBasis', 'fundraiserHcps',
 ];
 
 /**
@@ -118,10 +118,11 @@ function createApi(result) {
 }
 
 // Annex I column: 0 national, 1 international in the Area, 2 outside the Area with HCPs from the
-// Area, 3 outside the Area without them. Online Events use columns 2 and 3 for scope only.
+// Area, 3 outside the Area without them. Online Events use columns 2 and 3 for scope only. Local
+// HCPs plus HCPs from outside the Area is formally national: its Delegates from the Area are local.
 function annex1Column(ctx, answers) {
   if (ctx.inArea) {
-    if (answers.audience === 'local') return 0;
+    if (answers.audience === 'local' || answers.audience === 'other') return 0;
     if (answers.audience === 'international') return 1;
     return null;
   }
@@ -178,7 +179,6 @@ function setCvsRequirement(result, api, ctx, answers, cvs, vetted = cvs === 'req
 function setUnclassifiedCvs(result, api, ctx, answers, vetted = false) {
   if (setMecomedCvs(result, api, ctx, answers, vetted)) return;
   result.cvsRequirement = ctx.virtual ? 'none' : 'unknown';
-  if (ctx.inArea && answers.audience === 'other') api.reason('audienceUnclassified', null, ['annex1', 'cvsGuidance']);
 }
 
 function assessExpenses(answers, ctx, api, result, context) {
@@ -401,6 +401,9 @@ function assessThirdPartyEvent(data, answers, ctx, api, result) {
   const id = ctx.activity.id;
   if (answers.format === 'hybrid') api.reason('hybridIsInPerson', null, 'glossary');
   if (ctx.virtual) api.reason('virtualNoCvs', null, ['virtualEvents', 'virtualGuidance']);
+  if (!ctx.virtual && ctx.inArea && answers.audience === 'other' && answers.eventArea !== 'mecomed') {
+    api.reason('audienceFormallyNational', null, ['annex1', 'cvsGuidance']);
+  }
   if (id === 'company-attendance') {
     api.review('companyAttendanceReview', null, 'conferences');
     if (!ctx.virtual) api.reason('annex1AllColumns', { text: data.annex1Text[id][0] }, 'annex1');
@@ -474,7 +477,11 @@ function assessOtherInteraction(answers, ctx, api, result) {
     case 'donation':
       api.reason('donationAllowed', null, 'donations');
       if (answers.donationRecipient === 'hcp-charity') api.prohibit('donationHcpCharity', null, 'donations', 'rule');
-      if (answers.donationRecipient === 'hco') api.review('donationHco', null, 'donations');
+      if (answers.donationRecipient === 'hco') {
+        if (answers.donationHcoBasis === 'neither') api.prohibit('donationHcoNotAllowed', null, 'donations', 'rule');
+        else if (['hardship', 'law'].includes(answers.donationHcoBasis)) api.reason('donationHcoPermitted', null, 'donations');
+        else api.review('donationHco', null, 'donations');
+      }
       if (answers.fundraiserHcps === 'yes') api.prohibit('fundraiserHcps', null, 'donations');
       break;
     default:
@@ -632,11 +639,8 @@ function applyCvsEvidence(data, answers, result, api, evidence) {
     return;
   }
 
-  // A decision settles an audience Annex I does not classify, and Mecomed's vetting: CVS has decided.
-  if (decision && result.cvsRequirement !== 'required') {
-    result.cvsRequirement = 'required';
-    result.reasons = result.reasons.filter((reason) => reason.id !== 'audienceUnclassified');
-  }
+  // A decision settles Mecomed's vetting: CVS has decided.
+  if (decision && result.cvsRequirement !== 'required') result.cvsRequirement = 'required';
   if (state === 'positive') {
     api.reason('cvsPositive', null, 'cvs');
     return;

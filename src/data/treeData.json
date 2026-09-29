@@ -299,8 +299,8 @@
         {
           "id": "result-fail-location",
           "type": "result",
-          "outcome": "conditional",
-          "text": "STRONGLY RECOMMENDED. The Event location and venue should be in or near a city or town which is a recognised scientific or business centre, suitable for an Event conducive to the exchange of ideas and the transmission of knowledge. Choose such a location, or document why this one is justified.",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED. The Event location and venue should be in or near a city or town which is a recognised scientific or business centre, suitable for an Event conducive to the exchange of ideas and the transmission of knowledge.",
           "reference": "Chapter 1, Section 2"
         },
         {
@@ -341,8 +341,8 @@
         {
           "id": "result-access",
           "type": "result",
-          "outcome": "conditional",
-          "text": "STRONGLY RECOMMENDED. The Code requires the company to take into account both a central location for the majority of participants and ease of access. Choose a location that meets them, or document why this one is justified.",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED IN PRINCIPLE. The Code requires the company to take into account that the location should be central for the majority of participants and easy to reach, close to an airport and/or train station with appropriate connections. Only an exceptional, well-documented justification, reviewed internally, could support going ahead.",
           "reference": "Chapter 1 — Q&A 6"
         },
         {
@@ -840,7 +840,7 @@
                 "Not assessed - Out Of Scope"
               ],
               "tone": "caution",
-              "text": "CVS has concluded that the Event is outside its scope, although your answers describe an international Event. Clarify the Event’s audience with the organiser. Being outside CVS scope does not make the support permitted: the Code and local laws and regulations still apply."
+              "text": "CVS has concluded that the Event is outside its scope, although your answers place this support within it. Clarify the Event’s audience with the organiser. Being outside CVS scope does not make the support permitted: the Code and local laws and regulations still apply."
             }
           ],
           "otherStatus": "“{status}” is not a CVS status this tree recognises. Check its meaning in CVS before relying on it.",
@@ -865,11 +865,15 @@
           "id": "start",
           "type": "question",
           "text": "Where will the Event take place?",
-          "helpText": "The MedTech Europe Geographic Area covers the countries of the European Economic Area and the other countries where Member Associations are located (Annex III), including the countries covered by Mecomed. For Events in countries covered by Mecomed, CVS applies Mecomed’s guidelines. A hybrid Event, held in person with sessions also broadcast online, counts as held in person.",
+          "helpText": "The MedTech Europe Geographic Area covers the countries of the European Economic Area and the other countries where Member Associations are located (Annex III), including the countries covered by Mecomed. For Events in countries covered by Mecomed, CVS applies Mecomed’s guidelines, whose scope covers national and regional Events as well as international ones. A hybrid Event, held in person with sessions also broadcast online, counts as held in person.",
           "options": [
             {
-              "label": "In the MedTech Europe Geographic Area",
+              "label": "In the MedTech Europe Geographic Area, outside the countries covered by Mecomed",
               "next": "q_audience"
+            },
+            {
+              "label": "In a country covered by Mecomed (Africa excluding South Africa, the Middle East, Iran, Pakistan)",
+              "next": "q_mecomed_exempt"
             },
             {
               "label": "Outside the MedTech Europe Geographic Area",
@@ -918,6 +922,30 @@
             {
               "label": "No",
               "next": "q_support_outside_no_area_hcps"
+            },
+            {
+              "label": "I don’t know",
+              "next": "res_more_info"
+            }
+          ]
+        },
+        {
+          "id": "q_mecomed_exempt",
+          "type": "question",
+          "text": "Is the Event one of those that Mecomed exempts from CVS?",
+          "helpText": "Mecomed’s CVS covers international, regional and national Third Party Educational Events. A local in-institution activity is exempt only if all its conditions are met.",
+          "options": [
+            {
+              "label": "A local in-institution activity: organised by an HCO on its own premises, with medical education for its own HCPs, no registration fees, no travel or accommodation costs, and any support given to the HCO, not to individual HCPs",
+              "next": "res_mecomed_exempt"
+            },
+            {
+              "label": "A public awareness campaign for patients or the public, with no session addressed to HCPs",
+              "next": "res_mecomed_exempt"
+            },
+            {
+              "label": "No, neither of these",
+              "next": "q_support_mecomed"
             },
             {
               "label": "I don’t know",
@@ -1034,6 +1062,46 @@
             {
               "label": "Booth or advertising",
               "next": "res_national_mixed"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
+              "next": "res_direct_not_allowed"
+            },
+            {
+              "label": "Direct sponsorship of HCPs as Faculty (active participation)",
+              "next": "res_direct_not_allowed"
+            }
+          ]
+        },
+        {
+          "id": "q_support_mecomed",
+          "type": "question",
+          "text": "What does the company plan to provide?",
+          "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
+          "options": [
+            {
+              "label": "Educational Grant to support the general running of the conference",
+              "next": "res_mecomed_cvs"
+            },
+            {
+              "label": "Educational Grant that includes funds to support HCPs’ attendance",
+              "next": "res_mecomed_cvs"
+            },
+            {
+              "label": "Educational Grant that includes funds to support Faculty",
+              "next": "res_mecomed_cvs"
+            },
+            {
+              "label": "Consultancy agreement with a speaker in the company’s satellite symposium",
+              "next": "res_mecomed_cvs"
+            },
+            {
+              "label": "Attendance of Member Company representatives (company staff)",
+              "next": "res_prior_review"
+            },
+            {
+              "label": "Booth or advertising",
+              "next": "res_mecomed_cvs"
             },
             {
               "label": "Direct sponsorship of HCPs as Delegates (passive participation)",
@@ -1208,6 +1276,21 @@
           "text": "Subject to CVS decision. The company may provide this support only once CVS has assessed the Event as Compliant.",
           "reference": "Annex I — International Events",
           "cvsCheck": "required"
+        },
+        {
+          "id": "res_mecomed_cvs",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "Subject to CVS decision under Mecomed’s guidelines, whatever the Event’s audience. The company may provide this support only once CVS has assessed the Event as Compliant.",
+          "reference": "Annex III",
+          "cvsCheck": "required"
+        },
+        {
+          "id": "res_mecomed_exempt",
+          "type": "result",
+          "outcome": "not-required",
+          "text": "No CVS decision is needed: Mecomed exempts this kind of Event from CVS. The Code and local laws and regulations still apply to the support; the ban on direct sponsorship of HCPs and the internal review of company attendance still apply too.",
+          "reference": "Annex III"
         },
         {
           "id": "res_allowed_outside",
@@ -1629,8 +1712,8 @@
         {
           "id": "res_no_overhead",
           "type": "result",
-          "outcome": "conditional",
-          "text": "STRONGLY RECOMMENDED AGAINST. As a matter of principle, Member Companies should not cover an HCO’s normal overheads or routine costs of operation, and none of the exceptions in Q&A 36 applies.",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED IN PRINCIPLE. As a matter of principle, Member Companies should not cover an HCO’s normal overheads or routine costs of operation, and none of the exceptions in Q&A 36 applies.",
           "reference": "Chapter 4 — Q&A 36"
         },
         {
@@ -1938,8 +2021,8 @@
         {
           "id": "res_no_overhead_items",
           "type": "result",
-          "outcome": "conditional",
-          "text": "STRONGLY RECOMMENDED AGAINST. Higher value educational items should not be part of the HCO’s normal overheads or routine costs of operation.",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED IN PRINCIPLE. Higher value educational items should not be part of the HCO’s normal overheads or routine costs of operation. Only an exceptional, well-documented justification, reviewed internally, could support going ahead.",
           "reference": "Chapter 8"
         },
         {
@@ -1987,7 +2070,7 @@
           "options": [
             {
               "label": "Yes, we perform rigorous pre-engagement and renewal due diligence",
-              "next": "q_training_oversight"
+              "next": "q_oversight"
             },
             {
               "label": "No, due diligence or risk assessment has not been thoroughly performed",
@@ -1996,18 +2079,33 @@
           ]
         },
         {
-          "id": "q_training_oversight",
+          "id": "q_oversight",
           "type": "question",
-          "text": "Does the Member Company maintain an assessment of the TPI training needs, provide necessary training, AND exercise risk-based monitoring?",
-          "helpText": "The Code recommends regular training on the rules for the intermediary’s activity, and risk-based routine monitoring or auditing.",
+          "text": "Does the company perform risk-based, routine monitoring, auditing or other assessment of the intermediary’s compliance, and ask it for regular confirmation of compliance?",
+          "helpText": "The Code expects reasonable efforts, where applicable, to oversee intermediaries.",
           "options": [
             {
-              "label": "Yes, we oversee their training and actively monitor their compliance",
+              "label": "Yes",
+              "next": "q_training"
+            },
+            {
+              "label": "No",
+              "next": "res_oversight_fail"
+            }
+          ]
+        },
+        {
+          "id": "q_training",
+          "type": "question",
+          "text": "Does the company keep an up-to-date assessment of the intermediary’s training needs and train it regularly on the rules for its activity?",
+          "options": [
+            {
+              "label": "Yes",
               "next": "res_compliant_tpi"
             },
             {
-              "label": "No, training or active compliance monitoring is generally lacking",
-              "next": "res_oversight_fail"
+              "label": "No",
+              "next": "res_training_fail"
             }
           ]
         },
@@ -2028,15 +2126,22 @@
         {
           "id": "res_dd_fail",
           "type": "result",
-          "outcome": "conditional",
-          "text": "STRONGLY RECOMMENDED. Member Companies should evaluate the risk profile of the intermediary and perform a robust, risk-based due diligence process before engaging it, at renewal and, where useful, during the engagement.",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED IN PRINCIPLE. Member Companies should evaluate the risk profile of the intermediary and perform a robust, risk-based due diligence process before engaging it and at renewal. Only an exceptional, well-documented justification, reviewed internally, could support going ahead.",
           "reference": "Chapter 10"
         },
         {
           "id": "res_oversight_fail",
           "type": "result",
+          "outcome": "non-compliant",
+          "text": "NOT ALLOWED IN PRINCIPLE. Member Companies should, where applicable, exercise reasonable efforts to perform risk-based, routine monitoring, auditing or other assessment of intermediaries, and should request regular confirmation of their compliance. Only an exceptional, well-documented justification, reviewed internally, could support going ahead.",
+          "reference": "Chapter 10"
+        },
+        {
+          "id": "res_training_fail",
+          "type": "result",
           "outcome": "conditional",
-          "text": "STRONGLY RECOMMENDED. Member Companies should keep an up-to-date assessment of the intermediary’s training needs, train it regularly, and perform risk-based routine monitoring, auditing or other assessment of its compliance.",
+          "text": "STRONGLY RECOMMENDED. The Code recommends keeping an up-to-date assessment of the training needs of every intermediary and training them regularly on new rules, requirements and standards, where practical in local languages.",
           "reference": "Chapter 10"
         },
         {

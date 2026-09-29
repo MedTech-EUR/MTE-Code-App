@@ -174,6 +174,10 @@ export function getQuestionIds(data, answers) {
     if (activity.id === 'donation') {
       ids.push('donationRecipient');
       if (answers.donationRecipient === 'hcp-charity') return ids;
+      if (answers.donationRecipient === 'hco') {
+        ids.push('donationHcoBasis');
+        if (answers.donationHcoBasis === 'neither') return ids;
+      }
       ids.push('fundraiserHcps');
     }
     return withIntermediary();

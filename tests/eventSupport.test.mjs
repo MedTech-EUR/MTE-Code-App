@@ -183,16 +183,20 @@ test('paying an HCP from outside the Area for an Event abroad is outside the Cod
   assert.deepEqual(reasonIds(result), ['outsideSupportedHcp']);
 });
 
-test('an audience Annex I does not classify never becomes a national exemption', () => {
+test('local HCPs plus HCPs from outside the Area: formally national, with a suggestion to check with CVS', () => {
   const booth = confirmAll(event({ activity: 'booth', eventType: 'conference', audience: 'other', packageEducation: 'no' }));
-  const unconfirmed = evaluateEventSupport(data, booth, evidence('Under Review'));
-  assert.equal(unconfirmed.cvsRequirement, 'unknown');
-  assert.equal(unconfirmed.outcome, 'review');
-  assert.ok(reasonIds(unconfirmed).includes('audienceUnclassified'));
-  // Once CVS has assessed the Event as Compliant, its decision settles the question.
-  const decided = evaluateEventSupport(data, booth, evidence('Compliant'));
-  assert.equal(decided.outcome, 'permitted-confirmed');
-  assert.equal(reasonIds(decided).includes('audienceUnclassified'), false);
+  const result = evaluateEventSupport(data, booth);
+  assert.equal(result.cvsRequirement, 'none');
+  assert.equal(result.outcome, 'permitted-confirmed');
+  assert.ok(reasonIds(result).includes('audienceFormallyNational'));
+  // As for a national Event, a CVS record prompts a check of the audience.
+  const recorded = evaluateEventSupport(data, booth, evidence('Under Review'));
+  assert.equal(recorded.warnings[0]?.id, 'national-cvs-record');
+  assert.equal(recorded.outcome, 'review');
+});
+
+test('outside the Area, the Annex I column depends on HCPs from the Area supported by Member Companies', () => {
+  assert.match(data.questions.areaAttendance.label, /with the support of a Member Company/);
 });
 
 // ---- Virtual and hybrid Events ---------------------------------------------------------------
@@ -457,10 +461,22 @@ test('meals, items, products, proctorships and donations have their own rules', 
   assert.ok(getApplicableConditions(data, { member: 'yes', activity: 'demos', interactionInArea: 'yes', demoKind: 'sample' }).some((condition) => condition.id === 'sampleLimits'));
   assert.equal(other('proctorship', { proctorshipSetting: 'no' }).outcome, 'review');
   assert.equal(other('donation', { donationRecipient: 'hcp-charity' }).outcome, 'not-permitted');
-  assert.equal(other('donation', { donationRecipient: 'hco', fundraiserHcps: 'no' }).outcome, 'review');
+  assert.equal(other('donation', { donationRecipient: 'hco', fundraiserHcps: 'no' }).outcome, 'more-info');
+  assert.equal(other('donation', { donationRecipient: 'hco', donationHcoBasis: 'unknown', fundraiserHcps: 'no' }).outcome, 'more-info');
+  assert.equal(other('donation', { donationRecipient: 'hco', donationHcoBasis: 'neither' }).outcome, 'not-permitted');
+  assert.equal(other('donation', { donationRecipient: 'hco', donationHcoBasis: 'hardship', fundraiserHcps: 'no' }).outcome, 'permitted');
   assert.equal(other('donation', { donationRecipient: 'charity', fundraiserHcps: 'yes' }).outcome, 'not-permitted-as-proposed');
   assert.equal(other('items', { interactionInArea: 'no' }).outcome, 'outside');
   assert.equal(evaluateEventSupport(data, { activity: 'research' }).outcome, 'handoff');
+});
+
+test('a Third Party Intermediary: the contract and oversight are required, training needs review', () => {
+  const answers = { member: 'yes', activity: 'items', interactionInArea: 'yes', intermediary: 'yes' };
+  const byId = Object.fromEntries(getApplicableConditions(data, answers).map((condition) => [condition.id, condition.failure]));
+  assert.deepEqual(
+    [byId.intermediaryContract, byId.intermediaryOversight, byId.intermediaryTraining],
+    ['prohibited', 'prohibited', 'review'],
+  );
 });
 
 // ---- Conditions and outcomes ---------------------------------------------------------------------

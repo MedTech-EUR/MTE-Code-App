@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-27.2",
+  "version": "2026-09-29.1",
   "codeVersion": "September 2024",
   "sources": {
     "scope": { "chapter": "scope", "section": 0 },
@@ -359,8 +359,8 @@
     },
     "areaAttendance": {
       "type": "choice",
-      "label": "Will any HCPs registered and practising in the MedTech Europe Geographic Area take part, as speakers or Delegates?",
-      "help": "The Code applies to interactions with HCPs from the Area wherever the Event takes place. Annex I treats Events held outside the Area differently depending on whether HCPs from the Area attend.",
+      "label": "Will HCPs registered and practising in the MedTech Europe Geographic Area take part with the support of a Member Company, for example funded by a grant, engaged as speakers or invited by the company?",
+      "help": "For an Event held outside the Area, Annex I asks whether Member Companies support the attendance of HCPs from the Area (Annex I, footnote 3), not whether such HCPs attend at their own cost. The Code applies to interactions with HCPs from the Area wherever the Event takes place.",
       "options": [["yes", "Yes"], ["no", "No"], ["unknown", "I don’t know"]]
     },
     "beneficiariesInArea": {
@@ -557,6 +557,17 @@
         ["unknown", "I don’t know"]
       ]
     },
+    "donationHcoBasis": {
+      "type": "choice",
+      "label": "Is the Charitable Donation to the hospital or Healthcare Organisation permitted in one of these ways?",
+      "help": "Financial Hardship means extreme and unavoidable financial distress, outside the Healthcare Organisation’s control, where it cannot operate and patient care is jeopardised. It must be documented and objectively substantiated (Glossary).",
+      "options": [
+        ["hardship", "Demonstrated Financial Hardship, and the donation benefits patients or is limited to specific needs identified in advance"],
+        ["law", "The donation is explicitly permitted by applicable national law"],
+        ["neither", "Neither: it would support the general running of the hospital"],
+        ["unknown", "I don’t know"]
+      ]
+    },
     "fundraiserHcps": {
       "type": "choice",
       "label": "Would the company invite HCPs to a fundraising event at its expense, or suggest HCPs for the organiser to invite?",
@@ -594,8 +605,8 @@
     },
     {
       "id": "venue",
-      "label": "The location and venue are not the main attraction of the Event: they are not luxury, tourist or Entertainment venues, they are central for most participants and easy to reach, they are in or near a recognised scientific or business centre, and the Event is not held during the tourist season there.",
-      "sources": ["venue"],
+      "label": "The location and venue are not the main attraction of the Event: they are not luxury, tourist or Entertainment venues (a venue with significant leisure facilities only under the narrow exception in Q&A 5, and never a cruise ship or a hotel with an on-site casino), they are central for most participants and easy to reach, they are in or near a recognised scientific or business centre, and the Event is not held during the tourist season there.",
+      "sources": ["venue", "programme"],
       "appliesTo": ["inPersonEvent"],
       "coveredByCvs": true,
       "failure": "prohibited"
@@ -666,7 +677,7 @@
     },
     {
       "id": "grantSelection",
-      "label": "The receiving organisation alone selects the HCPs who benefit, and the agreement says so. The company does not ask for their names before the agreement is signed and the selection is complete, and any criteria it gives do not make individual HCPs identifiable.",
+      "label": "The receiving organisation alone selects the HCPs who benefit, and the agreement says so. The company does not proactively seek the names of the HCPs who benefit (unless the law requires it, or after the Event for audit and monitoring, and never before the agreement is signed and the selection is complete), and any criteria it gives do not make individual HCPs identifiable.",
       "sources": ["educationalGrants"],
       "appliesTo": ["grantAttendance"],
       "failure": "prohibited"
@@ -798,8 +809,22 @@
       "failure": "review"
     },
     {
-      "id": "intermediaryControls",
-      "label": "The Third Party Intermediary has passed risk-based due diligence, is trained, and is bound by a contract that requires it to comply with the Code and allows audits and early termination; the company oversees its activities.",
+      "id": "intermediaryContract",
+      "label": "Where local laws allow it, the contract requires the Third Party Intermediary to comply with the Code and other applicable guidelines, and provides for appropriate oversight, for example audit rights and early termination for non-compliance.",
+      "sources": ["intermediaries"],
+      "appliesTo": ["intermediary"],
+      "failure": "prohibited"
+    },
+    {
+      "id": "intermediaryOversight",
+      "label": "The company has assessed the Third Party Intermediary’s risk profile, carried out risk-based due diligence before engaging it and at renewal, and monitors or audits its compliance on a risk basis.",
+      "sources": ["intermediaries"],
+      "appliesTo": ["intermediary"],
+      "failure": "prohibited"
+    },
+    {
+      "id": "intermediaryTraining",
+      "label": "The company keeps an up-to-date assessment of the Third Party Intermediary’s training needs and trains it regularly on the rules for its activity.",
       "sources": ["intermediaries"],
       "appliesTo": ["intermediary"],
       "failure": "review"
@@ -842,8 +867,8 @@
     "annex1Cell": "For {column}, Annex I says: “{text}”.",
     "annex1AllColumns": "Whatever the Event’s location and audience, Annex I says: “{text}”.",
     "annex6Cell": "For {role} at {setting}, Annex VI says: “{text}”.",
-    "audienceUnclassified": "Annex I does not classify this audience, which is neither local HCPs only nor Delegates from at least two countries of the Area. Ask CVS whether the Event is within its scope before relying on either position.",
-    "mecomedCvs": "The Event takes place in a country covered by Mecomed, which is part of the MedTech Europe Geographic Area, so the Code applies. CVS applies Mecomed’s guidelines to Events in Mecomed countries, and Mecomed’s CVS scope covers national Events as well as regional and international ones (CVS – Mecomed). Find the Event in CVS and check Mecomed’s guidelines before providing this support.",
+    "audienceFormallyNational": "Formally a national Event: its Delegates from the Area are local HCPs only, so Annex I’s national column applies. Because HCPs from outside the Area also attend, it may be worth checking with CVS whether it considers the Event within its scope before relying on this.",
+    "mecomedCvs": "The Event takes place in a country covered by Mecomed, which is part of the MedTech Europe Geographic Area, so the Code applies. CVS applies Mecomed’s guidelines to Events in Mecomed countries, and Mecomed’s CVS scope covers national Events as well as regional and international ones (CVS – Mecomed). Find the Event in CVS and check Mecomed’s guidelines before providing this support. Mecomed exempts only local in-institution activities that meet all its conditions (organised by a Healthcare Organisation on its premises for its own HCPs, with no registration fees, no travel or accommodation costs, and support given to the organisation, not to individual HCPs) and public awareness campaigns with no session addressed to HCPs.",
     "directSponsorshipBan": "The Code does not allow direct sponsorship of HCPs to attend a Third Party Organised Educational Conference, whether as Delegates or as Faculty in its programme (Chapter 2, Annex I and Annex VI). A positive CVS decision does not change this. The company can support the Event through an Educational Grant instead, or engage speakers for its own satellite symposium or booth.",
     "posterIsDelegate": "Poster and abstract presenters are Delegates, not Faculty (Annex VI).",
     "recipientInAreaApplies": "The Code applies because the recipient organisation is located in the MedTech Europe Geographic Area (Annex I, footnote 5).",
@@ -893,6 +918,8 @@
     "proctorshipElsewhere": "Training organised elsewhere, for example as a course for several HCPs, may be a Third Party Organised Procedure Training or a Company Event instead. Check it as that Event.",
     "donationAllowed": "Charitable Donations may be made only to charitable organisations or other non-profit bodies whose main purposes are charitable or philanthropic (Chapter 4, Section 2).",
     "donationHco": "A Charitable Donation may not support the general running of a hospital or other Healthcare Organisation (Q&A 26). A donation to a non-profit hospital is possible only in documented Financial Hardship, for specific needs identified in advance that benefit patients, or where national law explicitly permits it (Chapter 4, Section 2).",
+    "donationHcoPermitted": "A Charitable Donation to a non-profit hospital is possible in documented Financial Hardship, for specific needs identified in advance that benefit patients, or where national law explicitly permits it (Chapter 4, Section 2).",
+    "donationHcoNotAllowed": "A Member Company cannot make a Charitable Donation to support the general running of a hospital or other Healthcare Organisation (Q&A 26).",
     "donationHcpCharity": "The company may not support an HCP’s favourite charity at the HCP’s request, whatever the reason (Q&A 28).",
     "fundraiserHcps": "At a fundraising event, the company may use its tickets for its own employees, but may not invite HCPs at its expense or suggest HCPs for the organiser to invite (Chapter 4, Section 2).",
     "virtualNoCvs": "Virtual Events are not subject to CVS (MedTech Europe Virtual Events Guidance). The rules of Chapters 1, 2, 3 and 4 still apply (Chapter 1, Section 7).",

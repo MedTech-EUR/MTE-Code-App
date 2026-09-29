@@ -27,14 +27,15 @@ export function classifyCvsStatus(data, raw) {
 }
 
 /**
- * When the company says a third-party Event is national (its Delegates are local HCPs only) but
+ * When the company says a third-party Event is national (its Delegates from the Area are local
+ * HCPs only, possibly with HCPs from outside the Area) but
  * the Event has a CVS record, the organiser or another Member Company may expect Delegates from
  * more than one country: warn, whatever the record's status, unless it is one of the two
  * "Not assessed" labels that confirm the Event is outside CVS scope. Events in Mecomed countries
  * are exempt, because Mecomed's CVS scope covers national Events too.
  */
 export function getCvsScopeWarning(data, ctx, answers, evidence) {
-  if (!ctx.thirdParty || ctx.virtual || answers.audience !== 'local' || answers.eventArea === 'mecomed' || !evidence) return null;
+  if (!ctx.thirdParty || ctx.virtual || !['local', 'other'].includes(answers.audience) || answers.eventArea === 'mecomed' || !evidence) return null;
   if (classifyCvsStatus(data, evidence.status?.raw) === 'exempt') return null;
   return {
     id: 'national-cvs-record',

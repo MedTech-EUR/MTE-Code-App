@@ -3,6 +3,65 @@ import { AppIcon } from './AppIcons';
 
 const PAGE_SIZE = 50;
 
+// Receives objections and correction or removal requests about archive records.
+export const ARCHIVE_CONTACT = 'ethics@medtecheurope.org';
+const DATA_PROTECTION_AUTHORITY_URL = 'https://www.dataprotectionauthority.be/citizen';
+
+// An e-mail to ARCHIVE_CONTACT that names the record, so the request can be traced.
+export function getRecordReportHref(declaration) {
+  const subject = `Historical Declarations: record ${declaration.id}`;
+  const body = [
+    `Record: ${declaration.id}`,
+    `Beneficiary: ${declaration.beneficiary_name}`,
+    `Company: ${declaration.company_name}`,
+    `Year: ${declaration.year}`,
+    '',
+    'What is the problem? For example: the record is about me and I object to its publication, or a detail is wrong.',
+    '',
+  ].join('\r\n');
+  return `mailto:${ARCHIVE_CONTACT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// What the archive is, how long it is kept and how to object: the information the GDPR
+// requires for data not collected from the people concerned (art. 14).
+export const ArchiveNotice = ({ oldestYear }) => (
+  <section
+    aria-labelledby="hd-about-title"
+    className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6 text-sm text-slate-600 leading-relaxed space-y-2"
+  >
+    <h2 id="hd-about-title" className="flex items-center gap-2 text-base font-bold text-slate-900">
+      <AppIcon name="Info" size={18} className="text-[#0099A7]" />
+      About this data
+    </h2>
+    <p>
+      These are the Educational Grants that Member Companies declared under the MedTech Europe Disclosure
+      Guidelines. MedTech Europe keeps them public here in its legitimate interest in keeping industry support
+      for medical education transparent. Each company is responsible for the accuracy of its own declarations.
+    </p>
+    <p>
+      Each year stays public until 31 August three years after its publication deadline
+      {oldestYear ? `: ${oldestYear} until 31 August ${oldestYear + 4}` : ''}.
+    </p>
+    <p>
+      Is a record about you, or wrong? To object to its publication or to ask for a correction or removal, use
+      “Report a problem with this record” in the record, or write to{' '}
+      <a href={`mailto:${ARCHIVE_CONTACT}`} className="font-medium text-[#007A86] hover:underline">
+        {ARCHIVE_CONTACT}
+      </a>
+      . You can also complain to the{' '}
+      <a
+        href={DATA_PROTECTION_AUTHORITY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium text-[#007A86] hover:underline"
+      >
+        Belgian Data Protection Authority
+      </a>
+      .
+    </p>
+  </section>
+);
+
 const EMPTY_FILTERS = Object.freeze({
   q: '',
   year: '',
@@ -257,6 +316,8 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
           </p>
         </header>
 
+        <ArchiveNotice oldestYear={metadata?.years?.length ? Math.min(...metadata.years) : null} />
+
         {/* Filters */}
         <section className="no-print bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -467,8 +528,9 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
                     {selectedDeclaration.beneficiary_ui && <p>ID: {selectedDeclaration.beneficiary_ui}</p>}
                     <p>{selectedDeclaration.beneficiary_address}</p>
                     <p>
-                      {selectedDeclaration.beneficiary_city}, {selectedDeclaration.beneficiary_zip}{' '}
-                      {selectedDeclaration.beneficiary_country_code}
+                      {[selectedDeclaration.beneficiary_city, selectedDeclaration.beneficiary_country_code]
+                        .filter(Boolean)
+                        .join(', ')}
                     </p>
                   </div>
                 </div>
@@ -513,6 +575,15 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
                     ) : (
                       <p>No dedicated public company query link is available in the source data.</p>
                     )}
+                    <p className="mt-2">
+                      Is this record about you, or wrong?{' '}
+                      <a
+                        href={getRecordReportHref(selectedDeclaration)}
+                        className="font-medium text-[#007A86] hover:underline"
+                      >
+                        Report a problem with this record
+                      </a>
+                    </p>
                   </div>
                 </div>
               </div>

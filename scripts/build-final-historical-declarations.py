@@ -25,6 +25,8 @@ Include:
 
 Exclude:
   all other year/status combinations
+  every declaration of a beneficiary in the --exclude-beneficiaries list
+  (individual practitioners removed at MedTech Europe's request)
 
 Safety:
 - If an otherwise eligible declaration has archived=true, abort.
@@ -68,9 +70,27 @@ COPY_RE = re.compile(
     r'\((.*?)\)\s+FROM\s+stdin;$'
 )
 
+UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I)
+
 
 class MigrationError(RuntimeError):
     pass
+
+
+def load_excluded_beneficiaries(path: Path) -> set:
+    """Beneficiary IDs to leave out of the archive, such as individual practitioners:
+    one per line, # starts a comment. scripts/archive-removal.mjs writes this file."""
+    if not path.is_file():
+        raise MigrationError(f"Exclusion list not found: {path}")
+    ids = set()
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        value = line.split("#", 1)[0].strip()
+        if not value:
+            continue
+        if not UUID_RE.match(value):
+            raise MigrationError(f"{path.name} line {number} is not a beneficiary ID.")
+        ids.add(value.lower())
+    return ids
 
 
 def sha256_file(path: Path) -> str:
@@ -314,7 +334,18 @@ def main() -> int:
         default=DEFAULT_PG_RESTORE,
         help=f"Path to pg_restore.exe (default: {DEFAULT_PG_RESTORE})",
     )
+    parser.add_argument(
+        "--exclude-beneficiaries",
+        required=True,
+        help="File of beneficiary IDs to leave out, one per line "
+        "(d1/historical-declarations/private/excluded-beneficiaries.txt, written by "
+        "scripts/archive-removal.mjs). Required, so that a rebuild cannot republish "
+        "removed beneficiaries; pass an empty file if there are none.",
+    )
     args = parser.parse_args()
+    excluded_beneficiaries = load_excluded_beneficiaries(
+        Path(args.exclude_beneficiaries).expanduser().resolve()
+    )
 
     dump = Path(args.dump).expanduser().resolve()
     out = Path(args.out).expanduser().resolve()
@@ -356,6 +387,8 @@ def main() -> int:
     source_status_counts = Counter()
     eligible: List[Dict[str, Optional[str]]] = []
     eligible_archived = 0
+    excluded_declarations = 0
+    excluded_found = set()
 
     for d in data["declaration"]:
         year = as_int(d.get("year"), "declaration.year")
@@ -364,6 +397,12 @@ def main() -> int:
 
         target_status = TARGET_RULES.get(year)
         if target_status is None or status != target_status:
+            continue
+
+        beneficiary_id = (d.get("beneficiary_id") or "").lower()
+        if beneficiary_id in excluded_beneficiaries:
+            excluded_declarations += 1
+            excluded_found.add(beneficiary_id)
             continue
 
         if as_bool(d.get("archived"), "declaration.archived"):
@@ -387,6 +426,15 @@ def main() -> int:
         raise MigrationError("No declarations matched the migration rules.")
 
     print(f"\nEligible declarations after rules: {len(eligible):,}")
+    print(
+        f"Left out by the exclusion list: {excluded_declarations:,} declarations "
+        f"of {len(excluded_found):,} beneficiaries"
+    )
+    if len(excluded_found) < len(excluded_beneficiaries):
+        print(
+            f"  WARNING: {len(excluded_beneficiaries) - len(excluded_found):,} listed beneficiaries "
+            "have no eligible declarations in this dump. Check that the list belongs to it."
+        )
 
     referenced_company_ids = set()
     referenced_beneficiary_ids = set()
@@ -610,6 +658,10 @@ def main() -> int:
         f.write("-- Generated locally from a restricted PostgreSQL dump.\n")
         f.write("-- Contains public historical archive data only; no user/auth tables.\n")
         f.write("-- Migration rules: 2023 published; 2024 published; 2025 draft.\n")
+        f.write(
+            f"-- Left out at MedTech Europe's request: {len(excluded_found)} beneficiaries "
+            f"({excluded_declarations} declarations).\n"
+        )
         f.write("-- Do not commit this file to Git.\n\n")
 
         for table, cols, rows in (
@@ -638,6 +690,9 @@ def main() -> int:
             for (year, status), count in sorted(source_status_counts.items())
         },
         "eligible_archived_count": eligible_archived,
+        "excluded_beneficiaries_listed": len(excluded_beneficiaries),
+        "excluded_beneficiaries_found": len(excluded_found),
+        "excluded_declarations": excluded_declarations,
         "output_counts": {
             "countries": len(target_countries),
             "currencies": len(target_currencies),

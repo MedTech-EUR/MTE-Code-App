@@ -8,6 +8,17 @@ const PAGE_SIZE_DEFAULT = 50;
 const PAGE_SIZE_MAX = 100;
 const MAX_ACCESSIBLE_RECORDS = 1000;
 
+/**
+ * The oldest reporting year still public. Companies publish a year's declarations by
+ * 31 August of the following year, and each year stays public for three years after that
+ * deadline (the Disclosure Guidelines' minimum): 2023 until 31 August 2027.
+ */
+export function oldestPublicYear(now = new Date()) {
+  const year = now.getUTCFullYear();
+  const afterAugust = now.getUTCMonth() > 7;
+  return afterAugust ? year - 3 : year - 4;
+}
+
 function jsonResponse(data, { status = 200, cacheSeconds } = {}) {
   const headers = { 'Content-Type': 'application/json' };
   if (cacheSeconds) {
@@ -26,9 +37,9 @@ function parseIntOrNull(value) {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
-async function handleMetadata(env) {
+async function handleMetadata(env, minYear) {
   const [years, countries, currencies, natures] = await Promise.all([
-    env.DB.prepare('SELECT DISTINCT year FROM declarations ORDER BY year DESC').all(),
+    env.DB.prepare('SELECT DISTINCT year FROM declarations WHERE year >= ? ORDER BY year DESC').bind(minYear).all(),
     env.DB.prepare('SELECT DISTINCT name, iso_code FROM countries ORDER BY name ASC').all(),
     env.DB.prepare('SELECT DISTINCT code FROM currencies ORDER BY code ASC').all(),
     env.DB.prepare('SELECT DISTINCT nature, nature_label FROM declarations ORDER BY nature_label ASC').all(),
@@ -42,7 +53,7 @@ async function handleMetadata(env) {
   }, { cacheSeconds: 86400 });
 }
 
-async function handleSearch(url, env) {
+async function handleSearch(url, env, minYear) {
   const q = url.searchParams.get('q')?.trim();
   const year = parseIntOrNull(url.searchParams.get('year'));
   const country = url.searchParams.get('country');
@@ -79,8 +90,8 @@ async function handleSearch(url, env) {
     }, { status: 403 });
   }
 
-  let query = 'SELECT * FROM declarations WHERE 1=1';
-  const params = [];
+  let query = 'SELECT * FROM declarations WHERE year >= ?';
+  const params = [minYear];
 
   if (q) {
     // Match the search text literally. "%" and "_" are LIKE wildcards, so a bare
@@ -130,7 +141,7 @@ async function handleSearch(url, env) {
   }, { cacheSeconds: 3600 });
 }
 
-async function handleDetail(id, env) {
+async function handleDetail(id, env, minYear) {
   const declaration = await env.DB.prepare(`
     SELECT
       d.*,
@@ -144,8 +155,8 @@ async function handleDetail(id, env) {
     FROM declarations d
     JOIN companies c ON c.id = d.company_id
     JOIN beneficiaries b ON b.id = d.beneficiary_id
-    WHERE d.id = ?
-  `).bind(id).first();
+    WHERE d.id = ? AND d.year >= ?
+  `).bind(id, minYear).first();
 
   if (!declaration) {
     return jsonResponse({ error: 'Declaration not found' }, { status: 404 });
@@ -159,19 +170,20 @@ async function handleDetail(id, env) {
  * Must be called before the static-asset SPA fallback in server.js, since
  * that fallback would otherwise serve index.html for any dotless path.
  */
-export async function handleHistoricalDeclarationsRequest(request, env) {
+export async function handleHistoricalDeclarationsRequest(request, env, now = new Date()) {
   if (request.method !== 'GET') {
     return jsonResponse({ error: 'Method not allowed' }, { status: 405 });
   }
 
   const url = new URL(request.url);
   const path = url.pathname.replace(/^\/api\/historical-declarations\/?/, '');
+  const minYear = oldestPublicYear(now);
 
   if (path === 'metadata') {
-    return handleMetadata(env);
+    return handleMetadata(env, minYear);
   }
   if (path === 'search') {
-    return handleSearch(url, env);
+    return handleSearch(url, env, minYear);
   }
   if (path) {
     let id;
@@ -181,7 +193,7 @@ export async function handleHistoricalDeclarationsRequest(request, env) {
       // Malformed percent-encoding cannot name a real declaration.
       return jsonResponse({ error: 'Declaration not found' }, { status: 404 });
     }
-    return handleDetail(id, env);
+    return handleDetail(id, env, minYear);
   }
 
   return jsonResponse({ error: 'Not found' }, { status: 404 });

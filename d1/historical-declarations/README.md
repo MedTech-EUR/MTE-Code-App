@@ -94,3 +94,33 @@ Already done for `historical-declarations-final`
 3. `npx wrangler d1 execute <name> --remote --file=d1/historical-declarations/seed.sql`
 4. Confirm with
    `npx wrangler d1 execute <name> --remote --command "SELECT year, COUNT(*) FROM declarations GROUP BY year ORDER BY year;"`
+
+## What stays public
+
+The Worker shows each reporting year until 31 August three years after its
+publication deadline (`oldestPublicYear()` in
+`historical-declarations-api.js`): 2023 until 31 August 2027, 2024 until
+31 August 2028. Older years drop out of the year filter, the search and the
+record links automatically. Delete them from D1 once a year as well, with
+the beneficiaries left without declarations, so the data is not kept longer
+than it is shown:
+
+`npx wrangler d1 execute historical-declarations-final --remote --command "DELETE FROM declarations WHERE year < <oldest public year>; DELETE FROM beneficiaries WHERE id NOT IN (SELECT beneficiary_id FROM declarations);"`
+
+## Removing beneficiaries
+
+Records of individual practitioners, and of anyone whose objection is
+upheld, are removed from the archive rather than hidden:
+
+1. Review the candidates. Every row marked `yes` in the `Individual?`
+   column is removed; save the sheet as CSV (commas or semicolons both work).
+2. `node scripts/archive-removal.mjs <reviewed.csv>` writes
+   `private/remove-beneficiaries.sql` and `private/excluded-beneficiaries.txt`.
+   A text file with one beneficiary ID per line also works as input.
+3. `npx wrangler d1 execute historical-declarations-final --remote --file=d1/historical-declarations/private/remove-beneficiaries.sql`
+4. Keep `excluded-beneficiaries.txt` with the legacy dump. The build script
+   requires it (`--exclude-beneficiaries`), so a rebuild cannot bring the
+   removed beneficiaries back; add new IDs to it when more are removed.
+
+The `private/` folder is ignored by Git: its files identify people. Never
+commit them.

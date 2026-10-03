@@ -12,7 +12,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 
 ```text
 /
- ├── /public/        # Static assets (icons, manifest, Decap CMS config)
+ ├── /public/        # Static assets (icons, manifest, security headers)
  ├── /src/
  │   ├── /components/ # The building blocks of the UI (Header, Decision Trees, Quiz, etc.)
  │   ├── /config/     # Centralized registries (sections, routes, search indexes)
@@ -25,8 +25,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
  │   ├── App.jsx      # The main "brain" that connects everything together
  │   ├── main.jsx     # React entry point
  │   └── index.css    # Global styles, fonts, and print rules
- ├── server.js       # App/SPA Cloudflare Worker with optional same-origin OAuth endpoints
- ├── oauth-proxy.js  # Standalone OAuth proxy for Decap CMS
+ ├── server.js       # App/SPA Cloudflare Worker with the declarations and CVS APIs
  ├── security-headers.js # Security headers for Worker responses (static files: public/_headers)
  ├── CHANGELOG.md    # Developer technical version changelog
  ├── PROJECT_CHECKS.md # Plain-language validation and testing guide
@@ -213,27 +212,16 @@ To facilitate heavy professional reference usage, the app includes several quali
 ### 🖨️ Print & Export Mode
 The app features an optimized Print Mode. By pressing the **Print** icon in the header (or pressing `Ctrl+P`), the `index.css` `@media print` query strips away the Sidebar, Header, and interactive elements. It presents a clean, high-contrast, black-and-white view of the legal text — perfect for generating PDFs. Transparency printing includes every publication Q&A even when Q&As are hidden on screen; the non-normative Annex I CSV preview and interactive source/download controls are omitted.
 
-### 🛠️ Decap CMS & Cloudflare Worker Integration
-The application uses **Decap CMS** for content management, accessible at `/admin/`.
-- The CMS uses GitHub as its backend.
-- The hosted CMS uses the separately deployed `oauth-proxy.js`, configured by `public/admin/config.yml`, for GitHub OAuth. Changes to that file take effect only when that Worker is redeployed.
-- `server.js` serves the static React application and SPA routes. It also contains optional same-origin OAuth endpoints, but it is not the OAuth service currently named by the hosted CMS configuration.
-- Both sign-in services send the GitHub token only to an allowed CMS origin: by default `https://medtecheurope-code.org` and `https://www.medtecheurope-code.org` for `oauth-proxy.js`, and the Worker's own origin for `server.js`. Set the `ALLOWED_ORIGINS` variable (comma-separated) to change the list; for `oauth-proxy.js` it replaces the defaults, for `server.js` it adds to its own origin. A CMS opened anywhere else cannot sign in.
-- GitHub is asked for the `public_repo` scope, which is enough for this public repository. Set `GITHUB_OAUTH_SCOPE` to `repo` only if the repository becomes private.
-- `public/admin/index.html` loads Decap CMS from unpkg with a Subresource Integrity hash, so the browser refuses a changed file. When upgrading Decap, update the version and the hash together (the command is in a comment beside the script tag).
-- For local, uncommitted content, run `npm run cms` from the app root. This
-  starts both Vite and the local Decap proxy. The hosted CMS continues to read
-  only the GitHub `main` branch.
-- See [`docs/cms-guide.md`](docs/cms-guide.md) for the non-technical editing,
-  validation, troubleshooting, and release workflow.
+### 🛠️ Cloudflare Worker
+`server.js` serves the static React application and its routes, the Historical Declarations API (`historical-declarations-api.js`) and the CVS lookup (`cvs-api.js`). Every response carries the security headers in `security-headers.js`; static files get the same headers from `public/_headers`.
+
+The app has no content management system: the Decap CMS at `/admin/` and its GitHub sign-in were removed in October 2026. Content is edited in the JSON files (see the next section).
 
 ---
 
 ## 📝 2. How to Edit & Add Legal Content (`FULL_CODE_DATA`)
 
-You can edit content directly in the JSON files or via the **Decap CMS** at `/admin/`.
-
-For local CMS editing, use `npm run cms`, not only `npm run dev`. The local proxy is what allows the CMS to read files that have not yet been committed to GitHub.
+Content is edited directly in the JSON files. Without a local setup, open the file on GitHub and use its edit (pencil) button; GitHub saves the change as a commit. Run `npm run validate:data` (or ask a developer to) before the change is published.
 
 The text, annexes, and Q&As are stored as **one canonical JSON file per chapter** in:
 👉 **`src/data/code/`**
@@ -309,7 +297,7 @@ Each chapter file in `src/data/code/` contains a single JSON object structured a
 ---
 
 ### How to Edit Existing Content
-1. **Fixing Typos:** Open the relevant file in `src/data/code/`, use `Ctrl+F` (or `Cmd+F`) to find the text, and change only the intended value. Alternatively, edit via Decap CMS.
+1. **Fixing Typos:** Open the relevant file in `src/data/code/`, use `Ctrl+F` (or `Cmd+F`) to find the text, and change only the intended value.
 2. **Formatting Text:** The `legalText` and `a` (answer) fields support standard HTML:
    - Use `<strong>text</strong>` for bold text.
    - Use `<em>text</em>` for italics.
@@ -484,7 +472,7 @@ Each tree is an object with these fields:
 | `in-scope` | Indigo | 🎯 | Within the Code's scope |
 
 ### How to add a new tree:
-1. Open `treeData.json` (or use Decap CMS).
+1. Open `treeData.json`.
 2. Add a new object to the top-level array.
 3. Give it a unique `id` starting with `dt-`.
 4. Set `relatedChapter` to the Code chapter's `id` (e.g. `"ch3"` for Company Events).
@@ -559,7 +547,7 @@ The app is designed to be scalable. Adding an entirely new top-level section (li
 
 ## 🎨 6. How to Edit Styles and Colors
 
-This app uses **Tailwind CSS** utility classes for most component styling. Cross-cutting behavior—including reader typography, CMS-authored HTML, accessibility helpers, animations, and print rules—also lives in `src/index.css`.
+This app uses **Tailwind CSS** utility classes for most component styling. Cross-cutting behavior—including reader typography, the HTML in the content files, accessibility helpers, animations, and print rules—also lives in `src/index.css`.
 
 ### Where to find styles:
 If you want to change how a specific part of the app looks, you need to find its corresponding component in the `src/components/` folder.
@@ -740,6 +728,6 @@ User opens app
 ## 🔒 12. Security Notes
 
 - All HTML in `legalText` and Q&A answers is sanitized through **DOMPurify** before rendering. This prevents cross-site scripting (XSS) even if someone injects malicious code into the JSON content.
-- The hosted Decap CMS uses the separately deployed `oauth-proxy.js`; `server.js` serves the application and also offers optional same-origin OAuth endpoints. Both OAuth implementations use HMAC-signed state tokens for CSRF protection, and post the GitHub token only to an allowed CMS origin (see "Decap CMS & Cloudflare Worker Integration" above).
-- Every response carries security headers (HSTS, `nosniff`, a referrer policy and a permissions policy); the CMS also refuses to be framed by other sites. Static files get them from `public/_headers`, Worker responses from `security-headers.js`.
-- Public reader interactions and TPPT source documents are processed client-side. Bookmarks, history, and recent searches stay in `localStorage`; the separate `/admin/` CMS communicates with GitHub and its OAuth service when editors sign in or save content. Search runs entirely in the browser, and search events are not sent or stored anywhere.
+- The app has no sign-in and no content management system; content changes go through Git.
+- Every response carries security headers (HSTS, `nosniff`, a referrer policy and a permissions policy). Static files get them from `public/_headers`, Worker responses from `security-headers.js`.
+- Public reader interactions and TPPT source documents are processed client-side. Bookmarks, history, and recent searches stay in `localStorage`. Search runs entirely in the browser, and search events are not sent or stored anywhere.

@@ -1,16 +1,8 @@
 # Security headers for the files Cloudflare serves directly. The Worker adds the same headers
 # to the responses it builds (security-headers.js); tests/securityHeaders.test.mjs keeps the
-# two in step. Only the CMS refuses to be framed by other sites.
+# two in step.
 /*
   Strict-Transport-Security: max-age=31536000
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
-
-/admin
-  X-Frame-Options: SAMEORIGIN
-  Content-Security-Policy: frame-ancestors 'self'
-
-/admin/*
-  X-Frame-Options: SAMEORIGIN
-  Content-Security-Policy: frame-ancestors 'self'

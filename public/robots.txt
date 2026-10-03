@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 
-Disallow: /admin/
 Disallow: /api/
 
 Sitemap: https://medtecheurope-code.org/sitemap.xml

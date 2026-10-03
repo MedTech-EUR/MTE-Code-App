@@ -22,7 +22,7 @@ export default defineConfig(() => {
           'code-assets/annex-iii-map-september-2024.png',
         ],
         workbox: {
-          navigateFallbackDenylist: [/^\/admin/, /^\/api\//],
+          navigateFallbackDenylist: [/^\/api\//],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           // The Latin subset of the bundled Inter font is precached so text keeps its typeface
           // offline; other subsets load on demand and fall back to system fonts offline.
@@ -74,10 +74,6 @@ export default defineConfig(() => {
       proxy: {
         // The local Worker (npm run dev:worker) serves the CVS lookup API.
         '/api/cvs': { target: 'http://127.0.0.1:8787' },
-        '^/admin/?$': {
-          target: 'http://localhost:3000',
-          rewrite: () => '/admin/index.html'
-        }
       }
     },
     build: {

@@ -76,12 +76,9 @@ npm run check
 chapter IDs, generated section IDs, decision-tree links, icons, Q&As, and quiz
 references without requiring content to remain frozen forever.
 
-The CMS opens each chapter as a separate entry. Chapter creation and deletion
-are disabled; chapter metadata is hidden; and Code sections and Q&As cannot be
-added, removed or reordered. HTML fields use an exact-string editor with an
-optional sandboxed preview instead of Markdown conversion. The hosted CMS only
-sees files already committed to its GitHub branch. For uncommitted chapter
-files, use the local workflow in `docs/cms-guide.md`.
+At the time of the migration, a Decap CMS opened each chapter as a separate
+entry, with chapter metadata hidden and sections and Q&As locked. The CMS was
+removed in October 2026; chapters are now edited in the JSON files directly.
 
 ## PDF Audit
 

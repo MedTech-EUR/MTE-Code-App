@@ -90,7 +90,7 @@
   margin-top: 0 !important;
 }
 
-/* Style bare HTML in reader/summary content (for CMS-authored class-free HTML) */
+/* Style bare HTML in reader/summary content (class-free HTML from the content files) */
 .reader-content ul,
 .summary-content ul {
   list-style-type: disc;

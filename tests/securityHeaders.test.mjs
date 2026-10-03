@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import worker from '../server.js';
-import { NO_FRAMING_HEADERS, SECURITY_HEADERS } from '../security-headers.js';
+import { SECURITY_HEADERS } from '../security-headers.js';
 
 // Reads public/_headers into { pattern: { name: value } }.
 function readHeadersFile() {
@@ -21,12 +21,14 @@ function readHeadersFile() {
   return rules;
 }
 
+const APP_SHELL = '<!doctype html><title>The Code App</title>';
+
 function createAssetsBinding() {
   return {
     async fetch(request) {
       const { pathname } = new URL(request.url);
-      if (pathname === '/' || pathname === '/admin/index.html') {
-        return new Response('<!doctype html>', { headers: { 'Content-Type': 'text/html' } });
+      if (pathname === '/') {
+        return new Response(APP_SHELL, { headers: { 'Content-Type': 'text/html' } });
       }
       return new Response('Not found', { status: 404 });
     },
@@ -40,44 +42,33 @@ async function fetchFromWorker(path, init, env = {}) {
   );
 }
 
-function assertHeaders(response, expected, label) {
-  for (const [name, value] of Object.entries(expected)) {
-    assert.equal(response.headers.get(name), value, `${label}: ${name}`);
-  }
-}
-
 test('public/_headers gives static files the same headers as the Worker', () => {
-  assert.deepEqual(readHeadersFile(), {
-    '/*': SECURITY_HEADERS,
-    '/admin': NO_FRAMING_HEADERS,
-    '/admin/*': NO_FRAMING_HEADERS,
-  });
+  assert.deepEqual(readHeadersFile(), { '/*': SECURITY_HEADERS });
 });
 
 test('the Worker adds the security headers to app routes and API responses', async () => {
   const page = await fetchFromWorker('/code/ch7');
   assert.equal(page.status, 200);
-  assertHeaders(page, SECURITY_HEADERS, '/code/ch7');
-  // The public reader may still be embedded elsewhere.
-  assert.equal(page.headers.get('X-Frame-Options'), null);
-  assert.equal(page.headers.get('Content-Security-Policy'), null);
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    assert.equal(page.headers.get(name), value, `/code/ch7: ${name}`);
+  }
 
   const api = await fetchFromWorker('/api/historical-declarations/search', { method: 'POST' });
   assert.equal(api.status, 405);
   assert.equal(api.headers.get('Content-Type'), 'application/json');
-  assertHeaders(api, SECURITY_HEADERS, 'declarations API');
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    assert.equal(api.headers.get(name), value, `declarations API: ${name}`);
+  }
 });
 
-test('the CMS and its sign-in endpoints cannot be framed by other sites', async () => {
-  const admin = await fetchFromWorker('/admin');
-  assertHeaders(admin, { ...SECURITY_HEADERS, ...NO_FRAMING_HEADERS }, '/admin');
-
-  // Redirects keep their status and location when the headers are added.
-  const signIn = await fetchFromWorker('/api/auth', undefined, {
-    GITHUB_CLIENT_ID: 'client-id',
-    GITHUB_CLIENT_SECRET: 'client-secret',
-  });
-  assert.equal(signIn.status, 302);
-  assert.match(signIn.headers.get('Location'), /^https:\/\/github\.com\/login\/oauth\/authorize\?/);
-  assertHeaders(signIn, { ...SECURITY_HEADERS, ...NO_FRAMING_HEADERS }, '/api/auth');
+test('the CMS and its GitHub sign-in are gone', async () => {
+  // Even with the old secrets still set, nothing starts a GitHub sign-in.
+  for (const path of ['/api/auth', '/api/auth/callback?code=x&state=y', '/admin', '/admin/']) {
+    const response = await fetchFromWorker(path, undefined, {
+      GITHUB_CLIENT_ID: 'client-id',
+      GITHUB_CLIENT_SECRET: 'client-secret',
+    });
+    assert.equal(response.status, 200, path);
+    assert.equal(await response.text(), APP_SHELL, `${path} gets the app shell`);
+  }
 });

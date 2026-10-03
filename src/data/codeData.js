@@ -21,6 +21,7 @@ import annex5 from './code/annex5.json';
 import annex6 from './code/annex6.json';
 import annex7 from './code/annex7.json';
 import changelog from './code/changelog.json';
+import legalNotice from './code/legal-notice.json';
 import privacy from './code/privacy.json';
 import { CODE_CHAPTER_IDS } from './codeOrder';
 
@@ -48,6 +49,7 @@ const CHAPTERS_BY_ID = {
   annex6,
   annex7,
   changelog,
+  'legal-notice': legalNotice,
   privacy,
 };
 
@@ -57,7 +59,7 @@ export const FULL_CODE_DATA = CODE_CHAPTER_IDS.map((id) => {
   return chapter;
 });
 
-// Website pages (Version History, Privacy Notice) are stored and routed like Code chapters, but they describe
+// Website pages (Version History, Legal Notice, Privacy Notice) are stored and routed like Code chapters, but they describe
 // the app, not the Code: the sidebar, the Code landing page and chapter-to-chapter navigation
 // keep them apart from the Code's own chapters.
 export const WEBSITE_PART_ID = 'website';

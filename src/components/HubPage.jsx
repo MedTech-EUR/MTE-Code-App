@@ -7,7 +7,7 @@ import { isPlainLinkClick } from '../utils/crossReferences';
 import { buildChapterPath } from '../utils/routeUtils';
 
 // Website pages the footer links to; every page also has an entry in the sidebar's Website group.
-const FOOTER_PAGE_IDS = ['privacy'];
+const FOOTER_PAGE_IDS = ['legal-notice', 'privacy'];
 const FOOTER_PAGES = WEBSITE_CHAPTERS.filter((page) => FOOTER_PAGE_IDS.includes(page.id));
 
 // Real links, so they can open in a new tab; a plain click stays inside the app.

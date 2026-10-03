@@ -1,0 +1,14 @@
+{
+      "id": "legal-notice",
+      "part": "website",
+      "title": "Legal Notice",
+      "icon": "JusticeScale",
+      "summary": "<div><p>Who publishes this app. Last updated October 2026.</p></div>",
+      "sections": [
+        {
+          "title": "Publisher",
+          "legalText": "<p>This app is published by MedTech Europe, an international non-profit association (AISBL) under Belgian law.</p><ul><li>Registered office: Rue Joseph II 40, box 3, 1000 Brussels, Belgium</li><li>Enterprise number: 0508.570.208, RPM Bruxelles (register of legal entities, French-speaking enterprise court of Brussels)</li><li>VAT number: BE 0508.570.208</li><li>E-mail: <a href=\"mailto:ethics@medtecheurope.org\">ethics@medtecheurope.org</a></li><li>Website: <a href=\"https://www.medtecheurope.org/\">www.medtecheurope.org</a></li></ul>",
+          "qas": []
+        }
+      ]
+    }

@@ -22,6 +22,9 @@ Include:
   2023 + status=published
   2024 + status=published
   2025 + status=draft
+    (on Transparent MedTech, "draft" meant final figures awaiting the
+    platform's publication date; MedTech Europe confirmed this in October
+    2026, and the platform has since shut down)
 
 Exclude:
   all other year/status combinations

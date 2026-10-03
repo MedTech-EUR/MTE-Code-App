@@ -17,6 +17,8 @@ test('the archive notice says how long records stay public and how to object', (
   assert.match(markup, /2023 until 31 August 2027\./);
   assert.match(markup, new RegExp(`href="mailto:${ARCHIVE_CONTACT}"`));
   assert.match(markup, /href="https:\/\/www\.dataprotectionauthority\.be\/citizen" target="_blank" rel="noopener noreferrer"/);
+  // The Disclosure Guidelines let companies modify or delete their disclosures at any time.
+  assert.match(markup, /Member Companies can ask to correct or remove their own declarations the same way\./);
 
   // Before the years have loaded, the example is left out rather than guessed.
   const loading = renderToStaticMarkup(React.createElement(ArchiveNotice, { oldestYear: null }));

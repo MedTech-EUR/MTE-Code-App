@@ -59,6 +59,7 @@ export const ArchiveNotice = ({ oldestYear }) => (
       </a>
       .
     </p>
+    <p>Member Companies can ask to correct or remove their own declarations the same way.</p>
   </section>
 );
 

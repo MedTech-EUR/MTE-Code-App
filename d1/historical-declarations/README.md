@@ -7,6 +7,10 @@
   `scripts/build-final-historical-declarations.py` from the legacy
   PostgreSQL dump. Not tracked in Git (see `.gitignore`); counts and the
   source-dump hash are recorded in `seed.sql.validation.json`.
+  On Transparent MedTech, the 2025 “draft” status meant final figures
+  awaiting the platform's publication date (confirmed by MedTech Europe in
+  October 2026). The platform has shut down, so the dump of 19 August 2026
+  is the only source; it cannot hold declarations filed after that date.
 - `seed.sample.sql` — 100-declaration sample with company and
   beneficiary/HCO names replaced by clearly-fake placeholders
   (`... (test data)`), for local testing without real names. Regenerate

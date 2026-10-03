@@ -5,10 +5,66 @@
  *
  * Security: Uses HMAC-signed state tokens for CSRF protection,
  * no-cache headers on token responses, and generic error messages.
+ * The GitHub token is sent only to an allowed origin, and every response
+ * carries the headers in security-headers.js.
  */
 
 import { handleHistoricalDeclarationsRequest } from './historical-declarations-api.js';
 import { handleCvsRequest } from './cvs-api.js';
+import { withSecurityHeaders } from './security-headers.js';
+
+// The repository is public, so the CMS needs only `public_repo`. A token
+// with `repo` would also open every private repository of the editor.
+const DEFAULT_OAUTH_SCOPE = 'public_repo';
+
+/**
+ * Origins allowed to receive the GitHub token: this Worker's own origin (the
+ * CMS at /admin/ signs in here) plus any listed in ALLOWED_ORIGINS
+ * (comma-separated), such as the other of the apex and www hosts.
+ */
+function allowedOrigins(url, env) {
+  const extra = (env.ALLOWED_ORIGINS || '').split(',').map((origin) => origin.trim()).filter(Boolean);
+  return [...new Set([url.origin, ...extra])];
+}
+
+// JSON that is safe inside an inline <script>: "<" cannot close the element.
+function scriptJson(value) {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
+/**
+ * The page GitHub's callback leaves in the Decap CMS sign-in popup. Decap's
+ * handshake: the popup announces itself to its opener, the CMS window answers,
+ * and the popup sends the token to the window that answered. The answer must
+ * come from the opener at an allowed origin, so a page elsewhere that opens
+ * this popup cannot receive the token.
+ */
+function renderCallbackPage(token, origins) {
+  const message = `authorization:github:success:${JSON.stringify({ token, provider: 'github' })}`;
+  return `<!doctype html>
+<html>
+<head><title>Authorizing...</title></head>
+<body>
+  <script>
+    (function() {
+      var allowedOrigins = ${scriptJson(origins)};
+      var message = ${scriptJson(message)};
+      function receiveMessage(e) {
+        if (!window.opener || e.source !== window.opener || allowedOrigins.indexOf(e.origin) === -1) return;
+        window.removeEventListener("message", receiveMessage, false);
+        window.opener.postMessage(message, e.origin);
+      }
+      window.addEventListener("message", receiveMessage, false);
+      // The handshake carries no secret, so it may go to any origin: the popup
+      // cannot read its opener's origin after GitHub's redirect chain.
+      if (window.opener) {
+        window.opener.postMessage("authorizing:github", "*");
+      }
+    })();
+  </script>
+</body>
+</html>`;
+}
 
 /**
  * Generate an HMAC-signed state token for CSRF protection.
@@ -45,7 +101,7 @@ async function verifyState(state, secret, maxAgeMs = 600000) {
   return sig === expectedHex;
 }
 
-export default {
+const app = {
   async fetch(request, env) {
     const url = new URL(request.url);
 
@@ -61,7 +117,7 @@ export default {
 
       const redirectUrl = new URL('https://github.com/login/oauth/authorize');
       redirectUrl.searchParams.set('client_id', clientId);
-      redirectUrl.searchParams.set('scope', 'repo');
+      redirectUrl.searchParams.set('scope', env.GITHUB_OAUTH_SCOPE || DEFAULT_OAUTH_SCOPE);
       redirectUrl.searchParams.set('state', state);
 
       return Response.redirect(redirectUrl.toString(), 302);
@@ -108,31 +164,7 @@ export default {
         }
 
         // Send the token back to the Decap CMS window via postMessage
-        const html = `<!doctype html>
-<html>
-<head><title>Authorizing...</title></head>
-<body>
-  <script>
-    (function() {
-      function receiveMessage(e) {
-        if (window.opener) {
-          window.opener.postMessage(
-            'authorization:github:success:${JSON.stringify({ token: tokenData.access_token, provider: 'github' })}',
-            e.origin
-          );
-        }
-      }
-      window.addEventListener("message", receiveMessage, false);
-      // Initial handshake uses "*" because the popup cannot determine the opener's
-      // origin after GitHub's redirect chain. This is Decap CMS's documented pattern.
-      // The actual token above is always sent using the validated e.origin.
-      if (window.opener) {
-        window.opener.postMessage("authorizing:github", "*");
-      }
-    })();
-  </script>
-</body>
-</html>`;
+        const html = renderCallbackPage(tokenData.access_token, allowedOrigins(url, env));
 
         return new Response(html, {
           headers: {
@@ -174,5 +206,12 @@ export default {
     }
 
     return env.ASSETS.fetch(assetReq);
+  },
+};
+
+export default {
+  async fetch(request, env) {
+    const response = await app.fetch(request, env);
+    return withSecurityHeaders(response, new URL(request.url).pathname);
   },
 };

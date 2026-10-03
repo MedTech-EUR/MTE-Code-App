@@ -27,6 +27,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
  │   └── index.css    # Global styles, fonts, and print rules
  ├── server.js       # App/SPA Cloudflare Worker with optional same-origin OAuth endpoints
  ├── oauth-proxy.js  # Standalone OAuth proxy for Decap CMS
+ ├── security-headers.js # Security headers for Worker responses (static files: public/_headers)
  ├── CHANGELOG.md    # Developer technical version changelog
  ├── PROJECT_CHECKS.md # Plain-language validation and testing guide
  ├── ROUTING.md      # URL formats, compatibility rules, and route checks
@@ -215,8 +216,11 @@ The app features an optimized Print Mode. By pressing the **Print** icon in the 
 ### 🛠️ Decap CMS & Cloudflare Worker Integration
 The application uses **Decap CMS** for content management, accessible at `/admin/`.
 - The CMS uses GitHub as its backend.
-- The hosted CMS uses the separately deployed `oauth-proxy.js`, configured by `public/admin/config.yml`, for GitHub OAuth.
+- The hosted CMS uses the separately deployed `oauth-proxy.js`, configured by `public/admin/config.yml`, for GitHub OAuth. Changes to that file take effect only when that Worker is redeployed.
 - `server.js` serves the static React application and SPA routes. It also contains optional same-origin OAuth endpoints, but it is not the OAuth service currently named by the hosted CMS configuration.
+- Both sign-in services send the GitHub token only to an allowed CMS origin: by default `https://medtecheurope-code.org` and `https://www.medtecheurope-code.org` for `oauth-proxy.js`, and the Worker's own origin for `server.js`. Set the `ALLOWED_ORIGINS` variable (comma-separated) to change the list; for `oauth-proxy.js` it replaces the defaults, for `server.js` it adds to its own origin. A CMS opened anywhere else cannot sign in.
+- GitHub is asked for the `public_repo` scope, which is enough for this public repository. Set `GITHUB_OAUTH_SCOPE` to `repo` only if the repository becomes private.
+- `public/admin/index.html` loads Decap CMS from unpkg with a Subresource Integrity hash, so the browser refuses a changed file. When upgrading Decap, update the version and the hash together (the command is in a comment beside the script tag).
 - For local, uncommitted content, run `npm run cms` from the app root. This
   starts both Vite and the local Decap proxy. The hosted CMS continues to read
   only the GitHub `main` branch.
@@ -736,5 +740,6 @@ User opens app
 ## 🔒 12. Security Notes
 
 - All HTML in `legalText` and Q&A answers is sanitized through **DOMPurify** before rendering. This prevents cross-site scripting (XSS) even if someone injects malicious code into the JSON content.
-- The hosted Decap CMS uses the separately deployed `oauth-proxy.js`; `server.js` serves the application and also offers optional same-origin OAuth endpoints. Both OAuth implementations use HMAC-signed state tokens for CSRF protection.
+- The hosted Decap CMS uses the separately deployed `oauth-proxy.js`; `server.js` serves the application and also offers optional same-origin OAuth endpoints. Both OAuth implementations use HMAC-signed state tokens for CSRF protection, and post the GitHub token only to an allowed CMS origin (see "Decap CMS & Cloudflare Worker Integration" above).
+- Every response carries security headers (HSTS, `nosniff`, a referrer policy and a permissions policy); the CMS also refuses to be framed by other sites. Static files get them from `public/_headers`, Worker responses from `security-headers.js`.
 - Public reader interactions and TPPT source documents are processed client-side. Bookmarks, history, and recent searches stay in `localStorage`; the separate `/admin/` CMS communicates with GitHub and its OAuth service when editors sign in or save content. Search runs entirely in the browser, and search events are not sent or stored anywhere.

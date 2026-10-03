@@ -6,11 +6,8 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>Content Manager — MTE Code App</title>
 
-  <!-- Match the app's typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-
+  <!-- No web fonts from Google: loading them sends each editor's IP address to Google.
+       Inter is used where it is installed; otherwise the system font. -->
   <style>
     /* ================================================================
        MTE Code App — Decap CMS Admin Theme Override
@@ -633,7 +630,9 @@
   </style>
 </head>
 <body>
-  <script src="https://unpkg.com/decap-cms@3.14.1/dist/decap-cms.js"></script>
+  <!-- The hash pins this exact file of the decap-cms 3.14.1 npm package. When upgrading,
+       recompute it: openssl dgst -sha384 -binary decap-cms.js | openssl base64 -A -->
+  <script src="https://unpkg.com/decap-cms@3.14.1/dist/decap-cms.js" integrity="sha384-K+E/B3QG3FJrtRXoyUjME4ilx71pYGyrvAVxYvd/p0zCPuXsc3eoEuSzUW3Ke63V" crossorigin="anonymous"></script>
   <script>
     const ExactHtmlControl = createClass({
       getInitialState: function () {

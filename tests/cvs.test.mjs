@@ -72,7 +72,7 @@ before(async () => {
   const options = {
     compatibilityDate: '2024-09-02', modulesRoot: root,
     modules: [{ type: 'ESModule', path: `${root}/cvs-test-entry.js`, contents: harness },
-      ...['cvs-parser.js', 'cvs-adapter.js', 'cvs-api.js', 'server.js', 'historical-declarations-api.js'].map((name) => ({
+      ...['cvs-parser.js', 'cvs-adapter.js', 'cvs-api.js', 'server.js', 'historical-declarations-api.js', 'security-headers.js'].map((name) => ({
         type: 'ESModule', path: `${root}/${name}`, contents: readFileSync(new URL(`../${name}`, import.meta.url), 'utf8'),
       }))],
   };

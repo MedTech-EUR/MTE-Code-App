@@ -103,6 +103,15 @@ Versions are internal application-release labels; they are independent of the pr
 - A new item in the side panel opened at the previous item's scroll position, so after scrolling down one reference the next could open scrolled past its title. Each item now opens at the top (`ContextPanel` is keyed by item, and the panel scrolls to the top when the item changes).
 - Resource links in the side panel, such as the Disclosure Guidelines' Annex I CSV template link, were stripped by the sanitizer; they now resolve as in the reader text.
 
+### Security
+Found by the legal and regulatory compliance audit of 2026-10-03; the open items are listed in `ranked_changed.md`.
+- The CMS sign-in popup sent the GitHub token to whichever window answered its handshake, so any website that opened the popup for an editor already signed in to GitHub received a token with access to all of the editor's repositories. A local browser check reproduced this with the previous `oauth-proxy.js`. `oauth-proxy.js` and the `/api/auth` endpoints in `server.js` now send the token only to the CMS window that opened the popup, at an allowed origin (`ALLOWED_ORIGINS`), and send it once. `oauth-proxy.js` also answers CORS only for those origins. Redeploy the `mte-oauth-proxy` Worker for this to take effect; editors should revoke the OAuth app in their GitHub settings and sign in again, so that tokens issued before the fix stop working.
+- GitHub is asked for `public_repo` instead of `repo` (`GITHUB_OAUTH_SCOPE` overrides it): the repository is public, and `repo` opened every private repository of the editor.
+- Added security headers: HSTS, `X-Content-Type-Options: nosniff`, `Referrer-Policy` and `Permissions-Policy` on every response, and `X-Frame-Options` with `frame-ancestors 'self'` on the CMS and its sign-in endpoints. Static files get them from `public/_headers`, Worker responses from `security-headers.js`; `tests/securityHeaders.test.mjs` keeps the two lists in step.
+- The CMS loads Decap CMS from unpkg with a Subresource Integrity hash (checked against the npm package), so the browser refuses a changed file. Lazily loaded editor chunks (CodeMirror modes) are still loaded without a hash.
+- The CMS no longer loads the Inter font from Google Fonts, which sent each editor's IP address to Google; it uses Inter where installed and the system font otherwise.
+- Added `tests/oauthCallback.test.mjs`, which runs the sign-in popup's script against messages from other origins and windows, and added `security-headers.js` to the modules `tests/cvs.test.mjs` loads into the Workers runtime.
+
 ---
 
 ## [1.6.0] - 2026-07-28

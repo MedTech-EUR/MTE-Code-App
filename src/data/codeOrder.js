@@ -22,4 +22,5 @@ export const CODE_CHAPTER_IDS = Object.freeze([
   'annex6',
   'annex7',
   'changelog',
+  'privacy',
 ]);

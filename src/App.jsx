@@ -433,7 +433,7 @@ const App = () => {
 
         {activeSection === null ? (
           <main ref={scrollRef} className="flex-1 overflow-y-auto bg-white custom-scrollbar h-full">
-            <HubPage onSelectSection={handleSectionSelect} />
+            <HubPage onSelectSection={handleSectionSelect} onNavigateChapter={navigateChapter} />
           </main>
         ) : activeSection === 'code' ? (
           <MainContent

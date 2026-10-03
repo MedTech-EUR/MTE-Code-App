@@ -1,0 +1,44 @@
+{
+      "id": "privacy",
+      "part": "website",
+      "title": "Privacy Notice",
+      "icon": "ShieldCheck",
+      "summary": "<div><p>How this app handles personal data. Last updated October 2026.</p></div>",
+      "sections": [
+        {
+          "title": "Who Is Responsible",
+          "legalText": "<p>MedTech Europe AISBL, Rue Joseph II 40, box 3, 1000 Brussels, Belgium, is responsible for the personal data processed through this app.</p><p>For questions about your personal data, write to <a href=\"mailto:data.protection@medtecheurope.org\">data.protection@medtecheurope.org</a>.</p><p>This notice covers what is specific to this app. For everything else, MedTech Europe’s <a href=\"https://www.medtecheurope.org/medtech-europe-privacy-cookies-policy/\">Data Protection &amp; Cookie Notice</a> applies.</p>",
+          "qas": []
+        },
+        {
+          "title": "When You Visit the App",
+          "legalText": "<p>When you open the app, your browser sends your IP address and technical details, such as your browser type and the pages you request, to Cloudflare, which hosts the app for MedTech Europe. Cloudflare uses them to deliver the pages, to protect the app against attacks and automated traffic, and to report network errors. For this protection it adds a short security check to each page, which keeps a cookie (cf_clearance) for about 15 minutes.</p><p>The app has no analytics, and no advertising or tracking cookies.</p><p>This is in MedTech Europe’s legitimate interest in a secure, working website (GDPR, Article 6(1)(f)). These data are kept only as long as these purposes require. Cloudflare processes them on MedTech Europe’s behalf and may do so outside the European Union, under the EU–US Data Privacy Framework and standard contractual clauses.</p>",
+          "qas": []
+        },
+        {
+          "title": "Historical Declarations",
+          "legalText": "<p>The Historical Declarations list the Educational Grants that Member Companies declared under the MedTech Europe Disclosure Guidelines on the former Transparent MedTech platform: each recipient’s name, address and identifier, the company, the year, the type and the amount.</p><p>The archive is meant to list organisations, not individuals. MedTech Europe publishes it in its legitimate interest in keeping industry support for medical education transparent (GDPR, Article 6(1)(f)), and anyone can consult it. Each year stays public until 31 August three years after its publication deadline and is then deleted.</p><p>If a record is about you, you can object to its publication or ask for a correction or removal: use “Report a problem with this record” in the record, or write to <a href=\"mailto:ethics@medtecheurope.org\">ethics@medtecheurope.org</a>.</p>",
+          "qas": []
+        },
+        {
+          "title": "Checking an Event in CVS",
+          "legalText": "<p>When you search the Conference Vetting System from the app, MedTech Europe’s server sends the Event name, country and dates you entered to the CVS website (cvs.solutions.iqvia.com) and shows you the result. Nothing else about you is sent, and the app does not keep your search.</p>",
+          "qas": []
+        },
+        {
+          "title": "Sending a Suggestion",
+          "legalText": "<p>“Send a Suggestion” opens your own e-mail program with a message to <a href=\"mailto:ethics@medtecheurope.org\">ethics@medtecheurope.org</a>; nothing is sent until you send it. MedTech Europe uses your e-mail address and message to answer you and to improve the app, as its <a href=\"https://www.medtecheurope.org/medtech-europe-privacy-cookies-policy/\">Data Protection &amp; Cookie Notice</a> describes.</p>",
+          "qas": []
+        },
+        {
+          "title": "What the App Keeps in Your Browser",
+          "legalText": "<p>To remember your choices, the app stores in your browser your bookmarks, the chapters and publications you viewed recently, your recent searches, your reading settings and panel widths, and the last agenda you entered in the TPPT Checker. It also stores its own files so that it works offline. All of this stays on your device and is never sent to MedTech Europe.</p><p>To remove it, clear this site’s data in your browser settings. Recent searches can also be cleared from the search box.</p>",
+          "qas": []
+        },
+        {
+          "title": "Your Rights",
+          "legalText": "<p>You can ask for access to your personal data, for its correction or deletion, or for its use to be restricted, and you can object to processing based on legitimate interest. Write to <a href=\"mailto:data.protection@medtecheurope.org\">data.protection@medtecheurope.org</a>. You can also complain to the <a href=\"https://www.dataprotectionauthority.be/citizen\">Belgian Data Protection Authority</a>.</p>",
+          "qas": []
+        }
+      ]
+    }

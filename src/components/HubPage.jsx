@@ -2,8 +2,37 @@ import React from 'react';
 import { Logo } from './Logo';
 import { AppIcon } from './AppIcons';
 import { SECTIONS } from '../config/sections';
+import { WEBSITE_CHAPTERS } from '../data/codeData';
+import { isPlainLinkClick } from '../utils/crossReferences';
+import { buildChapterPath } from '../utils/routeUtils';
 
-export const HubPage = ({ onSelectSection }) => (
+// Website pages the footer links to; every page also has an entry in the sidebar's Website group.
+const FOOTER_PAGE_IDS = ['privacy'];
+const FOOTER_PAGES = WEBSITE_CHAPTERS.filter((page) => FOOTER_PAGE_IDS.includes(page.id));
+
+// Real links, so they can open in a new tab; a plain click stays inside the app.
+export const HubFooter = ({ onNavigateChapter }) => (
+  <footer className="mt-16 lg:mt-12 pt-6 border-t border-gray-100 text-center text-sm text-gray-500">
+    <nav aria-label="About this website" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+      {FOOTER_PAGES.map((page) => (
+        <a
+          key={page.id}
+          href={buildChapterPath(page.id)}
+          onClick={(event) => {
+            if (!onNavigateChapter || !isPlainLinkClick(event)) return;
+            event.preventDefault();
+            onNavigateChapter(page.id);
+          }}
+          className="hover:text-[#007A86] hover:underline"
+        >
+          {page.title}
+        </a>
+      ))}
+    </nav>
+  </footer>
+);
+
+export const HubPage = ({ onSelectSection, onNavigateChapter }) => (
   <div className="animate-fade-in py-10 lg:py-8 px-4 max-w-5xl xl:max-w-6xl 3xl:max-w-[110rem] mx-auto overflow-y-auto h-full custom-scrollbar pb-24">
     {/* A smaller heading on laptops and desktops keeps the section cards on the first screen. */}
     <div className="text-center mb-16 lg:mb-8">
@@ -69,5 +98,7 @@ export const HubPage = ({ onSelectSection }) => (
         </button>
       ))}
     </div>
+
+    <HubFooter onNavigateChapter={onNavigateChapter} />
   </div>
 );

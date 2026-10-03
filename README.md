@@ -185,7 +185,7 @@ The sidebar uses a hierarchical, fully collapsible group structure:
 - **Code section:** "The Code" parent group expands automatically, revealing sub-groups (Introductory Chapters, Part 1: The Code, Part 2: Complaint Handling, Part 3: Annexes & Glossary).
 - **Transparency section:** The "Transparency" group reveals each registered publication and its reader units.
 - **Decision Trees section:** The "Decision Trees" group expands, showing a "Browse Decision Trees" link.
-- **Website group:** Pages about the app itself, such as Version History, have their own "Website" group, available in every section. It expands automatically while one of those pages is open.
+- **Website group:** Pages about the app itself, Version History and the Privacy Notice, have their own "Website" group, available in every section. It expands automatically while one of those pages is open.
 - **Search mode:** While a search is active, the ranked result list replaces the groups. Their expansion state is left untouched and comes back as it was when the search is cleared.
 
 ### 🌳 Decision Trees
@@ -285,7 +285,7 @@ Each chapter file in `src/data/code/` contains a single JSON object structured a
   * `"part1"` — Part 1: MedTech Europe Code of Ethical Business Practice
   * `"part2"` — Part 2: Dispute Resolution Code / Complaint Handling
   * `"part3"` — Part 3: Procedural Standards & Annexes
-  * `"website"` — Pages about the app itself, such as Version History. They appear in the sidebar's own "Website" group, not under The Code, and are left out of the Code landing page and the Code's Previous/Next navigation.
+  * `"website"` — Pages about the app itself, such as Version History and the Privacy Notice (`privacy.json`). The footer on Home links to the pages listed in `FOOTER_PAGE_IDS` in `HubPage.jsx`. They appear in the sidebar's own "Website" group, not under The Code, and are left out of the Code landing page and the Code's Previous/Next navigation.
 * `title`: Full title string displayed in headers and sidebar navigation.
 * `icon`: Icon name from `AppIcons.jsx` or a chapter number string (e.g. `"1"`).
 * `summary`: Short summary string or HTML rendered on chapter cards and summary views.

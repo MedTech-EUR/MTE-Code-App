@@ -82,6 +82,11 @@ const ResultReference = ({ reference, onOpenReference }) => {
   );
 };
 
+// Shown under every answer: the trees apply the Code, but they are not its text, legal advice
+// or a decision of the Conference Vetting System.
+export const TREE_ANSWER_NOTE = 'This answer is a guide to the Code, not legal advice or a CVS decision. '
+  + 'Check the Code’s text and, when in doubt, ask your compliance team.';
+
 // A decision tree's answer: its outcome, its text, anything shown under the text (such as what
 // the Event's CVS status means) and the provision it cites.
 export const TreeResultCard = ({ outcome, text, reference, onOpenReference, cardRef, children }) => {
@@ -107,6 +112,7 @@ export const TreeResultCard = ({ outcome, text, reference, onOpenReference, card
       {reference && (
         <ResultReference reference={reference} onOpenReference={onOpenReference} />
       )}
+      <p className={`mt-4 text-xs leading-relaxed opacity-90 ${style.text}`}>{TREE_ANSWER_NOTE}</p>
     </div>
   );
 };

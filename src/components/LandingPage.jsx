@@ -3,6 +3,9 @@ import { CODE_CHAPTERS } from '../data/codeData';
 import { AppIcon } from './AppIcons';
 import { Logo } from './Logo';
 
+// Where MedTech Europe publishes the official text (the PDF this app's text was built from).
+export const OFFICIAL_CODE_URL = 'https://www.medtecheurope.org/resource-library/medtech-europe-code-of-ethical-business-practice/';
+
 export const LandingPage = ({ onSelectChapter }) => (
     <div className="animate-fade-in py-10 lg:py-8 px-4 max-w-6xl 2xl:max-w-7xl 3xl:max-w-[110rem] mx-auto overflow-y-auto h-full custom-scrollbar pb-24">
         <div className="text-center mb-16 lg:mb-10">
@@ -12,6 +15,18 @@ export const LandingPage = ({ onSelectChapter }) => (
             <h1 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">The MedTech Europe Code of Ethical Business Practice</h1>
             <p className="text-xl text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">
                 Code text: September 2024.
+            </p>
+            <p className="mt-3 text-sm text-gray-500 max-w-2xl mx-auto leading-relaxed">
+                The official text is the PDF that MedTech Europe publishes on{' '}
+                <a
+                    href={OFFICIAL_CODE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-[#007A86] hover:underline"
+                >
+                    its website
+                </a>
+                . This app reproduces it for easier reading, with a few editorial corrections; if the two differ, the PDF prevails.
             </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-6">

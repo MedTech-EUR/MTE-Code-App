@@ -9,6 +9,16 @@
           "title": "Publisher",
           "legalText": "<p>This app is published by MedTech Europe, an international non-profit association (AISBL) under Belgian law.</p><ul><li>Registered office: Rue Joseph II 40, box 3, 1000 Brussels, Belgium</li><li>Enterprise number: 0508.570.208, RPM Bruxelles (register of legal entities, French-speaking enterprise court of Brussels)</li><li>VAT number: BE 0508.570.208</li><li>E-mail: <a href=\"mailto:ethics@medtecheurope.org\">ethics@medtecheurope.org</a></li><li>Website: <a href=\"https://www.medtecheurope.org/\">www.medtecheurope.org</a></li></ul>",
           "qas": []
+        },
+        {
+          "title": "The Code Text",
+          "legalText": "<p>The official text of the MedTech Europe Code of Ethical Business Practice is the PDF that MedTech Europe publishes on <a href=\"https://www.medtecheurope.org/resource-library/medtech-europe-code-of-ethical-business-practice/\">its website</a>. This app reproduces it for easier reading, with a few editorial corrections. If the two differ, the PDF prevails.</p>",
+          "qas": []
+        },
+        {
+          "title": "Using the App’s Tools",
+          "legalText": "<p>The decision trees, the Conference Vetting System check, “Can we support this event?”, the TPPT Checker and the Knowledge Quiz help you apply the Code. They are guidance: they are not legal advice, they do not replace the text of the Code, and they are not decisions of the Conference Vetting System.</p><p>As far as the law allows, MedTech Europe is not liable for decisions taken on the basis of their answers.</p>",
+          "qas": []
         }
       ]
     }

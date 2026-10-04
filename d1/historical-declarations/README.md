@@ -11,13 +11,14 @@
   awaiting the platform's publication date (confirmed by MedTech Europe in
   October 2026). The platform has shut down, so the dump of 19 August 2026
   is the only source; it cannot hold declarations filed after that date.
-- `seed.sample.sql` — 100-declaration sample with company and
-  beneficiary/HCO names replaced by clearly-fake placeholders
-  (`... (test data)`), for local testing without real names. Regenerate
-  with `python3 scripts/build-sanitized-d1-sample.py`. See that script's
-  docstring for what it does and doesn't sanitize (addresses and one
-  legacy data-quality outlier still carry real identifying text in a
-  few rows).
+- `seed.sample.sql` — a made-up local fixture: 100 declarations from 12
+  invented companies to 45 invented organisations, 2022 to 2025. Every
+  company and beneficiary name ends in “(test data)”; addresses,
+  identifiers (`TEST-…`), descriptions and web pages (`.example`) are
+  invented too, and nothing comes from the archive. Regenerate with
+  `python3 scripts/build-d1-sample.py`, which reads nothing but
+  `schema.sql`; `tests/d1Sample.test.mjs` checks that the fixture stays
+  made up. Never fill it from `seed.sql`: this file is in the repository.
 
 ## Which database am I looking at?
 
@@ -26,12 +27,15 @@ This is the single most common source of confusion, so check it first.
 | | local fixture | final archive |
 |---|---|---|
 | Source | `seed.sample.sql` | `seed.sql` |
-| Declarations | 100 | 31,095 |
-| Years | **2022**, 2023, 2024 | 2023, 2024, 2025 |
+| Declarations | 100, made up | 31,095 |
+| Names | all end in “(test data)” | real |
+| Years in the data | 2022 to 2025 | 2023 to 2025 |
 | Lives in | `.wrangler/state/v3/d1/` | Cloudflare D1 `historical-declarations-final` |
 
-**Any 2022 in the year filter means you are on the local fixture.** The
-final archive excludes 2022 and earlier by design.
+**Names ending in “(test data)” mean you are on the local fixture.** The
+year filter does not tell them apart: both show only the years still public
+(see [What stays public](#what-stays-public)). The fixture's 2022
+declarations stay hidden, which shows the retention rule at work.
 
 `wrangler dev` uses the local fixture **by default**. The
 `database_name` and `database_id` in `wrangler.toml` identify the remote
@@ -74,12 +78,14 @@ response and hide the answer.
 
 ```bash
 curl "http://localhost:8787/api/historical-declarations/metadata"
-curl "http://localhost:8787/api/historical-declarations/search?year=2022&limit=1"
+curl "http://localhost:8787/api/historical-declarations/search?q=test%20data&limit=1"
 curl "http://localhost:8787/api/historical-declarations/search?currency=RSD&limit=1"
 ```
 
-Against the final archive: `metadata` returns years `[2025, 2024, 2023]`,
-`year=2022` returns `total: 0`, and `currency=RSD` returns `total: 2`.
+Against the final archive: `metadata` returns the public years
+(`[2025, 2024, 2023]` until 31 August 2027), `q=test data` returns
+`total: 0`, and `currency=RSD` returns `total: 2`. Against the local
+fixture, `q=test data` matches every declaration it shows.
 
 `search` caps `total` at `MAX_ACCESSIBLE_RECORDS` (1000) as an
 anti-scraping measure, so `year=2024` reports `total: 1000` rather than

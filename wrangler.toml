@@ -23,7 +23,7 @@ binding = "ASSETS"
 #
 #   npm run dev:worker         -> local fixture in .wrangler/state, seeded from
 #                                 d1/historical-declarations/seed.sample.sql
-#                                 (100 rows, years 2022-2024; 2022 is the tell)
+#                                 (100 made-up rows; every name ends in "(test data)")
 #   npm run dev:worker:remote  -> the real archive configured below
 #                                 (31,095 rows, years 2023-2025, no 2022)
 [[d1_databases]]

@@ -628,6 +628,8 @@ This file uses a library called `lucide-react`. If you want to change an icon, y
 | `pdfjs-dist` | ^5.7.284 | PDF text extraction for the TPPT Checker |
 | `pdfmake` | ^0.3.8 | TPPT assessment PDF generation |
 
+Every build writes `dist/third-party-licenses.txt` with the licence of each package whose code or files ship in the app (`scripts/lib/third-party-licenses.mjs`, a Vite plugin; packages outside the app's module graph, such as the service worker's Workbox modules and Tailwind, are listed in `EXTRA_PACKAGES`). The Legal Notice links to it.
+
 ---
 
 ## 🚀 10. How to Preview and Publish Your Changes

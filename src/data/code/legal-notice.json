@@ -19,6 +19,11 @@
           "title": "Using the App’s Tools",
           "legalText": "<p>The decision trees, the Conference Vetting System check, “Can we support this event?”, the TPPT Checker and the Knowledge Quiz help you apply the Code. They are guidance: they are not legal advice, they do not replace the text of the Code, and they are not decisions of the Conference Vetting System.</p><p>As far as the law allows, MedTech Europe is not liable for decisions taken on the basis of their answers.</p>",
           "qas": []
+        },
+        {
+          "title": "Open-Source Software",
+          "legalText": "<p>This app is built with open-source software, used under its own licences. They are listed in full in <a href=\"/third-party-licenses.txt\">third-party-licenses.txt</a>.</p>",
+          "qas": []
         }
       ]
     }

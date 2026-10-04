@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import {defineConfig} from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { thirdPartyLicensesPlugin } from './scripts/lib/third-party-licenses.mjs';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -12,6 +13,7 @@ export default defineConfig(() => {
     plugins: [
       react(), 
       tailwindcss(),
+      thirdPartyLicensesPlugin({ nodeModules: path.join(projectRoot, 'node_modules') }),
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: [
@@ -22,7 +24,9 @@ export default defineConfig(() => {
           'code-assets/annex-iii-map-september-2024.png',
         ],
         workbox: {
-          navigateFallbackDenylist: [/^\/api\//],
+          // Leave the API and real files (any path whose last part has a dot, such as
+          // /third-party-licenses.txt) to the network; the app shell is for app routes only.
+          navigateFallbackDenylist: [/^\/api\//, /\/[^/?]+\.[^/?]+(\?.*)?$/],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           // The Latin subset of the bundled Inter font is precached so text keeps its typeface
           // offline; other subsets load on demand and fall back to system fonts offline.

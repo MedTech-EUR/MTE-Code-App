@@ -51,6 +51,15 @@ export const useRecentHistory = (maxItems = 5) => {
     });
   }, [maxItems]);
 
-  return { history, addHistory };
+  const clearHistory = useCallback(() => {
+    setHistory([]);
+    try {
+      localStorage.removeItem('mte_recent_history');
+    } catch (e) {
+      console.error('Error clearing history', e);
+    }
+  }, []);
+
+  return { history, addHistory, clearHistory };
 };
 

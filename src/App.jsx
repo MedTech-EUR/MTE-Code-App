@@ -124,7 +124,7 @@ const App = () => {
     scrollRef,
   });
   const { bookmarks, toggleBookmark, isBookmarked } = useBookmarks();
-  const { history, addHistory } = useRecentHistory();
+  const { history, addHistory, clearHistory } = useRecentHistory();
 
   const searchScope = activeSection === 'transparency' ? 'transparency' : 'code';
   const searchResponse = useSearch(debouncedSearch, searchScope);
@@ -417,6 +417,7 @@ const App = () => {
           handleInstallClick={handleInstallClick}
           bookmarks={bookmarks}
           recentHistory={history}
+          onClearRecentHistory={clearHistory}
           searchResponse={searchResponse}
           onOpenDefinition={handleTermClick}
           onPreviewResult={sidePanelEnabled ? handlePreviewSearchResult : undefined}

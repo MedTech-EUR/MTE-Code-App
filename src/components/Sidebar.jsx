@@ -137,6 +137,7 @@ export const Sidebar = ({
   handleInstallClick,
   bookmarks = [],
   recentHistory = [],
+  onClearRecentHistory,
   searchResponse = null,
   onOpenDefinition,
   onPreviewResult,
@@ -751,6 +752,18 @@ export const Sidebar = ({
                     </button>
                   ))}
                 </div>
+                {onClearRecentHistory && (
+                  <div className="flex justify-end px-1 pt-1">
+                    <button
+                      type="button"
+                      onClick={onClearRecentHistory}
+                      className="text-[10px] text-gray-400 hover:text-red-500 font-medium transition-colors"
+                      title="Clear recently viewed pages"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
               </CollapsibleGroup>
             )}
           </>

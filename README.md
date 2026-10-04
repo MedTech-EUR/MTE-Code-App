@@ -177,7 +177,7 @@ This app precaches the core reader and application assets via `vite-plugin-pwa` 
 - The installation logic relies on the `usePWAInstall.js` hook, which intercepts the browser's `beforeinstallprompt` and shows a custom install button. iOS requires manual installation via Safari's "Add to Home Screen" share action, which the UI explicitly handles.
 
 ### ⭐ Bookmarks & History
-Users can save specific Code or Transparency sections to a personalized **Bookmarks** group in the sidebar (via `useBookmarks.js`). The app also tracks the last 5 visited Code chapters or Transparency document units under **Recently Viewed** (via `useRecentHistory.js`). Stored identifiers are namespaced by publication so similarly named sections cannot collide. Both are saved silently to `window.localStorage` so they persist without user accounts.
+Users can save specific Code or Transparency sections to a personalized **Bookmarks** group in the sidebar (via `useBookmarks.js`). The app also tracks the last 5 visited Code chapters or Transparency document units under **Recently Viewed** (via `useRecentHistory.js`). Stored identifiers are namespaced by publication so similarly named sections cannot collide. Both are saved silently to `window.localStorage` so they persist without user accounts. Recently Viewed has a Clear button, and the TPPT Checker's saved agenda is removed by its Start over button.
 
 ### 🗂️ Collapsible Sidebar Navigation
 The sidebar uses a hierarchical, fully collapsible group structure:

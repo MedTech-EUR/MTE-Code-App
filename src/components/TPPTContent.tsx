@@ -11,6 +11,7 @@ import {
   parseTpptSessions,
 } from '../utils/tpptParser.js';
 import { extractPdfTextFromPdf } from '../utils/tpptExtraction.js';
+import { saveTpptState, TPPT_AUTOSAVE_KEY } from '../utils/tpptAutosave.js';
 
 type SessionType = "General Educational" | "Other" | "Hands-on" | "Streaming" | "Case Study";
 
@@ -147,6 +148,7 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
   const [qStandalone, setQStandalone] = useState<Answer>(null);
   const [qSize, setQSize] = useState<Answer>(null);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [confirmingStartOver, setConfirmingStartOver] = useState(false);
 
   const closeParseWarning = () => {
     setShowParseWarning(false);
@@ -180,7 +182,7 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
   // Restore state on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('tppt_autosave_state');
+      const saved = localStorage.getItem(TPPT_AUTOSAVE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.inputText) setInputText(parsed.inputText);
@@ -197,12 +199,26 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
   // Autosave when key data changes
   useEffect(() => {
     try {
-      const stateToSave = { inputText, sessions, qVenue, qStandalone, qSize };
-      localStorage.setItem('tppt_autosave_state', JSON.stringify(stateToSave));
+      saveTpptState(localStorage, { inputText, sessions, qVenue, qStandalone, qSize });
     } catch (e) {
       // Ignore storage errors in restricted domains
     }
   }, [inputText, sessions, qVenue, qStandalone, qSize]);
+
+  // Empties the checker; the autosave then removes the copy saved in the browser.
+  const startOver = () => {
+    setInputText("");
+    setSessions([]);
+    setQVenue(null);
+    setQStandalone(null);
+    setQSize(null);
+    setEventNameInput("");
+    setEditingSessionId(null);
+    clearExportDownloadUrl();
+    setConfirmingStartOver(false);
+  };
+
+  const hasSavedWork = Boolean(inputText.trim() || sessions.length || qVenue || qStandalone || qSize);
 
   const clearExportDownloadUrl = () => {
     setExportDownloadUrl((previousUrl) => {
@@ -561,18 +577,49 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
               </p>
             </div>
             
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isExtracting}
-              className="flex items-center justify-center gap-2 text-xs font-bold text-[#634488] bg-[#634488]/10 hover:bg-[#634488]/20 px-4 py-2.5 rounded-xl border border-[#634488]/20 transition-all cursor-pointer shrink-0 disabled:opacity-50 min-w-[130px]"
-            >
-              {isExtracting ? (
-                <AppIcon name="Loader2" size={14} className="animate-spin" />
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              {hasSavedWork && (confirmingStartOver ? (
+                <div role="group" aria-label="Start over" className="flex items-center gap-2 text-xs">
+                  <span className="text-gray-600">Clear the agenda and answers?</span>
+                  <button
+                    type="button"
+                    onClick={startOver}
+                    className="font-bold text-red-700 bg-red-50 hover:bg-red-100 px-3 py-2.5 rounded-xl border border-red-200 transition-all"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingStartOver(false)}
+                    className="font-medium text-gray-600 hover:text-gray-900 px-3 py-2.5 rounded-xl border border-gray-200 transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
               ) : (
-                <AppIcon name="Upload" size={14} />
-              )}
-              Upload Agenda
-            </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmingStartOver(true)}
+                  title="Clear the agenda and answers, including the copy saved in this browser"
+                  className="flex items-center justify-center gap-2 text-xs font-medium text-gray-600 hover:text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 hover:border-gray-300 transition-all"
+                >
+                  <AppIcon name="RotateCcw" size={14} />
+                  Start over
+                </button>
+              ))}
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isExtracting}
+                className="flex items-center justify-center gap-2 text-xs font-bold text-[#634488] bg-[#634488]/10 hover:bg-[#634488]/20 px-4 py-2.5 rounded-xl border border-[#634488]/20 transition-all cursor-pointer shrink-0 disabled:opacity-50 min-w-[130px]"
+              >
+                {isExtracting ? (
+                  <AppIcon name="Loader2" size={14} className="animate-spin" />
+                ) : (
+                  <AppIcon name="Upload" size={14} />
+                )}
+                Upload Agenda
+              </button>
+            </div>
             
             <input 
               type="file" 

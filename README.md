@@ -1,4 +1,4 @@
-# The Code App — Developer & Editor Guide 
+# The Code App — Developer & Editor Guide
 
 Welcome to the repository for **The Code App** (MedTech Europe Code of Ethical Business Practice Reader).
 

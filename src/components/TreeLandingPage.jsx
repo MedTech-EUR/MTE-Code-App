@@ -10,6 +10,7 @@ const CATEGORY_CONFIG = {
   grants:     { label: 'Grants and Donations',  color: '#e67e22', icon: 'Star' },
   consulting: { label: 'Consulting Agreements', color: '#7654A1', icon: 'FileText' },
   items:      { label: 'Educational & Promotional Items', color: '#3b82f6', icon: 'Gift' },
+  products:   { label: 'Demonstration Products and Samples', color: '#4f46e5', icon: 'Package' },
   research:   { label: 'Research',              color: '#2ecc71', icon: 'Search' },
   default:    { label: 'General',               color: '#95a5a6', icon: 'GitBranch' },
 };

@@ -32,12 +32,13 @@ A successful result looks like this:
 
 ```text
 Data validation passed.
-23 chapters, 72 sections, 43 Q&As
-8 decision trees, 116 nodes
+23 chapters, 75 sections, 43 Q&As
+9 decision trees, 133 nodes
 60 quiz questions
 199 phrasebook groups
 1 Transparency document, 7 reader units, 19 sections, 11 Q&As
 66 cross-references linked
+Event support checker: 15 activities, 32 conditions
 2 notes (not errors):
 - Code chapter "ch1" sections[4]: "section 3 of Chapter 2": Chapter 2 has no section 3; linked to the chapter.
 - Code chapter "ch1" sections[5]: "section 3 of Chapter 2": Chapter 2 has no section 3; linked to the chapter.

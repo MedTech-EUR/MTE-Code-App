@@ -1588,6 +1588,170 @@
       ]
     },
     {
+      "id": "dt-ch9-product-allocation",
+      "title": "How should a product allocation be classified?",
+      "relatedChapter": "ch9",
+      "relatedSection": null,
+      "category": "products",
+      "description": "Classify a product provided free of charge to an HCP or HCO by the primary purpose of the arrangement. Whatever the route: no improper inducement, written purpose and conditions, appropriate records, local law and national codes, and clear ownership, duration and return.",
+      "nodes": [
+        {
+          "id": "start",
+          "type": "question",
+          "text": "Is the product provided as part of a commercial supply, a tender or value-add offer, a rebate, a warranty, or a placement of capital equipment?",
+          "helpText": "Look at the primary purpose and substance of the arrangement, not the label used for it internally. Products provided at no additional charge as part of the overall purchase price, for example under an agreed discount arrangement, or as substitute products under a warranty agreement, are part of the commercial supply.",
+          "options": [
+            {
+              "label": "Yes, it is part of a commercial or placement arrangement",
+              "next": "res_commercial"
+            },
+            {
+              "label": "No",
+              "next": "q_research"
+            }
+          ]
+        },
+        {
+          "id": "q_research",
+          "type": "question",
+          "text": "Is the purpose research, or a defined post-market user evaluation of the product?",
+          "helpText": "A post-market user evaluation asks the Healthcare Organisation for defined, evaluative user feedback over a defined period of use.",
+          "options": [
+            {
+              "label": "Yes",
+              "next": "q_research_type"
+            },
+            {
+              "label": "No",
+              "next": "q_education"
+            }
+          ]
+        },
+        {
+          "id": "q_research_type",
+          "type": "question",
+          "text": "Which best describes the arrangement?",
+          "options": [
+            {
+              "label": "The company asks for defined user feedback on the product, free of charge, over a defined period",
+              "next": "res_evaluation"
+            },
+            {
+              "label": "A third party initiated the research and asks the company to support it",
+              "next": "res_research_grant"
+            },
+            {
+              "label": "The company initiates the research, or conducts it with others as collaborative research",
+              "next": "res_research_agreement"
+            }
+          ]
+        },
+        {
+          "id": "q_education",
+          "type": "question",
+          "text": "Is the product support to a Healthcare Organisation solely to advance genuine medical education?",
+          "helpText": "For example, products that support an Event or educational programme of the HCO. An In Kind Educational Grant goes to an HCO, never to an individual HCP, and does not include products that could be used for non-educational clinical activities.",
+          "options": [
+            {
+              "label": "Yes",
+              "next": "res_inkind_grant"
+            },
+            {
+              "label": "No",
+              "next": "q_demo"
+            }
+          ]
+        },
+        {
+          "id": "q_demo",
+          "type": "question",
+          "text": "Is the product solely for demonstrating its functionality, or for awareness, education or training, with no clinical use?",
+          "helpText": "For example, a mock-up such as an unsterilised single-use product, which an HCP uses to show a patient the type of technology to be implanted, or to train other HCPs in its use.",
+          "options": [
+            {
+              "label": "Yes",
+              "next": "res_demo"
+            },
+            {
+              "label": "No",
+              "next": "q_sample"
+            }
+          ]
+        },
+        {
+          "id": "q_sample",
+          "type": "question",
+          "text": "Is the product for HCPs to familiarise themselves with it in clinical use, before deciding whether, or when, to use or buy it in the future?",
+          "options": [
+            {
+              "label": "Yes",
+              "next": "res_sample"
+            },
+            {
+              "label": "No",
+              "next": "res_reassess"
+            }
+          ]
+        },
+        {
+          "id": "res_commercial",
+          "type": "result",
+          "outcome": "out-of-scope",
+          "text": "Commercial or placement route, outside Chapter 9. Chapter 9 does not apply to products provided under other arrangements, such as commercial supplies by way of rebates or pricing incentives in a public procurement context, or to the placement of capital equipment at a Healthcare Organisation’s premises. Document the product under the applicable commercial arrangement, or follow MedTech Europe’s separate Guidance on Placement of Capital Equipment.",
+          "reference": "Chapter 9, Section 1 — General Principles"
+        },
+        {
+          "id": "res_evaluation",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "Evaluation Product, under Chapter 6 rather than Chapter 9. Where there is a legitimate business need, the company may provide Evaluation Products free of charge under a written contract, in return for defined user feedback from HCPs at the Healthcare Organisation, described in a written protocol or questionnaire that forms part of the contract. For multiple-use Evaluation Products, define the evaluation period and keep title to them. At the end of the evaluation, promptly remove multiple-use products and any unused single-use products, unless the Healthcare Organisation buys or leases them.",
+          "reference": "Chapter 6, Section 2 — Member Company Post-Market Product Evaluation"
+        },
+        {
+          "id": "res_research_grant",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "Research Grant, under Chapter 6 rather than Chapter 9. Where national rules permit, the company may support clearly defined third party-initiated research with a Research Grant, which may include reasonable quantities of free-of-charge product for the limited duration of the research. The request must be in writing, the written Grant agreement must let the company verify that the Grant is used solely for the agreed research, and the company must not unduly influence the research.",
+          "reference": "Chapter 6, Section 3 — Research Grants"
+        },
+        {
+          "id": "res_research_agreement",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "Research agreement, under Chapter 6 rather than Chapter 9. Products for research that the company initiates, or conducts with others as collaborative research, are provided under the written agreement for that research. For company-initiated research, the agreement references a written research protocol and schedule of work. For collaborative research, it defines each party’s roles and responsibilities.",
+          "reference": "Chapter 6 — Q&A 39"
+        },
+        {
+          "id": "res_inkind_grant",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "In Kind Educational Grant, under Chapter 4 rather than Chapter 9. Products given to a Healthcare Organisation solely to advance genuine medical education are an In Kind Educational Grant. Apply the Chapter 4 safeguards, including a written agreement, the right to verify that the Grant is used for its intended purpose, and public disclosure. Where practicable, state the value of the products in the Grant agreement (Annex II).",
+          "reference": "Chapter 4 — Educational Grants"
+        },
+        {
+          "id": "res_demo",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "Demonstration Product (Demo). The company may provide mock-ups or examples of its products free of charge for HCP and patient awareness, education and training. A Demo is not for clinical use in any patient care, nor for on-sale or other transfer. Record the no-charge basis and other conditions in the company’s records, and disclose them to the HCP or HCO in writing no later than the time of supply.",
+          "reference": "Chapter 9, Section 2 — Demonstration Products (Demos)"
+        },
+        {
+          "id": "res_sample",
+          "type": "result",
+          "outcome": "conditional",
+          "text": "Sample. The company may provide a reasonable number of Samples free of charge so that HCPs can familiarise themselves with the product in clinical use. For single-use Samples, provide no more than the quantity reasonably necessary to gain adequate experience. For multiple-use Samples, define the familiarisation period, keep title to them, and have a process to remove them promptly at its end. Keep records, such as proof of delivery and receipt of return, and disclose the no-charge basis and other conditions in writing no later than the time of supply.",
+          "reference": "Chapter 9, Section 3 — Samples"
+        },
+        {
+          "id": "res_reassess",
+          "type": "result",
+          "outcome": "more-info",
+          "text": "Stop and reassess. No route fits, so do not default to treating the product as a “loaner”. Clarify the purpose, the recipient, ownership, duration, clinical use, any consideration and the return obligations, then go back through the questions.",
+          "reference": "Chapter 9, Section 1 — General Principles"
+        }
+      ]
+    },
+    {
       "id": "dt-ch10-tpi",
       "title": "Third Party Intermediaries (TPI)",
       "relatedChapter": "ch10",

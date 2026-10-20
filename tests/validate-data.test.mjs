@@ -208,6 +208,27 @@ test('reports duplicate section routes and unresolved local resources', () => {
   assert.ok(errors.some((error) => error.includes('resource "not-declared" is not declared')));
 });
 
+test('requires one definition per Glossary section, titled with its term', () => {
+  const fixture = makeValidFixture();
+  fixture.codeData.chapters.push({
+    id: 'glossary',
+    part: 'part3',
+    title: 'Glossary',
+    icon: 'Info',
+    sections: [
+      { title: 'Delegate', legalText: '<p><strong>Delegate:</strong> means …</p>', qas: [] },
+      { title: 'Faculty', legalText: '<p><strong>Guests:</strong> means …</p>', qas: [] },
+      { title: 'Event', legalText: '<p><strong>Event:</strong> means …</p> <p><strong>Grants:</strong> means …</p>', qas: [] },
+    ],
+  });
+
+  const errors = validateProjectData(fixture).errors.filter((error) => error.includes('chapters[1]'));
+  assert.deepEqual(errors, [
+    'Code data chapters[1] sections[1]: title "Faculty" must be its definition\'s term, "Guests".',
+    'Code data chapters[1] sections[2]: a Glossary section holds one definition (a <p><strong>Term:</strong> paragraph); found 2.',
+  ]);
+});
+
 test('reports phrasebook structural errors comprehensively', () => {
   const fixture = makeValidFixture();
   fixture.searchPhrasebook = {

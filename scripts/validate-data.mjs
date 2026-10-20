@@ -2,14 +2,14 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
-import { generateSectionId } from '../src/utils/textUtils.js';
+import { generateSectionId, splitGlossaryDefinitions } from '../src/utils/textUtils.js';
 import {
   createReferenceIndex,
   findCrossReferences,
   resolveTreeReference,
 } from '../src/utils/crossReferences.js';
 import { tokenizeAllWithOffsets, tokenizeWords } from '../src/utils/searchText.js';
-import { CONDITION_TAGS } from '../src/utils/eventSupportRules.js';
+import { CONDITION_TAGS, findSourceSectionIndex } from '../src/utils/eventSupportRules.js';
 import { normalizeCvsStatus } from '../src/utils/eventSupportCvs.js';
 import { TREE_CVS_MODES, TREE_CVS_TONES } from '../src/utils/treeCvs.js';
 import { loadSplitCodeData } from './lib/code-content.mjs';
@@ -315,8 +315,9 @@ function validateEventSupportRules(rules, chapters, errors, warnings) {
       if (!isNonEmptyString(source.label) || !EVENT_SUPPORT_GUIDANCE_SITES.some((site) => String(source.url).startsWith(site))) {
         errors.push(`${path} sources.${key}: guidance sources need a label and an ethicalmedtech.eu or mecomed.com URL.`);
       }
-    } else if (!chapters.find((chapter) => chapter?.id === source?.chapter)?.sections?.[source?.section]) {
-      errors.push(`${path} sources.${key}: chapter "${source?.chapter}" has no section ${source?.section}.`);
+    } else if (findSourceSectionIndex(chapters.find((chapter) => chapter?.id === source?.chapter), source) < 0) {
+      const section = source?.sectionTitle !== undefined ? `"${source.sectionTitle}"` : source?.section;
+      errors.push(`${path} sources.${key}: chapter "${source?.chapter}" has no section ${section}.`);
     }
   }
   const checkSources = (list, itemPath) => {
@@ -531,6 +532,16 @@ export function validateProjectData({
       sectionIdSet.add(sectionId);
 
       if (!isNonEmptyString(section?.legalText)) errors.push(`${sectionPath}: missing legalText.`);
+      // Each Glossary section holds one definition and is titled with its term, so the
+      // definition's link (built from the title) always names the term it opens.
+      if (chapter.id === 'glossary' && isNonEmptyString(section?.legalText)) {
+        const definitions = splitGlossaryDefinitions(section.legalText);
+        if (definitions.length !== 1) {
+          errors.push(`${sectionPath}: a Glossary section holds one definition (a <p><strong>Term:</strong> paragraph); found ${definitions.length}.`);
+        } else if (section.title !== definitions[0].entry.term) {
+          errors.push(`${sectionPath}: title "${section?.title ?? ''}" must be its definition's term, "${definitions[0].entry.term}".`);
+        }
+      }
       if (!Array.isArray(section?.qas)) {
         errors.push(`${sectionPath}: expected a qas array.`);
         return;

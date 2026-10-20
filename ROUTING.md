@@ -13,6 +13,7 @@ The routing system is intentionally small and does not use a third-party routing
 | Code chapter | `/code/:chapterId` | `https://medtecheurope-code.org/code/ch1` |
 | Exact Code section | `/code/:chapterId#section-id` | `https://medtecheurope-code.org/code/ch1#ch1-2-event-location-and-venue` |
 | Exact Code Q&A | `/code/:chapterId#section-id-qa-k` | `https://medtecheurope-code.org/code/ch4#ch4-3-educational-grants-qa-3` |
+| Exact Glossary definition | `/code/glossary#glossary-term-id` | `https://medtecheurope-code.org/code/glossary#glossary-healthcare-professional-hcp` |
 | Transparency index | `/transparency` | `https://medtecheurope-code.org/transparency` |
 | Transparency document | `/transparency/:documentId` | `https://medtecheurope-code.org/transparency/disclosure-guidelines` |
 | Transparency reader unit | `/transparency/:documentId/:unitId` | `https://medtecheurope-code.org/transparency/disclosure-guidelines/dg-chapter-1` |
@@ -60,6 +61,12 @@ Code and Transparency section anchors combine the chapter or reader-unit ID with
 a slug of the section title. An untitled section instead uses its zero-based
 position (`section-0`, `section-1`, and so on), so changing a title or reordering
 untitled sections can change public URLs and existing bookmarks.
+
+Each Glossary definition is its own section of `glossary.json`, titled with its
+term exactly as its bold headword gives it (`npm run validate:data` checks this),
+so its anchor is `glossary-` plus a slug of the term. Adding or reordering
+definitions does not change other definitions' links; renaming a term changes
+its own.
 
 A Q&A anchor is its section anchor plus `-qa-` plus that Q&A's position within
 that section (first, second, third, and so on) — for example

@@ -41,7 +41,11 @@
     "demos": { "chapter": "ch9", "section": 1 },
     "samples": { "chapter": "ch9", "section": 2 },
     "intermediaries": { "chapter": "ch10", "section": 0 },
-    "glossary": { "chapter": "glossary", "section": 0 },
+    "glossaryDelegate": { "chapter": "glossary", "sectionTitle": "Delegate" },
+    "glossaryFaculty": { "chapter": "glossary", "sectionTitle": "Faculty" },
+    "glossaryPreceptorship": { "chapter": "glossary", "sectionTitle": "Preceptorship" },
+    "glossaryProctorship": { "chapter": "glossary", "sectionTitle": "Proctorship" },
+    "glossaryVirtualEvent": { "chapter": "glossary", "sectionTitle": "Virtual Event" },
     "tpptGuidance": {
       "url": "https://www.ethicalmedtech.eu/conference-vetting-system/third-party-procedure-training/",
       "label": "CVS guidance: Third Party Procedure Trainings"
@@ -185,7 +189,7 @@
       "label": "Fund a Proctorship or Preceptorship",
       "description": "Clinician-to-clinician training, usually on hospital premises.",
       "eventTypes": [],
-      "sources": ["tppt", "glossary", "consultingCriteria"]
+      "sources": ["tppt", "glossaryProctorship", "glossaryPreceptorship", "consultingCriteria"]
     },
     {
       "id": "donation",

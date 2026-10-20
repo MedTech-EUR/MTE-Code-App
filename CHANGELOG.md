@@ -9,6 +9,12 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### Glossary definitions — 2026-10-20
+- Split the Glossary's single "Definitions" section into one section per definition (38), each titled with its term exactly as its bold headword gives it, so every definition has its own route (`/code/glossary#glossary-<term>`), bookmark, Cite/Link menu and table-of-contents entry. The text is unchanged: the definitions joined back together reproduce the former section's text byte for byte, and `npm run verify:code-docx` reports the same findings before and after. `npm run validate:data` now requires one definition per Glossary section, titled with its term. As documented in `PROJECT_CHECKS.md`, the historical `verify:code-migration` check differs from its 2026 baseline after approved edits; this adds to that.
+- `FullTextSection.jsx` keeps a Glossary section's title for screen readers and the table of contents but does not show it, since the definition opens with its term in bold.
+- The definition side panel's "Open the Glossary" opens the definition's own section (`App.jsx`).
+- The event support checker's sources can name a section by title (`"sectionTitle"`), resolved by `findSourceSectionIndex()` in `eventSupportRules.js` for both the result's Sources list and `validate-data.mjs`. Its three reasons that cited the whole Glossary now cite the definitions they rely on: Delegate and Faculty (poster presenters), Virtual Event (hybrid Events), Proctorship and Preceptorship. The wording and logic are unchanged, so the rules version stays 2026-09-27.2; the Word review copy still lists "Glossary › Definitions" for the Proctorship activity.
+
 ### Integration — 2026-09-29
 - Combined the latest event-support and Annex I CVS work with the expandable-reference branch on main. Preserved the current decision-tree components and moved the chapter preview fallback into `getReferencePreviewHtml()`, shared by tree results and the checker's small-screen dialog.
 - Extended the restored side-panel behavior to the event-support checker: reset disclosure rows and scroll position when changing references, keep the reader's position while resizing, and retain its answers when opening a referenced section in another tab.

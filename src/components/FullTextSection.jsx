@@ -232,13 +232,18 @@ export const FullTextSection = ({
         return getTreesBySection(id);
     }, [id]);
 
+    // Each Glossary section is one definition, titled with its term. The definition already
+    // opens with that term in bold, so the title is kept only for screen readers and the
+    // table of contents.
+    const isGlossaryDefinition = bookmarkSection === 'code' && chapterId === 'glossary';
+
     return (
-        <div id={id} className="mb-8 scroll-mt-24" onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onClick={handleClick}>
+        <div id={id} className={`${isGlossaryDefinition ? 'mb-6' : 'mb-8'} scroll-mt-24`} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onClick={handleClick}>
             {/* The actions sit beside the title when both fit and wrap under it otherwise, so a
                 long title keeps the full column width. */}
-            <div className={`group flex flex-wrap items-baseline gap-x-4 gap-y-2 mb-3 mt-6 ${section.title ? 'justify-between' : 'justify-end print:hidden'}`}>
+            <div className={`group flex flex-wrap items-baseline gap-x-4 gap-y-2 ${isGlossaryDefinition ? 'mb-1' : 'mb-3 mt-6'} ${section.title ? 'justify-between' : 'justify-end print:hidden'}`}>
                 {section.title && (
-                    <h2 className="min-w-0 text-xl font-bold text-gray-800 flex items-center flex-wrap gap-2">
+                    <h2 className={isGlossaryDefinition ? 'sr-only' : 'min-w-0 text-xl font-bold text-gray-800 flex items-center flex-wrap gap-2'}>
                         <Highlight text={section.title} query={query} />
                         {showQA && section.qas && section.qas.length > 0 && (
                             <button

@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { generateSectionId, getQaAnchorId } from '../src/utils/textUtils.js';
+import { generateSectionId, getQaAnchorId, splitGlossaryDefinitions } from '../src/utils/textUtils.js';
 import { loadSplitCodeData } from '../scripts/lib/code-content.mjs';
 import { loadTransparencyData } from '../scripts/lib/transparency-content.mjs';
 import {
@@ -238,6 +238,21 @@ test('round-trips every live Transparency Q&A anchor without using the printed Q
       });
     }
   }
+});
+
+test('links every Glossary definition by its term’s ID', () => {
+  const glossary = FULL_CODE_DATA.find((chapter) => chapter.id === 'glossary');
+  assert.ok(glossary.sections.length > 1, 'one section per definition');
+
+  glossary.sections.forEach((section, index) => {
+    const [{ entry }] = splitGlossaryDefinitions(section.legalText);
+    const anchor = `glossary-${entry.id}`;
+    assert.equal(generateSectionId(glossary.id, section.title, index), anchor);
+    const route = parseAppLocation(buildChapterPath(glossary.id), `#${anchor}`);
+    assert.equal(route.activeId, glossary.id);
+    assert.equal(route.anchor, anchor);
+    assert.equal(route.canonicalUrl, buildCodeSectionPath(glossary.id, anchor));
+  });
 });
 
 test('keeps anchorType off every live section route', () => {

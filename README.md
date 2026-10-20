@@ -203,6 +203,7 @@ To facilitate heavy professional reference usage, the app includes several quali
 - **Reading Progress Line:** A sticky top progress bar that smoothly tracks scrolling completion down long legal chapters.
 - **Q&A Fast-Jump Badges:** Section titles with associated Q&As feature a `💬 Q&A` badge that smooth-scrolls directly to the guidance notes for that provision.
 - **Multi-Format Citation and Link Dropdown:** A `[Cite/Link]` popover offering Formal Citations (including section title and current access date), Markdown links, and Direct URL links with confirmation toast notifications.
+- **Section Actions on Hover:** In the Code, a section's Bookmark, Cite/Link and Copy Text buttons fade in when the pointer is over the section or keyboard focus moves into it, and fade out after a short pause. A bookmarked section keeps its star, the buttons stay while the Cite/Link menu is open, and on touch screens (which cannot hover) and in the Transparency reader they always show.
 - **Next/Prev Navigation:** Large footer buttons at the bottom of every reader unit allow for linear reading without returning to the sidebar.
 - **Reader Settings:** An `Aa` button in the header opens a panel to customize font size, line spacing, paragraph spacing, line length (Narrow, Standard or Full) and the side panel (On or Off).
 - **Line Length:** The text is centred in the reading area and stops at 40 (Narrow) or 52 (Standard, the default) times the chosen text size, about 80 or 105 characters per line; Full fills the space between the panes.

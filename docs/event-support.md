@@ -26,7 +26,8 @@ It is a guide to the Code, not company approval. Its answers say so.
 To correct wording, edit the JSON only. Every “Chapter N, Section N”, “Annex N” and “Q&A N”
 in it is checked by `npm run validate:data`, which fails when one names nothing and notes one
 that falls back to its chapter. The validator also checks the structure: every source must be
-an existing Code section or a guidance page on `ethicalmedtech.eu` (or `mecomed.com`, for
+an existing Code section (a Glossary definition is cited by its title, `"sectionTitle"`, because
+definitions shift when one is added) or a guidance page on `ethicalmedtech.eu` (or `mecomed.com`, for
 Mecomed's own CVS scope), every outcome needs its opening text in `outcomeTexts`, condition IDs
 must not clash with question IDs, and the Annex I and Annex VI tables must be complete.
 
@@ -70,7 +71,7 @@ leaving the page would lose the answers. The answer’s Sources list uses the sa
 | A meal at a meeting, including during a congress | — | Chapter 1, Sections 4 and 6; Chapter 3, Section 3 |
 | Educational or promotional items | — | Chapter 8 |
 | Demonstration Products and Samples | — | Chapter 9 |
-| Proctorships and Preceptorships | — | Q&A 19; Glossary; Chapter 5 |
+| Proctorships and Preceptorships | — | Q&A 19; Glossary (Proctorship, Preceptorship); Chapter 5 |
 | Charitable Donations and fundraisers | — | Chapter 4, Sections 1 and 2; Q&A 26 and 28 |
 | Research and royalties | — | Points to Chapters 6 and 7 |
 

@@ -8,6 +8,7 @@ import { validateProjectData } from '../scripts/validate-data.mjs';
 import {
   assessProposal,
   evaluateEventSupport,
+  findSourceSectionIndex,
   getApplicableConditions,
   getConditionQuestions,
   getTpptQualification,
@@ -621,6 +622,7 @@ test('the rules file passes validation, and broken rules are reported', () => {
   assert.deepEqual(validateRules(data), []);
   const broken = structuredClone(data);
   broken.sources.scope = { chapter: 'missing', section: 0 };
+  broken.sources.glossaryFaculty = { chapter: 'glossary', sectionTitle: 'Not a defined term' };
   broken.conditions[0].appliesTo = ['nowhere'];
   broken.conditions[1].id = 'member';
   broken.messages.research = 'See Chapter 42.';
@@ -630,6 +632,7 @@ test('the rules file passes validation, and broken rules are reported', () => {
   broken.outcomeTexts.permitted = 'See Chapter 42, Section 1.';
   const errors = validateRules(broken).join('\n');
   assert.match(errors, /sources\.scope/);
+  assert.match(errors, /sources\.glossaryFaculty: chapter "glossary" has no section "Not a defined term"/);
   assert.match(errors, /unknown tag "nowhere"/);
   assert.match(errors, /also a question ID/);
   assert.match(errors, /"Chapter 42" does not match anything/);
@@ -637,6 +640,19 @@ test('the rules file passes validation, and broken rules are reported', () => {
   assert.match(errors, /sources\.cvsGuidance: guidance sources need a label and an ethicalmedtech\.eu or mecomed\.com URL/);
   assert.match(errors, /outcomes\.review: missing heading or outcomeTexts entry/);
   assert.match(errors, /outcomeTexts\.permitted: "Chapter 42, Section 1" does not match anything/);
+});
+
+test('Glossary sources name their definition, so a new definition cannot shift them', () => {
+  const glossary = chapters.find((chapter) => chapter.id === 'glossary');
+  const cited = Object.values(data.sources).filter((source) => source.chapter === 'glossary');
+  assert.ok(cited.length > 0);
+  for (const source of cited) {
+    assert.equal(typeof source.sectionTitle, 'string', 'cited by title, not by number');
+    assert.equal(glossary.sections[findSourceSectionIndex(glossary, source)]?.title, source.sectionTitle);
+  }
+  const shifted = { ...glossary, sections: [{ title: 'A new definition' }, ...glossary.sections] };
+  const faculty = data.sources.glossaryFaculty;
+  assert.equal(shifted.sections[findSourceSectionIndex(shifted, faculty)].title, 'Faculty');
 });
 
 // ---- Live CVS lookups ---------------------------------------------------------------------------

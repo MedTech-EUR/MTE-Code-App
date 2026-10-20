@@ -5,6 +5,7 @@ import { CODE_CHAPTER_IDS } from '../data/codeOrder';
 import { REFERENCE_INDEX } from '../data/referenceIndex';
 import { useCheckerText } from '../hooks/useCheckerText';
 import { formatMessage } from '../utils/eventSupportText';
+import { findSourceSectionIndex } from '../utils/eventSupportRules';
 import { generateSectionId } from '../utils/textUtils';
 import { getReferenceHref, getReferenceTarget, referenceKey } from '../utils/crossReferences';
 
@@ -41,13 +42,14 @@ function describeSource(data, key) {
   if (!source) return null;
   if (source.url) return { key, external: true, href: source.url, label: source.label, order: [Infinity, 0] };
   const chapter = CODE_CHAPTERS.find((item) => item.id === source.chapter);
-  const section = chapter?.sections[source.section];
+  const sectionIndex = findSourceSectionIndex(chapter, source);
+  const section = chapter?.sections[sectionIndex];
   if (!section) return null;
-  const sectionId = section.computedId || generateSectionId(chapter.id, section.title, source.section);
+  const sectionId = section.computedId || generateSectionId(chapter.id, section.title, sectionIndex);
   const target = getReferenceTarget(REFERENCE_INDEX, `code:${chapter.id}:${sectionId}`);
   if (!target) return null;
   const label = target.location && target.location !== target.title ? `${target.location} › ${target.title}` : target.title;
-  const order = [CODE_CHAPTER_IDS.indexOf(chapter.id), source.section];
+  const order = [CODE_CHAPTER_IDS.indexOf(chapter.id), sectionIndex];
   return { key, reference: referenceKey(target), href: getReferenceHref(target), label, order };
 }
 

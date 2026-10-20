@@ -194,17 +194,22 @@ const App = () => {
 
   const glossaryTarget = getReferenceTarget(REFERENCE_INDEX, 'code:glossary');
 
-  const buildDefinitionItem = (entry) => ({
-    key: `definition:${entry.id}`,
-    label: 'Definition',
-    title: entry.term,
-    html: entry.definition,
-    ...(glossaryTarget && {
-      target: glossaryTarget,
-      href: getReferenceHref(glossaryTarget),
-      actionLabel: checkerOpen ? 'Open the Glossary in a new tab' : 'Open the Glossary',
-    }),
-  });
+  // Each definition is its own Glossary section, titled with its term, so its section ID is
+  // the term's ID prefixed with the chapter's (see generateSectionId).
+  const buildDefinitionItem = (entry) => {
+    const target = getReferenceTarget(REFERENCE_INDEX, `code:glossary:glossary-${entry.id}`) || glossaryTarget;
+    return {
+      key: `definition:${entry.id}`,
+      label: 'Definition',
+      title: entry.term,
+      html: entry.definition,
+      ...(target && {
+        target,
+        href: getReferenceHref(target),
+        actionLabel: checkerOpen ? 'Open the Glossary in a new tab' : 'Open the Glossary',
+      }),
+    };
+  };
 
   const buildReferenceItem = (target) => ({
     key: referenceKey(target),

@@ -27,6 +27,16 @@ export const CONDITION_TAGS = Object.freeze([
   'mealAtTpoe', 'items', 'products', 'samples', 'donation', 'inKind', 'intermediary',
 ]);
 
+// A Code source names its section by number, or by title: Glossary definitions are cited by
+// title, because their numbers shift whenever a definition is added. Returns -1 if none matches.
+export const findSourceSectionIndex = (chapter, source) => {
+  const sections = chapter?.sections ?? [];
+  if (typeof source?.sectionTitle === 'string') {
+    return sections.findIndex((section) => section?.title === source.sectionTitle);
+  }
+  return Number.isInteger(source?.section) && sections[source.section] ? source.section : -1;
+};
+
 // Facts about the Event and the company that stay true whatever is proposed. They are kept when
 // another activity is chosen, and also while a question before them is still unanswered; each
 // is read only where its own question applies.
@@ -251,7 +261,7 @@ function assessDirectSupport(data, answers, ctx, api, result) {
     result.cvsRequirement = 'none';
   };
   if (ctx.eventType === 'conference') {
-    if (answers.facultyRole === 'poster') api.reason('posterIsDelegate', null, ['annex6Definitions', 'glossary']);
+    if (answers.facultyRole === 'poster') api.reason('posterIsDelegate', null, ['annex6Definitions', 'glossaryDelegate', 'glossaryFaculty']);
     banned();
     return;
   }
@@ -399,7 +409,7 @@ function assessInKind(data, answers, ctx, api, result) {
 
 function assessThirdPartyEvent(data, answers, ctx, api, result) {
   const id = ctx.activity.id;
-  if (answers.format === 'hybrid') api.reason('hybridIsInPerson', null, 'glossary');
+  if (answers.format === 'hybrid') api.reason('hybridIsInPerson', null, 'glossaryVirtualEvent');
   if (ctx.virtual) api.reason('virtualNoCvs', null, ['virtualEvents', 'virtualGuidance']);
   if (id === 'company-attendance') {
     api.review('companyAttendanceReview', null, 'conferences');
@@ -468,7 +478,7 @@ function assessOtherInteraction(answers, ctx, api, result) {
       if (answers.demoKind === 'sample') api.reason('samplesAllowed', null, 'samples');
       break;
     case 'proctorship':
-      api.reason('proctorshipNoCvs', null, ['tppt', 'glossary', 'consultingCriteria']);
+      api.reason('proctorshipNoCvs', null, ['tppt', 'glossaryProctorship', 'glossaryPreceptorship', 'consultingCriteria']);
       if (answers.proctorshipSetting === 'no') api.review('proctorshipElsewhere', null, 'tppt');
       break;
     case 'donation':

@@ -12,6 +12,17 @@ import { createLinkedTextHandlers } from '../utils/linkedTextEvents';
 
 const EMPTY_RESOURCE_LINKS = Object.freeze({});
 
+// A Code section's actions fade in when the reader points at the section or moves into it with
+// the keyboard, and fade out unhurriedly after a short pause, so moving between sections reads as
+// a gentle crossfade. Only keyboard focus counts (:focus-visible): a clicked button keeps focus,
+// which would otherwise hold the actions in view. Only devices that can hover hide them: on
+// touch screens they always show.
+const ACTIONS_REVEAL_ON_HOVER = [
+    'transition-opacity duration-500 delay-150 ease-in-out [@media(hover:hover)]:opacity-0',
+    'group-hover/section:opacity-100 group-hover/section:duration-350 group-hover/section:delay-0',
+    'group-has-[:focus-visible]/section:opacity-100 group-has-[:focus-visible]/section:duration-350 group-has-[:focus-visible]/section:delay-0',
+].join(' ');
+
 export const FullTextSection = ({
     id,
     section,
@@ -232,13 +243,22 @@ export const FullTextSection = ({
         return getTreesBySection(id);
     }, [id]);
 
+    // Each Glossary section is one definition, titled with its term. The definition already
+    // opens with that term in bold, so the title is kept only for screen readers and the
+    // table of contents.
+    const isGlossaryDefinition = bookmarkSection === 'code' && chapterId === 'glossary';
+
+    // The actions stay in view while the Cite/Link menu is open, and a bookmarked section keeps
+    // its star, so the bookmark can be seen while reading.
+    const actionsReveal = bookmarkSection === 'code' && !citeMenuOpen ? ACTIONS_REVEAL_ON_HOVER : '';
+
     return (
-        <div id={id} className="mb-8 scroll-mt-24" onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onClick={handleClick}>
+        <div id={id} className={`group/section ${isGlossaryDefinition ? 'mb-4' : 'mb-8'} scroll-mt-24`} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onClick={handleClick}>
             {/* The actions sit beside the title when both fit and wrap under it otherwise, so a
                 long title keeps the full column width. */}
-            <div className={`group flex flex-wrap items-baseline gap-x-4 gap-y-2 mb-3 mt-6 ${section.title ? 'justify-between' : 'justify-end print:hidden'}`}>
+            <div className={`group flex flex-wrap items-baseline gap-x-4 gap-y-2 ${isGlossaryDefinition ? 'mb-1' : 'mb-3 mt-6'} ${section.title ? 'justify-between' : 'justify-end print:hidden'}`}>
                 {section.title && (
-                    <h2 className="min-w-0 text-xl font-bold text-gray-800 flex items-center flex-wrap gap-2">
+                    <h2 className={isGlossaryDefinition ? 'sr-only' : 'min-w-0 text-xl font-bold text-gray-800 flex items-center flex-wrap gap-2'}>
                         <Highlight text={section.title} query={query} />
                         {showQA && section.qas && section.qas.length > 0 && (
                             <button
@@ -259,27 +279,29 @@ export const FullTextSection = ({
                 )}
                 <div className="flex flex-wrap gap-x-2 gap-y-1 shrink-0 sm:ml-auto sm:justify-end print:hidden">
                         {bookmarksControls && (
-                            <button
-                                type="button"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                        bookmarksControls.toggleBookmark(
-                                            id,
-                                            section.title
-                                                ? (chapterPrefix || '') + section.title
-                                                : fallbackTitle,
-                                        chapterId,
-                                        bookmarkSection,
-                                        bookmarkDocumentId,
-                                    );
-                                }}
-                                className={`text-sm border rounded px-2 py-1 transition-colors ${isBookmarked ? 'bg-purple-100 text-purple-700 border-purple-200' : 'text-gray-500 hover:text-purple-600 border-transparent hover:border-purple-100'}`}
-                                title={isBookmarked ? 'Remove bookmark' : 'Bookmark this section'}
-                            >
-                                {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}
-                            </button>
+                            <div className={isBookmarked ? undefined : actionsReveal}>
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                            bookmarksControls.toggleBookmark(
+                                                id,
+                                                section.title
+                                                    ? (chapterPrefix || '') + section.title
+                                                    : fallbackTitle,
+                                            chapterId,
+                                            bookmarkSection,
+                                            bookmarkDocumentId,
+                                        );
+                                    }}
+                                    className={`text-sm border rounded px-2 py-1 transition-colors ${isBookmarked ? 'bg-purple-100 text-purple-700 border-purple-200' : 'text-gray-500 hover:text-purple-600 border-transparent hover:border-purple-100'}`}
+                                    title={isBookmarked ? 'Remove bookmark' : 'Bookmark this section'}
+                                >
+                                    {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}
+                                </button>
+                            </div>
                         )}
-                        <div ref={citeContainerRef} className="relative">
+                        <div ref={citeContainerRef} className={`relative ${actionsReveal}`}>
                             <button
                                 ref={citeTriggerRef}
                                 type="button"
@@ -337,14 +359,16 @@ export const FullTextSection = ({
                                 </div>
                             )}
                         </div>
-                        <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); copyPlainText(); }}
-                            className="text-sm text-slate-600 hover:text-slate-900 border border-transparent hover:border-slate-200 rounded px-2 py-1 font-medium transition-colors"
-                            title="Copy clean plain text of this section"
-                        >
-                            Copy Text
-                        </button>
+                        <div className={actionsReveal}>
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); copyPlainText(); }}
+                                className="text-sm text-slate-600 hover:text-slate-900 border border-transparent hover:border-slate-200 rounded px-2 py-1 font-medium transition-colors"
+                                title="Copy clean plain text of this section"
+                            >
+                                Copy Text
+                            </button>
+                        </div>
                 </div>
             </div>
             <div className="prose prose-slate max-w-none text-gray-800 leading-relaxed reader-content" dangerouslySetInnerHTML={legalTextMarkup} />

@@ -62,7 +62,7 @@
     },
     {
       "title": "Initial Release",
-      "legalText": " <div class=\"space-y-4\"> <div class=\"flex items-center gap-2 mb-2\"> <span class=\"text-xs font-medium px-2.5 py-0.5 rounded bg-slate-100 text-slate-600\">Initial Release</span> </div> <ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600\"> <li>Initial release of the digital MedTech Europe Code.</li> <li>Full text of the Code of Ethical Business Practice.</li> <li>Initial implementation of accessibility menu.</li> <li>Search functionality.</li> <li>External link/sharing feature.</li> </ul> </div> ",
+      "legalText": "<div class=\"space-y-4\"> <div class=\"flex items-center gap-2 mb-2\"> <span class=\"text-xs font-medium px-2.5 py-0.5 rounded bg-slate-100 text-slate-600\">Initial Release</span> </div> <ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600\"> <li>Initial release of the digital MedTech Europe Code.</li> <li>Full text of the Code of Ethical Business Practice.</li> <li>Initial implementation of accessibility menu.</li> <li>Search functionality.</li> <li>External link/sharing feature.</li> </ul> </div>",
       "qas": []
     }
   ]

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { canonicalChapter, canonicalTrees, formatEditorFile, isEditorFile, toJsonText } from '../public/admin/lib/cms-format.js';
+import { canonicalChapter, canonicalTrees, formatEditorFile, isEditorFile, toJsonText, trimTexts } from '../public/admin/lib/cms-format.js';
 import { findUnformatted } from '../scripts/format-cms-data.mjs';
 
 test('the content editor files in the repository are in its layout', () => {
@@ -57,4 +57,10 @@ test('only the files the editor writes are formatted', () => {
   assert.ok(!isEditorFile('src/data/quizData.json'));
   assert.equal(formatEditorFile('src/data/quizData.json', []), null);
   assert.equal(toJsonText({ a: 1 }), '{\n  "a": 1\n}\n');
+});
+
+test('texts lose their outer spaces, as the editor trims them before saving', () => {
+  assert.deepEqual(trimTexts({ a: ' <p>x</p> ', b: [' y', 2, null, { c: 'z\n' }] }), { a: '<p>x</p>', b: ['y', 2, null, { c: 'z' }] });
+  const text = formatEditorFile('src/data/code/x.json', { id: 'x', sections: [{ title: 'T', legalText: ' <div>Text</div>', qas: [] }] });
+  assert.equal(JSON.parse(text).sections[0].legalText, '<div>Text</div>');
 });

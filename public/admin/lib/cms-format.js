@@ -3,7 +3,8 @@
  * in that layout change only where they were edited. `npm run format:data` applies it and
  * `npm run validate:data` checks it. Runs in Node and in the browser (Content history).
  *
- * - Every file: 2-space indentation and a final newline, as JSON.stringify(value, null, 2).
+ * - Every file: 2-space indentation and a final newline, as JSON.stringify(value, null, 2), and
+ *   no spaces at the start or end of any text: the editor trims every text before it saves.
  * - Code chapters (src/data/code/*.json): keys in the order the editor lists the fields.
  * - Decision trees (src/data/treeData.json): keys in the editor's field order, the related
  *   chapters and sections always as lists, and optional fields present even when empty ("" for
@@ -14,11 +15,31 @@
 export const TREES_PATH = 'src/data/treeData.json';
 export const CHAPTER_PATH = /^src\/data\/code\/([a-z0-9-]+)\.json$/;
 
+/**
+ * The chapter files the content editor lists, in the Code's order (src/data/codeOrder.js;
+ * public/admin/config.yml lists the same files, which tests/cmsConfig.test.mjs checks).
+ */
+export const CHAPTER_FILES = Object.freeze([
+  'scope', 'admin', 'intro',
+  'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6', 'ch7', 'ch8', 'ch9', 'ch10',
+  'part2',
+  'glossary', 'annex1', 'annex2', 'annex3', 'annex4', 'annex5', 'annex6', 'annex7',
+  'changelog',
+]);
+
 /** True for the files the content editor writes. */
 export const isEditorFile = (path) => path === TREES_PATH || CHAPTER_PATH.test(path);
 
 /** JSON text in the editor's indentation. */
 export const toJsonText = (value) => `${JSON.stringify(value, null, 2)}\n`;
+
+/** Every text trimmed, as the editor does before saving (Sveltia CMS trims all text values). */
+export function trimTexts(value) {
+  if (typeof value === 'string') return value.trim();
+  if (Array.isArray(value)) return value.map(trimTexts);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, trimTexts(item)]));
+  return value;
+}
 
 const asList = (value) => {
   if (Array.isArray(value)) return value;
@@ -74,6 +95,19 @@ const QUESTION_KEYS = ['type', 'id', 'text', 'helpText', 'options'];
 const RESULT_KEYS = ['type', 'id', 'text', 'outcome', 'reference', 'cvsCheck'];
 const OPTION_KEYS = ['label', 'next'];
 
+/** The editor's field order for each kind of object (config.yml lists the fields in this order). */
+export const EDITOR_FIELD_ORDER = Object.freeze({
+  chapter: CHAPTER_KEYS,
+  section: SECTION_KEYS,
+  qa: QA_KEYS,
+  tree: TREE_KEYS,
+  question: QUESTION_KEYS,
+  result: RESULT_KEYS,
+  option: OPTION_KEYS,
+  cvsMode: CVS_MODE_KEYS,
+  cvsStatus: CVS_STATUS_KEYS,
+});
+
 function canonicalNode(node) {
   if (node.type === 'question') {
     return ordered({ ...node, options: (node.options ?? []).map((option) => ordered(option, OPTION_KEYS)) }, QUESTION_KEYS, { helpText: '' });
@@ -108,7 +142,7 @@ export function canonicalTrees(data) {
 
 /** A content file's text in the editor's layout, or null for files the editor does not write. */
 export function formatEditorFile(path, value) {
-  if (path === TREES_PATH) return toJsonText(canonicalTrees(value));
-  if (CHAPTER_PATH.test(path)) return toJsonText(canonicalChapter(value));
+  if (path === TREES_PATH) return toJsonText(canonicalTrees(trimTexts(value)));
+  if (CHAPTER_PATH.test(path)) return toJsonText(canonicalChapter(trimTexts(value)));
   return null;
 }

@@ -677,8 +677,17 @@ async function confirmUndo(save, only = null) {
       ]);
       const plan = file.status === 'modified' ? planUndo(path, { parentText, saveText, headText }, only ? [only.change.key] : null) : null;
       if (plan) {
-        if (plan.conflicts.length) blocked.push({ path, changes: plan.conflicts });
-        else if (plan.text) {
+        if (plan.conflicts.length) blocked.push({ path, changes: plan.conflicts, reason: 'later' });
+        else if (plan.structural.length) {
+          // A save that added or removed parts is undone by putting the whole file back, which
+          // is only safe if nothing was saved to it since.
+          if (headText === saveText) {
+            steps.push({ path, expectedSha, from: { ref: parent, path } });
+            previews.push(h('h4', {}, itemTitle(path)), renderComparison(path, headText, parentText));
+          } else blocked.push({ path, changes: plan.structural, reason: 'structure' });
+        // Putting the old value back can leave the file as it is (only spaces at the ends of a
+        // text changed, which the editor trims anyway): nothing to undo there.
+        } else if (plan.text && plan.text !== headText) {
           steps.push({ path, expectedSha, text: plan.text });
           previews.push(h('h4', {}, itemTitle(path)), renderComparison(path, headText, plan.text));
         } else alreadyUndone += 1;
@@ -693,11 +702,20 @@ async function confirmUndo(save, only = null) {
     }
     say('');
     if (blocked.length) {
+      const later = blocked.filter((item) => item.reason === 'later');
+      const structure = blocked.filter((item) => item.reason === 'structure');
+      const list = (items) => items.map(({ path, changes }) => h('div', {}, h('h4', {}, itemTitle(path)), h('ul', {}, changes.map((change) => h('li', {}, `${change.group} › ${change.label}${change.status === 'added' ? ' (added)' : change.status === 'removed' ? ' (removed)' : ''}`)))));
       explainBlocked('This can’t be undone automatically', [
-        h('p', {}, only
-          ? 'This text was changed again by a later save, so undoing this change here would also undo that later work.'
-          : 'Some of the texts this save changed were changed again by later saves, so undoing it here would also undo that later work:'),
-        ...blocked.map(({ path, changes }) => h('div', {}, h('h4', {}, itemTitle(path)), h('ul', {}, changes.map((change) => h('li', {}, `${change.group} › ${change.label}`))))),
+        ...(later.length ? [
+          h('p', {}, only
+            ? 'This text was changed again by a later save, so undoing this change here would also undo that later work.'
+            : 'Some of the texts this save changed were changed again by later saves, so undoing it here would also undo that later work:'),
+          ...(only ? [] : list(later)),
+        ] : []),
+        ...(structure.length ? [
+          h('p', {}, 'This save added or removed parts (for example a Version History update or a decision-tree step), and the item has been saved again since, so it cannot be undone part by part:'),
+          ...list(structure),
+        ] : []),
         h('p', {}, 'Undo the later saves first (newest first), or open the item’s History and restore the version you want.'),
       ]);
       return;

@@ -92,6 +92,9 @@ Click **Content history: see and undo changes** in the purple bar (it opens a ne
 - If a text was changed again by a later save, it cannot be undone from the older save without
   losing that later work. The page says which text, and what to do instead (undo the later save
   first, or restore a version).
+- A save that added or removed a part (a Version History update, a decision-tree step) is undone
+  whole: the item is put back as it was before that save. That is only possible while nobody has
+  saved the item since; otherwise the page says so, and you can restore a version instead.
 - **History** (or the search box) lists every version of a chapter or of the decision trees.
   **Restore this version** puts that whole version back.
 - Before anything happens, you see exactly what will change, and nothing changes until you confirm.

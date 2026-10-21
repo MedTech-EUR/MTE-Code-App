@@ -121,11 +121,24 @@ test('planUndo of a save that added a tree step cannot be done field by field', 
   const saved = trees();
   saved.trees[0].nodes.push({ type: 'result', id: 'extra', text: 'E', outcome: 'conditional', reference: '', cvsCheck: '' });
   const plan = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, saved), headText: text(TREES, saved) });
-  assert.ok(plan.conflicts.length > 0);
+  assert.ok(plan.structural.length > 0, 'the added step is a structural change');
+  assert.deepEqual(plan.conflicts, []);
   assert.equal(plan.text, null);
   // A tree text edit can be: the outcome is put back as stored, not as its label.
   const edited = trees();
   edited.trees[0].nodes[1].outcome = 'conditional';
   const undo = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, edited), headText: text(TREES, edited) });
   assert.equal(JSON.parse(undo.text).trees[0].nodes[1].outcome, 'compliant');
+});
+
+test('Version History updates are matched by title, so a new one at the top is one addition', () => {
+  const PATH = 'src/data/code/changelog.json';
+  const page = (sections) => ({ id: 'changelog', part: 'website', title: 'Version History', icon: 'Info', summary: '<p>S</p>', sections });
+  const before = page([{ title: 'Update 1', legalText: '<p>Current</p>', qas: [] }]);
+  const after = page([{ title: 'Update 2', legalText: '<p>Current</p>', qas: [] }, { title: 'Update 1', legalText: '<p>First</p>', qas: [] }]);
+  const { changes } = compareContent(PATH, text(PATH, before), text(PATH, after));
+  assert.deepEqual(changes.map((c) => [c.group, c.label, c.status]), [['Update 2', 'Text', 'added'], ['Update 1', 'Text', 'changed']]);
+  // Undoing the badge move on Update 1 writes to Update 1, now second in the list.
+  const plan = planUndo(PATH, { parentText: text(PATH, before), saveText: text(PATH, after), headText: text(PATH, after) }, ['update:Update 1.legalText']);
+  assert.equal(JSON.parse(plan.text).sections[1].legalText, '<p>Current</p>');
 });

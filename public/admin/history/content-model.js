@@ -4,8 +4,9 @@
  * field at a time. Tested by tests/contentModel.test.mjs.
  *
  * A field's key is the same in every version of the file: chapters are keyed by position (the
- * editor cannot add, remove or reorder their sections and Q&As), decision trees by tree and step
- * ID (steps can be added and reordered).
+ * editor cannot add, remove or reorder their sections and Q&As), Version History updates by title
+ * (new ones are added at the top) and decision trees by tree and step ID (steps can be added and
+ * reordered).
  */
 import { CHAPTER_PATH, formatEditorFile, TREES_PATH } from '../lib/cms-format.js';
 import { OUTCOME_LABELS } from '../lib/trees.js';
@@ -38,14 +39,17 @@ export function fieldsOf(path, data) {
     add('title', ['title'], chapterGroup, website ? 'Title' : 'Chapter title', 'text', data.title);
     add('summary', ['summary'], chapterGroup, website ? 'Introduction' : 'Chapter summary', 'html', data.summary);
     for (const key of ['id', 'part', 'icon']) add(key, [key], chapterGroup, `Technical setting “${key}”`, 'value', data[key]);
+    const titles = (data.sections ?? []).map((section) => section.title);
+    const byTitle = website && titles.every((title, i) => title && titles.indexOf(title) === i);
     (data.sections ?? []).forEach((section, i) => {
       const group = section.title || `Section ${i + 1} (untitled)`;
-      add(`sections.${i}.title`, ['sections', i, 'title'], group, glossary ? 'Term' : website ? 'Title' : 'Section title', 'text', section.title);
-      add(`sections.${i}.legalText`, ['sections', i, 'legalText'], group, glossary ? 'Definition' : 'Text', 'html', section.legalText);
+      const base = byTitle ? `update:${section.title}` : `sections.${i}`;
+      if (!byTitle) add(`${base}.title`, ['sections', i, 'title'], group, glossary ? 'Term' : 'Section title', 'text', section.title);
+      add(`${base}.legalText`, ['sections', i, 'legalText'], group, glossary ? 'Definition' : 'Text', 'html', section.legalText);
       (section.qas ?? []).forEach((qa, k) => {
         const number = qaNumber(qa.q, k);
-        add(`sections.${i}.qas.${k}.q`, ['sections', i, 'qas', k, 'q'], group, `${number} · Question`, 'text', qa.q);
-        add(`sections.${i}.qas.${k}.a`, ['sections', i, 'qas', k, 'a'], group, `${number} · Answer`, 'html', qa.a);
+        add(`${base}.qas.${k}.q`, ['sections', i, 'qas', k, 'q'], group, `${number} · Question`, 'text', qa.q);
+        add(`${base}.qas.${k}.a`, ['sections', i, 'qas', k, 'a'], group, `${number} · Answer`, 'html', qa.a);
       });
     });
     return fields;
@@ -140,13 +144,15 @@ export function compareContent(path, beforeText, afterText) {
 /**
  * Plans an undo of the fields a save changed, keeping everything changed since in other fields.
  * `keys` limits it to some of those fields ("undo just this change").
- * Returns { changes, ready, done, conflicts, text }:
+ * Returns { changes, ready, done, conflicts, structural, text }:
  * - ready: changes that can be undone (the field is still as the save left it);
  * - done: changes already undone (the field is back as it was before the save);
- * - conflicts: changes to fields edited again later, or that added or removed a step: they cannot
- *   be undone here without losing that later work;
- * - text: the file with the ready changes undone, or null when there is nothing to do or a
- *   conflict stops the undo.
+ * - conflicts: changes to fields edited again later, which cannot be undone here without losing
+ *   that later work;
+ * - structural: fields the save added or removed (a new update, a tree step): undone only by
+ *   putting the whole file back, which the page offers when nothing changed since;
+ * - text: the file with the ready changes undone, or null when there is nothing to do, or a
+ *   conflict or a structural change stops a field-by-field undo.
  */
 export function planUndo(path, { parentText, saveText, headText }, keys = null) {
   const parent = parse(parentText);
@@ -161,14 +167,16 @@ export function planUndo(path, { parentText, saveText, headText }, keys = null) 
   const ready = [];
   const done = [];
   const conflicts = [];
+  const structural = [];
   for (const change of changes) {
     const now = H.get(change.key);
-    if (change.status !== 'changed' || !now) conflicts.push(change);
+    if (change.status !== 'changed') structural.push(change);
+    else if (!now) conflicts.push(change);
     else if (sameValue(now.value, change.after)) ready.push(change);
     else if (sameValue(now.value, change.before)) done.push(change);
     else conflicts.push(change);
   }
-  if (conflicts.length || ready.length === 0) return { changes, ready, done, conflicts, text: null };
+  if (conflicts.length || structural.length || ready.length === 0) return { changes, ready, done, conflicts, structural, text: null };
   const next = structuredClone(head);
   for (const change of ready) {
     const target = H.get(change.key).path;
@@ -176,5 +184,5 @@ export function planUndo(path, { parentText, saveText, headText }, keys = null) 
     const owner = valueAt(next, target.slice(0, -1));
     owner[target.at(-1)] = structuredClone(parentValue);
   }
-  return { changes, ready, done, conflicts, text: formatEditorFile(path, next) };
+  return { changes, ready, done, conflicts, structural, text: formatEditorFile(path, next) };
 }

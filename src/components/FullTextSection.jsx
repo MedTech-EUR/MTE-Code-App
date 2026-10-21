@@ -4,11 +4,19 @@ import { processReaderHtml, getQaAnchorId } from '../utils/textUtils';
 import { copyTextToClipboard } from '../utils/clipboardUtils';
 import { Highlight } from './Highlight';
 import { AppIcon } from './AppIcons';
+import { ReaderActions } from './ReaderActions';
 import { getTreesBySection } from '../data/treeData';
 import { buildCodeSectionPath } from '../utils/routeUtils';
 import { resolveResourceLinks } from '../utils/resourceUtils';
 import { linkCrossReferences } from '../utils/crossReferences';
 import { createLinkedTextHandlers } from '../utils/linkedTextEvents';
+import {
+    buildQaTitle,
+    CITATION_COPIED_MESSAGES,
+    formatCitation,
+    formatQaPlainText,
+    getQaNumberLabel,
+} from '../utils/citationText';
 
 const EMPTY_RESOURCE_LINKS = Object.freeze({});
 
@@ -22,6 +30,26 @@ const ACTIONS_REVEAL_ON_HOVER = [
     'group-hover/section:opacity-100 group-hover/section:duration-350 group-hover/section:delay-0',
     'group-has-[:focus-visible]/section:opacity-100 group-has-[:focus-visible]/section:duration-350 group-has-[:focus-visible]/section:delay-0',
 ].join(' ');
+
+// The same for each Q&A's own actions, revealed by pointing at or moving into that Q&A.
+const QA_ACTIONS_REVEAL_ON_HOVER = [
+    'transition-opacity duration-500 delay-150 ease-in-out [@media(hover:hover)]:opacity-0',
+    'group-hover/qa:opacity-100 group-hover/qa:duration-350 group-hover/qa:delay-0',
+    'group-has-[:focus-visible]/qa:opacity-100 group-has-[:focus-visible]/qa:duration-350 group-has-[:focus-visible]/qa:delay-0',
+].join(' ');
+
+// Plain text of reader HTML, as the browser shows it.
+const toPlainText = (html) => {
+    const element = document.createElement('div');
+    element.innerHTML = html;
+    return (element.textContent || '').trim();
+};
+
+const toQaPlainText = (qa) => formatQaPlainText({
+    label: qa.label,
+    question: toPlainText(qa.q),
+    answer: toPlainText(qa.a),
+});
 
 export const FullTextSection = ({
     id,
@@ -76,12 +104,14 @@ export const FullTextSection = ({
 
         return {
             legalTextMarkup: { __html: DOMPurify.sanitize(processedHtml) },
-            processedQas: (section.qas || []).map((qa) => {
+            processedQas: (section.qas || []).map((qa, index) => {
                 const questionHtml = processReaderHtml(qa.q, processingOptions);
                 const answerHtml = processReaderHtml(`A: ${qa.a}`, processingOptions);
 
                 return {
                     ...qa,
+                    anchorId: getQaAnchorId(id, index),
+                    numberLabel: getQaNumberLabel(qa),
                     questionMarkup: { __html: DOMPurify.sanitize(questionHtml) },
                     answerMarkup: { __html: DOMPurify.sanitize(answerHtml) },
                 };
@@ -90,13 +120,9 @@ export const FullTextSection = ({
     }, [section.legalText, section.qas, resourceLinks, query, glossaryMap, id, referenceContext]);
 
     const [copyFeedback, setCopyFeedback] = useState(null);
-    const [citeMenuOpen, setCiteMenuOpen] = useState(false);
-    const citeContainerRef = useRef(null);
-    const citeTriggerRef = useRef(null);
     const copyFeedbackTimerRef = useRef(null);
     const copyRequestRef = useRef(0);
     const isMountedRef = useRef(false);
-    const citeMenuId = `citation-menu-${id}`;
 
     useEffect(() => {
         isMountedRef.current = true;
@@ -108,36 +134,6 @@ export const FullTextSection = ({
             }
         };
     }, []);
-
-    useEffect(() => {
-        if (!citeMenuOpen) return undefined;
-
-        const closeCiteMenu = (restoreFocus = false) => {
-            setCiteMenuOpen(false);
-            if (restoreFocus) {
-                window.requestAnimationFrame(() => citeTriggerRef.current?.focus());
-            }
-        };
-
-        const handlePointerDown = (event) => {
-            if (!citeContainerRef.current?.contains(event.target)) {
-                closeCiteMenu();
-            }
-        };
-
-        const handleKeyDown = (event) => {
-            if (event.key !== 'Escape') return;
-            event.preventDefault();
-            closeCiteMenu(true);
-        };
-
-        document.addEventListener('pointerdown', handlePointerDown);
-        document.addEventListener('keydown', handleKeyDown);
-        return () => {
-            document.removeEventListener('pointerdown', handlePointerDown);
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [citeMenuOpen]);
 
     const showCopyFeedback = (message, kind = 'success') => {
         if (copyFeedbackTimerRef.current) {
@@ -174,69 +170,54 @@ export const FullTextSection = ({
         new URL(buildSectionPath(chapterId, sectionId), window.location.origin).href
     );
 
-    const copyCitationFormat = async (format) => {
-        const url = getSectionUrl(id);
-        const prefix = chapterPrefix ? chapterPrefix : '';
-        const fullTitle = section.title ? `${prefix}${section.title}` : fallbackTitle;
-        const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-        let textToCopy = '';
+    const sectionTitle = section.title ? `${chapterPrefix || ''}${section.title}` : fallbackTitle;
 
-        if (format === 'formal') {
-            textToCopy = `${citationSourceTitle}, ${fullTitle}. (Accessed ${today}). Available at: ${url}`;
-        } else if (format === 'markdown') {
-            textToCopy = `[${fullTitle} - ${citationMarkdownLabel}](${url})`;
-        } else if (format === 'url') {
-            textToCopy = url;
-        }
-
-        const successMessage = (
-            format === 'formal' ? 'Formal citation copied!' :
-            format === 'markdown' ? 'Markdown link copied!' : 'Direct link copied!'
-        );
-
-        if (await copyWithFeedback(textToCopy, successMessage)) {
-            setCiteMenuOpen(false);
-            window.requestAnimationFrame(() => citeTriggerRef.current?.focus());
-        }
-    };
+    // Copies a citation of this section, or of one of its Q&As (`anchorId`), in a Cite/Link format.
+    const copyCitation = (format, title, anchorId) => copyWithFeedback(
+        formatCitation(format, {
+            sourceTitle: citationSourceTitle,
+            markdownLabel: citationMarkdownLabel,
+            title,
+            url: getSectionUrl(anchorId),
+        }),
+        CITATION_COPIED_MESSAGES[format],
+    );
 
     const copyPlainText = async () => {
-        const prefix = chapterPrefix ? chapterPrefix : '';
-        const fullTitle = section.title ? `${prefix}${section.title}` : fallbackTitle;
-        
-        const tempEl = document.createElement('div');
-        tempEl.innerHTML = section.legalText;
-        const plainLegalText = tempEl.textContent || tempEl.innerText || '';
-
-        let textToCopy = `${fullTitle}\n\n${plainLegalText.trim()}`;
+        let textToCopy = `${sectionTitle}\n\n${toPlainText(section.legalText)}`;
 
         if (section.qas && section.qas.length > 0) {
             textToCopy += `\n\nOfficial Q&A Guidance:\n`;
-            section.qas.forEach(qa => {
-                const tempQ = document.createElement('div');
-                tempQ.innerHTML = qa.q;
-                const tempA = document.createElement('div');
-                tempA.innerHTML = qa.a;
-                const questionText = (tempQ.textContent || '').trim();
-                const answerText = (tempA.textContent || '').trim();
-                const questionPrefix = /^Q:/i.test(questionText) ? '' : 'Q: ';
-                const answerPrefix = /^A:/i.test(answerText) ? '' : 'A: ';
-                textToCopy += `\n${qa.label ? `${qa.label}\n` : ''}${questionPrefix}${questionText}\n${answerPrefix}${answerText}\n`;
+            section.qas.forEach((qa) => {
+                textToCopy += `\n${toQaPlainText(qa)}`;
             });
         }
 
         await copyWithFeedback(textToCopy, 'Plain text copied to clipboard!');
     };
 
-    // Glossary terms open their definition; references open a preview, or the Code.
-    const { handleClick, handleKeyDown, handleKeyUp } = createLinkedTextHandlers({ onTermClick, onOpenReference });
+    const copyQaPlainText = (qa) => copyWithFeedback(
+        `${sectionTitle}\n\n${toQaPlainText(qa)}`,
+        'Plain text copied to clipboard!',
+    );
 
-    const isBookmarked = bookmarksControls?.isBookmarked(
-        id,
+    const toggleBookmark = (anchorId, title) => bookmarksControls.toggleBookmark(
+        anchorId,
+        title,
+        chapterId,
+        bookmarkSection,
+        bookmarkDocumentId,
+    );
+
+    const isAnchorBookmarked = (anchorId) => Boolean(bookmarksControls?.isBookmarked(
+        anchorId,
         bookmarkSection,
         bookmarkDocumentId,
         chapterId,
-    );
+    ));
+
+    // Glossary terms open their definition; references open a preview, or the Code.
+    const { handleClick, handleKeyDown, handleKeyUp } = createLinkedTextHandlers({ onTermClick, onOpenReference });
 
     // Find related decision trees for this specific section only (no chapter fallback)
     const relatedTrees = useMemo(() => {
@@ -248,9 +229,8 @@ export const FullTextSection = ({
     // table of contents.
     const isGlossaryDefinition = bookmarkSection === 'code' && chapterId === 'glossary';
 
-    // The actions stay in view while the Cite/Link menu is open, and a bookmarked section keeps
-    // its star, so the bookmark can be seen while reading.
-    const actionsReveal = bookmarkSection === 'code' && !citeMenuOpen ? ACTIONS_REVEAL_ON_HOVER : '';
+    // Only the Code reader hides the actions at rest; the Transparency reader always shows them.
+    const isCodeReader = bookmarkSection === 'code';
 
     return (
         <div id={id} className={`group/section ${isGlossaryDefinition ? 'mb-4' : 'mb-8'} scroll-mt-24`} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onClick={handleClick}>
@@ -277,99 +257,15 @@ export const FullTextSection = ({
                         )}
                     </h2>
                 )}
-                <div className="flex flex-wrap gap-x-2 gap-y-1 shrink-0 sm:ml-auto sm:justify-end print:hidden">
-                        {bookmarksControls && (
-                            <div className={isBookmarked ? undefined : actionsReveal}>
-                                <button
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                            bookmarksControls.toggleBookmark(
-                                                id,
-                                                section.title
-                                                    ? (chapterPrefix || '') + section.title
-                                                    : fallbackTitle,
-                                            chapterId,
-                                            bookmarkSection,
-                                            bookmarkDocumentId,
-                                        );
-                                    }}
-                                    className={`text-sm border rounded px-2 py-1 transition-colors ${isBookmarked ? 'bg-purple-100 text-purple-700 border-purple-200' : 'text-gray-500 hover:text-purple-600 border-transparent hover:border-purple-100'}`}
-                                    title={isBookmarked ? 'Remove bookmark' : 'Bookmark this section'}
-                                >
-                                    {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}
-                                </button>
-                            </div>
-                        )}
-                        <div ref={citeContainerRef} className={`relative ${actionsReveal}`}>
-                            <button
-                                ref={citeTriggerRef}
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); setCiteMenuOpen(!citeMenuOpen); }}
-                                className="text-sm text-[#007A86] hover:text-[#005F68] border border-transparent hover:border-cyan-100 rounded px-2 py-1 flex items-center gap-1 font-medium transition-colors"
-                                title="Copy citation or reference link for this section"
-                                aria-expanded={citeMenuOpen}
-                                aria-controls={citeMenuOpen ? citeMenuId : undefined}
-                            >
-                                <span>Cite/Link</span>
-                                <AppIcon name={citeMenuOpen ? "ChevronUp" : "ChevronDown"} size={12} />
-                            </button>
-                            {citeMenuOpen && (
-                                <div
-                                    id={citeMenuId}
-                                    role="group"
-                                    aria-label="Copy reference"
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-xl p-2 z-50 animate-fade-in text-left"
-                                >
-                                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-1">Copy Reference</div>
-                                    <button
-                                        type="button"
-                                        onClick={() => copyCitationFormat('formal')}
-                                        className="w-full text-left px-2.5 py-1.5 text-xs text-gray-700 hover:bg-cyan-50 hover:text-[#007A86] rounded-lg transition-colors flex items-center justify-between group"
-                                    >
-                                        <div>
-                                            <div className="font-semibold">Formal Citation</div>
-                                            <div className="text-[10px] text-gray-400 group-hover:text-cyan-700">Includes date & full title</div>
-                                        </div>
-                                        <AppIcon name="Copy" size={14} className="text-gray-400 group-hover:text-[#007A86]" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => copyCitationFormat('markdown')}
-                                        className="w-full text-left px-2.5 py-1.5 text-xs text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-lg transition-colors flex items-center justify-between group"
-                                    >
-                                        <div>
-                                            <div className="font-semibold">Markdown Link</div>
-                                            <div className="text-[10px] text-gray-400 group-hover:text-purple-600">[Title](URL) format</div>
-                                        </div>
-                                        <AppIcon name="Link" size={14} className="text-gray-400 group-hover:text-purple-600" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => copyCitationFormat('url')}
-                                        className="w-full text-left px-2.5 py-1.5 text-xs text-gray-700 hover:bg-slate-50 hover:text-slate-900 rounded-lg transition-colors flex items-center justify-between group"
-                                    >
-                                        <div>
-                                            <div className="font-semibold">Direct Link URL</div>
-                                            <div className="text-[10px] text-gray-400">Raw web link</div>
-                                        </div>
-                                        <AppIcon name="ExternalLink" size={14} className="text-gray-400 group-hover:text-slate-700" />
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                        <div className={actionsReveal}>
-                            <button
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); copyPlainText(); }}
-                                className="text-sm text-slate-600 hover:text-slate-900 border border-transparent hover:border-slate-200 rounded px-2 py-1 font-medium transition-colors"
-                                title="Copy clean plain text of this section"
-                            >
-                                Copy Text
-                            </button>
-                        </div>
-                </div>
+                <ReaderActions
+                    menuId={`citation-menu-${id}`}
+                    reveal={isCodeReader ? ACTIONS_REVEAL_ON_HOVER : ''}
+                    isBookmarked={isAnchorBookmarked(id)}
+                    onToggleBookmark={bookmarksControls ? () => toggleBookmark(id, sectionTitle) : undefined}
+                    onCopyCitation={(format) => copyCitation(format, sectionTitle, id)}
+                    onCopyText={copyPlainText}
+                    className="shrink-0 sm:ml-auto sm:justify-end"
+                />
             </div>
             <div className="prose prose-slate max-w-none text-gray-800 leading-relaxed reader-content" dangerouslySetInnerHTML={legalTextMarkup} />
             {supplement}
@@ -419,23 +315,40 @@ export const FullTextSection = ({
                     id={`qa-block-${id}`}
                     className={`mt-4 space-y-4 scroll-mt-24 ${!showQA && printAllQA ? 'hidden print-always' : ''}`}
                 >
-                    {processedQas.map((qa, idx) => (
-                        <div key={idx} id={getQaAnchorId(id, idx)} className="bg-gray-50 p-4 rounded-lg border border-gray-100 scroll-mt-24 print:bg-transparent print:border-none print:p-0 print:my-4">
-                            {qa.label && (
-                                <p className="text-xs font-bold text-[#007A86] underline underline-offset-2 mb-2 reader-content">
-                                    {qa.label}
-                                </p>
-                            )}
-                            <p
-                                className="font-bold text-gray-900 mb-1 reader-content"
-                                dangerouslySetInnerHTML={qa.questionMarkup}
-                            />
-                            <div
-                                className="text-gray-700 prose prose-sm max-w-none reader-content"
-                                dangerouslySetInnerHTML={qa.answerMarkup}
-                            />
-                        </div>
-                    ))}
+                    {processedQas.map((qa) => {
+                        const qaTitle = buildQaTitle(sectionTitle, qa);
+                        return (
+                            <div key={qa.anchorId} id={qa.anchorId} className="group/qa bg-gray-50 p-4 rounded-lg border border-gray-100 scroll-mt-24 print:bg-transparent print:border-none print:p-0 print:my-4">
+                                {/* The actions float beside the start of the question from the
+                                    sm breakpoint, so only its first line is narrower; on phones
+                                    they get their own row above it. */}
+                                <ReaderActions
+                                    menuId={`citation-menu-${qa.anchorId}`}
+                                    subject="Q&A"
+                                    name={qa.numberLabel || 'Q&A'}
+                                    reveal={isCodeReader ? QA_ACTIONS_REVEAL_ON_HOVER : ''}
+                                    isBookmarked={isAnchorBookmarked(qa.anchorId)}
+                                    onToggleBookmark={bookmarksControls ? () => toggleBookmark(qa.anchorId, qaTitle) : undefined}
+                                    onCopyCitation={(format) => copyCitation(format, qaTitle, qa.anchorId)}
+                                    onCopyText={() => copyQaPlainText(qa)}
+                                    className="justify-end mb-2 sm:float-right sm:ml-4 sm:-my-1"
+                                />
+                                {qa.label && (
+                                    <p className="text-xs font-bold text-[#007A86] underline underline-offset-2 mb-2 reader-content">
+                                        {qa.label}
+                                    </p>
+                                )}
+                                <p
+                                    className="font-bold text-gray-900 mb-1 reader-content"
+                                    dangerouslySetInnerHTML={qa.questionMarkup}
+                                />
+                                <div
+                                    className="clear-right text-gray-700 prose prose-sm max-w-none reader-content"
+                                    dangerouslySetInnerHTML={qa.answerMarkup}
+                                />
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </div>

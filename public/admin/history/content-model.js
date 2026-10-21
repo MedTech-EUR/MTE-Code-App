@@ -120,9 +120,11 @@ function parse(text) {
 
 /**
  * The field-by-field difference between two versions of a content file:
- * { changes: [{ key, group, label, kind, status: 'changed' | 'added' | 'removed', before, after }],
- *   layoutOnly } — `layoutOnly` is true when the files differ but no field does: only the file's
- *   layout (or, for the decision trees, the order of trees or steps) changed.
+ * { changes: [{ key, group, label, kind, status: 'changed' | 'added' | 'removed', before, after,
+ *   wholeGroup }], layoutOnly } — `wholeGroup` is true on an added (removed) field whose whole group
+ *   is new (gone): a new Version History update or tree step rather than a new answer to an
+ *   existing question. `layoutOnly` is true when the files differ but no field does: only the
+ *   file's layout (or, for the decision trees, the order of trees or steps) changed.
  * Returns null when either version is not a content file that can be read (compare lines then).
  */
 export function compareContent(path, beforeText, afterText) {
@@ -131,14 +133,33 @@ export function compareContent(path, beforeText, afterText) {
   if (before === undefined || after === undefined || (!CHAPTER_PATH.test(path) && path !== TREES_PATH)) return null;
   const a = before ? fieldsOf(path, before) : new Map();
   const b = after ? fieldsOf(path, after) : new Map();
+  const groupsOf = (fields) => new Set([...fields.values()].map((field) => field.group));
+  const groupsBefore = groupsOf(a);
+  const groupsAfter = groupsOf(b);
   const changes = [];
   for (const [key, field] of b) {
     const old = a.get(key);
-    if (!old) changes.push({ ...field, status: 'added', before: undefined, after: field.value });
-    else if (!sameValue(old.value, field.value)) changes.push({ ...field, status: 'changed', before: old.value, after: field.value });
+    if (!old) changes.push({ ...field, status: 'added', before: undefined, after: field.value, wholeGroup: !groupsBefore.has(field.group) });
+    else if (!sameValue(old.value, field.value)) changes.push({ ...field, status: 'changed', before: old.value, after: field.value, wholeGroup: false });
   }
-  for (const [key, field] of a) if (!b.has(key)) changes.push({ ...field, status: 'removed', before: field.value, after: undefined });
+  for (const [key, field] of a) if (!b.has(key)) changes.push({ ...field, status: 'removed', before: field.value, after: undefined, wholeGroup: !groupsAfter.has(field.group) });
   return { changes, layoutOnly: changes.length === 0 && beforeText !== afterText };
+}
+
+/** A change's name as the editor shows it: "3. Educational Grants › Text", or "Chapter title". */
+export const changeName = (change) => (change.group && change.group !== 'Chapter' && change.group !== 'Page' ? `${change.group} › ${change.label}` : change.label);
+
+/**
+ * One line for a list of changes: "Added: October 2026 Update 3. Changed: October 2026 Update 2 ›
+ * Text." A new (or removed) update or step is named once, not field by field; each kind lists at
+ * most `limit` names.
+ */
+export function summarizeChanges(changes, limit = 4) {
+  return [['added', 'Added'], ['changed', 'Changed'], ['removed', 'Removed']].map(([status, verb]) => {
+    const names = [...new Set(changes.filter((change) => change.status === status).map((change) => (change.wholeGroup ? change.group : changeName(change))))];
+    if (!names.length) return '';
+    return `${verb}: ${names.slice(0, limit).join('; ')}${names.length > limit ? `; and ${names.length - limit} more` : ''}.`;
+  }).filter(Boolean).join(' ');
 }
 
 /**

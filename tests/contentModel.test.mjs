@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { compareContent, fieldsOf, planUndo } from '../public/admin/history/content-model.js';
+import { compareContent, fieldsOf, planUndo, summarizeChanges } from '../public/admin/history/content-model.js';
 import { formatEditorFile } from '../public/admin/lib/cms-format.js';
 
 const CH4 = 'src/data/code/ch4.json';
@@ -141,4 +141,30 @@ test('Version History updates are matched by title, so a new one at the top is o
   // Undoing the badge move on Update 1 writes to Update 1, now second in the list.
   const plan = planUndo(PATH, { parentText: text(PATH, before), saveText: text(PATH, after), headText: text(PATH, after) }, ['update:Update 1.legalText']);
   assert.equal(JSON.parse(plan.text).sections[1].legalText, '<p>Current</p>');
+});
+
+test('summaries say what was added, changed and removed, naming a new update or step once', () => {
+  const PATH = 'src/data/code/changelog.json';
+  const page = (sections) => ({ id: 'changelog', part: 'website', title: 'Version History', icon: 'Info', summary: '<p>S</p>', sections });
+  const before = page([{ title: 'Update 1', legalText: '<p>Current</p>', qas: [] }]);
+  const after = page([{ title: 'Update 2', legalText: '<p>Current</p>', qas: [] }, { title: 'Update 1', legalText: '<p>First</p>', qas: [] }]);
+  assert.equal(summarizeChanges(compareContent(PATH, text(PATH, before), text(PATH, after)).changes), 'Added: Update 2. Changed: Update 1 › Text.');
+  assert.equal(summarizeChanges(compareContent(PATH, text(PATH, after), text(PATH, before)).changes), 'Changed: Update 1 › Text. Removed: Update 2.');
+
+  // A new step is named once; a new answer to an existing question is named field by field.
+  const t1 = trees();
+  const t2 = trees();
+  t2.trees[0].nodes.push({ type: 'result', id: 'extra', text: 'E', outcome: 'conditional', reference: '', cvsCheck: '' });
+  t2.trees[0].nodes[0].options.push({ label: 'No', next: 'extra' });
+  assert.equal(
+    summarizeChanges(compareContent(TREES, text(TREES, t1), text(TREES, t2)).changes),
+    'Added: Tree “Tree X” › Question “start” › Answer 2; Tree “Tree X” › Question “start” › Answer 2 · leads to; Tree “Tree X” › Result “extra”.',
+  );
+
+  // Chapter-level fields go by their own names, and long lists are cut short.
+  const c2 = chapter();
+  c2.title = 'Grants (revised)';
+  assert.equal(summarizeChanges(compareContent(CH4, text(CH4, chapter()), text(CH4, c2)).changes), 'Changed: Chapter title.');
+  const many = Array.from({ length: 6 }, (_, i) => ({ status: 'changed', group: `S${i}`, label: 'Text', wholeGroup: false }));
+  assert.equal(summarizeChanges(many), 'Changed: S0 › Text; S1 › Text; S2 › Text; S3 › Text; and 2 more.');
 });

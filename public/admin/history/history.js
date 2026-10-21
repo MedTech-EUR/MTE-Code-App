@@ -24,7 +24,7 @@ import {
   undoMessage,
   undoSteps,
 } from './history-core.js';
-import { compareContent, planUndo } from './content-model.js';
+import { changeName, compareContent, planUndo, summarizeChanges } from './content-model.js';
 import { htmlToText } from '../lib/html-tools.js';
 import { ConflictError, GitHubError, createGitHub, forgetToken, signIn, storedToken } from './github.js';
 
@@ -431,8 +431,7 @@ async function summarise(save, file, target) {
       target.textContent = layoutNote(file.filename);
       return;
     }
-    const names = comparison.changes.map((change) => (change.group && change.group !== 'Chapter' && change.group !== 'Page' ? `${change.group} › ${change.label}` : change.label));
-    target.textContent = names.length ? `Changed: ${names.slice(0, 4).join('; ')}${names.length > 4 ? `; and ${names.length - 4} more` : ''}.` : '';
+    target.textContent = summarizeChanges(comparison.changes);
   } catch {
     // The summary is a convenience; "What changed" shows the details or the error.
   }
@@ -704,7 +703,8 @@ async function confirmUndo(save, only = null) {
     if (blocked.length) {
       const later = blocked.filter((item) => item.reason === 'later');
       const structure = blocked.filter((item) => item.reason === 'structure');
-      const list = (items) => items.map(({ path, changes }) => h('div', {}, h('h4', {}, itemTitle(path)), h('ul', {}, changes.map((change) => h('li', {}, `${change.group} › ${change.label}${change.status === 'added' ? ' (added)' : change.status === 'removed' ? ' (removed)' : ''}`)))));
+      const describe = (change) => `${change.wholeGroup ? change.group : changeName(change)}${{ changed: '', added: ' (added)', removed: ' (removed)' }[change.status]}`;
+      const list = (items) => items.map(({ path, changes }) => h('div', {}, h('h4', {}, itemTitle(path)), h('ul', {}, [...new Set(changes.map(describe))].map((line) => h('li', {}, line)))));
       explainBlocked('This can’t be undone automatically', [
         ...(later.length ? [
           h('p', {}, only

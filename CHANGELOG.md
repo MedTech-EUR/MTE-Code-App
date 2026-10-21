@@ -9,6 +9,11 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### Q&A actions — 2026-10-21
+- Every official Q&A (Code and Transparency) has its own Bookmark, Cite/Link and Copy Text buttons. The section's buttons and the Cite/Link menu moved into `ReaderActions.jsx`, used for both; the copied text comes from `utils/citationText.js` (citation formats, the Q&A's printed "Q&A N" from its `label` or the start of its question, a Q&A as plain text). A Q&A is cited, linked and bookmarked by its existing anchor (`getQaAnchorId`), so no route or data changes; its title is the section's plus the number, e.g. "Ch 4 - 3. Educational Grants, Q&A 31".
+- In the Code reader the Q&A buttons fade in on hover of the Q&A (`group/qa`) or keyboard focus in it, like the section's; the Transparency reader always shows them. They float beside the first line of the question from `sm`, and take their own row above it on phones. Each button's accessible name includes the Q&A number ("Cite/Link Q&A 31").
+- Copy Text no longer adds "Q: " before a Code question that opens with its "Q&A N" number (section and Q&A copies alike).
+
 ### Glossary definitions — 2026-10-20
 - Split the Glossary's single "Definitions" section into one section per definition (38), each titled with its term exactly as its bold headword gives it, so every definition has its own route (`/code/glossary#glossary-<term>`), bookmark, Cite/Link menu and table-of-contents entry. The text is unchanged: the definitions joined back together reproduce the former section's text byte for byte, and `npm run verify:code-docx` reports the same findings before and after. `npm run validate:data` now requires one definition per Glossary section, titled with its term. As documented in `PROJECT_CHECKS.md`, the historical `verify:code-migration` check differs from its 2026 baseline after approved edits; this adds to that.
 - `FullTextSection.jsx` keeps a Glossary section's title for screen readers and the table of contents but does not show it, since the definition opens with its term in bold.

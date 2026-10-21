@@ -95,7 +95,7 @@ The bookmark and Recently Viewed storage formats are independent from the browse
 - `src/config/routes.js` creates the parser from the current Code, Transparency, and decision-tree data.
 - `src/hooks/useAppRouting.js` synchronizes React state with the address bar and handles Back, Forward, current navigation, and legacy URL replacement.
 - `src/App.jsx` passes route-aware navigation callbacks to the existing components.
-- `src/components/FullTextSection.jsx` builds canonical links and citation URLs for Code and Transparency sections, and gives each Q&A block its own anchor id (`getQaAnchorId`) so it can be linked directly.
+- `src/components/FullTextSection.jsx` builds canonical links and citation URLs for Code and Transparency sections, and gives each Q&A block its own anchor id (`getQaAnchorId`) so it can be linked directly. Each Q&A's Cite/Link copies that link and its Bookmark stores that anchor; opening the bookmark goes through the same route, so it also switches the Q&A view on.
 - `src/components/quiz/QuizContent.jsx` loads shared Quiz URLs and responds when Back or Forward changes the shared challenge.
 - `src/components/quiz/QuizResults.jsx` builds canonical shared Quiz URLs.
 - `tests/routeUtils.test.mjs` exercises every current Code chapter/section, Transparency document/unit/section, decision tree, and supported legacy format.

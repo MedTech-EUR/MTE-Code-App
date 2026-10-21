@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Content history – The Code App</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/admin/history/history.css" />
+    <!--
+      Content history: see what changed in the content and undo it, for editors.
+      How it works: history.js (page), github.js (GitHub), history-core.js and content-model.js
+      (logic, tested by `npm test`). Guide: docs/cms-guide.md, "Undoing a change".
+    -->
+    <script type="module" src="/admin/history/history.js"></script>
+  </head>
+  <body>
+    <header class="bar">
+      <a class="bar__back" href="/admin/">← Content editor</a>
+      <span class="bar__title">Content history</span>
+      <span class="bar__user" id="user"></span>
+    </header>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <main id="main">
+      <h1>Content history</h1>
+      <noscript><p>This page needs JavaScript.</p></noscript>
+    </main>
+    <dialog id="confirm" class="dialog"></dialog>
+  </body>
+</html>

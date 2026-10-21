@@ -1,0 +1,244 @@
+/* The content editor page: the bar above Sveltia CMS, the editor's colours, and the HTML field
+   (cms-fields.js). Colours follow the app: purple #7654A1, teal text #007A86. */
+
+:root {
+  --mte-purple: #7654a1;
+  --mte-purple-dark: #5e3f87;
+  --mte-teal-text: #007a86;
+  --mte-text: #1e293b;
+  --mte-muted: #475569;
+  --mte-border: #cbd5e1;
+  --mte-surface: #ffffff;
+  --mte-soft: #f8fafc;
+  --mte-removed-bg: #fde8e8;
+  --mte-removed-text: #9b1c1c;
+  --mte-added-bg: #def7ec;
+  --mte-added-text: #03543f;
+  --mte-warning-bg: #fff8e1;
+  --mte-warning-border: #e0a800;
+  --mte-font: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --mte-mono: ui-monospace, 'Cascadia Code', 'SFMono-Regular', Consolas, monospace;
+  /* Sveltia CMS derives its accent colours from this hue: the app's purple. */
+  --sui-base-hue: 267 !important;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-bar {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  padding: 0.3rem 1rem;
+  background: var(--mte-purple);
+  color: #fff;
+  font: 0.9rem/1.4 var(--mte-font);
+}
+
+.admin-bar__name {
+  font-weight: 600;
+}
+
+.admin-bar__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+}
+
+.admin-bar a {
+  color: #fff;
+}
+
+.admin-bar a:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Sveltia places its app inside #nc-root (position: absolute). Its full-screen entry editor is
+   position: fixed; layout containment keeps it below the bar too. Dialogs and notifications open
+   in the browser's top layer, above everything. */
+#nc-root {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  contain: layout;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* ── The HTML field: Edit · Preview · Changes ─────────────────────────────── */
+
+.mte-html {
+  width: 100%;
+  font-family: var(--mte-font);
+  color: var(--mte-text);
+}
+
+.mte-html__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mte-html__tabs {
+  display: inline-flex;
+  padding: 2px;
+  background: #eef2f6;
+  border: 1px solid var(--mte-border);
+  border-radius: 6px;
+}
+
+.mte-html__tab {
+  min-width: 5.5rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
+  color: var(--mte-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  font: 600 0.85rem/1.2 var(--mte-font);
+  cursor: pointer;
+}
+
+.mte-html__tab[aria-selected='true'] {
+  color: #fff;
+  background: var(--mte-purple);
+}
+
+.mte-html__tab:focus-visible {
+  outline: 2px solid var(--mte-purple);
+  outline-offset: 2px;
+}
+
+.mte-html__dot {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.mte-html__state {
+  font-size: 0.8rem;
+  color: var(--mte-muted);
+}
+
+.mte-html__source {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 8rem;
+  max-height: 70vh;
+  field-sizing: content;
+  padding: 0.75rem;
+  resize: vertical;
+  color: var(--mte-text);
+  background: var(--mte-surface);
+  border: 1px solid var(--mte-border);
+  border-radius: 6px;
+  font: 0.875rem/1.6 var(--mte-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.mte-html__source:focus {
+  outline: 2px solid var(--mte-purple);
+  outline-offset: 1px;
+}
+
+.mte-html__preview {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 6rem;
+  background: #fff;
+  border: 1px solid var(--mte-border);
+  border-radius: 6px;
+}
+
+.mte-html__warnings {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--mte-warning-bg);
+  border-left: 4px solid var(--mte-warning-border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.mte-html__warnings ul {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.mte-html__changes {
+  padding: 0.75rem;
+  background: var(--mte-soft);
+  border: 1px solid var(--mte-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.mte-html__changes--html {
+  font: 0.8rem/1.6 var(--mte-mono);
+}
+
+.mte-html__changes del {
+  color: var(--mte-removed-text);
+  background: var(--mte-removed-bg);
+  text-decoration: line-through;
+}
+
+.mte-html__changes ins {
+  color: var(--mte-added-text);
+  background: var(--mte-added-bg);
+  text-decoration: none;
+}
+
+.mte-html__skip {
+  color: var(--mte-muted);
+  font-style: italic;
+}
+
+.mte-html__note {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--mte-muted);
+}
+
+.mte-html__link {
+  padding: 0;
+  color: var(--mte-teal-text);
+  background: none;
+  border: 0;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}

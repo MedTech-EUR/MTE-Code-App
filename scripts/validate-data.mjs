@@ -15,13 +15,14 @@ import { TREE_CVS_MODES, TREE_CVS_TONES } from '../src/utils/treeCvs.js';
 import { loadSplitCodeData } from './lib/code-content.mjs';
 import { loadTransparencyData } from './lib/transparency-content.mjs';
 import { checkHtml } from '../public/admin/lib/html-tools.js';
+import { inspectTree } from '../public/admin/lib/trees.js';
 import { findUnformatted } from './format-cms-data.mjs';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIR, '..');
 
 const ALLOWED_PARTS = new Set(['intro', 'part1', 'part2', 'part3', 'website']);
-const ALLOWED_OUTCOMES = new Set([
+export const ALLOWED_OUTCOMES = new Set([
   'compliant',
   'non-compliant',
   'conditional',
@@ -634,6 +635,10 @@ export function validateProjectData({
         errors.push(`${nodePath}: unsupported node type "${node?.type ?? ''}".`);
       }
     });
+
+    // A step no answer leads to is never shown; it is usually left over from an edit.
+    const unreached = inspectTree(tree).unreached.map((node) => node.id);
+    if (unreached.length) warnings.push(`${treePath} (${tree.id}): not reached from "start": ${unreached.join(', ')}.`);
 
     // null: the tree has no live CVS check texts.
     if (tree.cvsCheck != null) validateTreeCvsCheck(tree.cvsCheck, `${treePath} cvsCheck`, errors);

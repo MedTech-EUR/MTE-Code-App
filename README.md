@@ -44,7 +44,8 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 | `DecisionTree.jsx` | Interactive step-by-step decision tree; on wide screens the answers are listed beside the question, and a result's cited provision can be previewed in place |
 | `DefinitionPopup.jsx` | Glossary term tooltip popup |
 | `DocumentReader.jsx` | Shared legal-document reader used by the Code and Transparency publications. Centres the text in the reading area and caps its line length (`--reader-measure`); from 1280px the side panel ("On This Page" and `ContextPanel`) is docked to the right edge of the window and can be resized. The text and the panel keep the reader's place when a pane is resized (`useKeepReadingPosition.js`) |
-| `FullTextSection.jsx` | Renders a single legal text section with citation/link menu, bookmark, copy-text, and related-tree actions |
+| `FullTextSection.jsx` | Renders a single legal text section, its Q&As and related-tree links; the section and each Q&A get their own Bookmark, Cite/Link and Copy Text actions |
+| `ReaderActions.jsx` | The Bookmark, Cite/Link and Copy Text buttons of a reader section or Q&A, with the Cite/Link menu |
 | `Header.jsx` | Top bar with section-aware toolbar (Summary, Full Text, Q&A, Reader, Print) |
 | `Highlight.jsx` | Wraps matched words in highlight marks during search |
 | `HubPage.jsx` | Home landing page with section cards |
@@ -80,6 +81,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 | `utils/crossReferences.js` | Finds references such as "Chapter 4" or "Section 3 of Chapter 4" in reader text, resolves them to chapters, sections and Q&As, links them when the text is displayed, and resolves decision-tree citations. Also used by `npm run validate:data` |
 | `utils/csvUtils.js` | Parses the bundled Annex I CSV for its non-normative preview |
 | `utils/htmlTextUtils.js` | Extracts normalized visible text from legal HTML for search and copy utilities |
+| `utils/citationText.js` | The text Cite/Link and Copy Text copy: citation formats, a Q&A's printed number and title, a Q&A as plain text |
 | `utils/routeEffects.js` | Cancels/version-controls delayed anchor scrolling and section highlighting across route changes |
 | `utils/searchDocuments.js` | Turns Code and Transparency content into search documents (provisions, Q&As, definitions, app summaries) |
 | `utils/searchEngine.js` | Builds the in-memory index and ranks results with BM25F, coverage and proximity; tuning constants are in `SEARCH_RANKING` |
@@ -204,6 +206,7 @@ To facilitate heavy professional reference usage, the app includes several quali
 - **Q&A Fast-Jump Badges:** Section titles with associated Q&As feature a `💬 Q&A` badge that smooth-scrolls directly to the guidance notes for that provision.
 - **Multi-Format Citation and Link Dropdown:** A `[Cite/Link]` popover offering Formal Citations (including section title and current access date), Markdown links, and Direct URL links with confirmation toast notifications.
 - **Section Actions on Hover:** In the Code, a section's Bookmark, Cite/Link and Copy Text buttons fade in when the pointer is over the section or keyboard focus moves into it, and fade out after a short pause. A bookmarked section keeps its star, the buttons stay while the Cite/Link menu is open, and on touch screens (which cannot hover) and in the Transparency reader they always show.
+- **Q&A Actions:** Every official Q&A, in the Code and the Transparency publications, has its own Bookmark, Cite/Link and Copy Text buttons, revealed the same way when the pointer is over that Q&A. They use the Q&A's own link (see `ROUTING.md`) and its printed number: “Ch 4 - 3. Educational Grants, Q&A 31”. Copy Text copies the section title and that Q&A.
 - **Next/Prev Navigation:** Large footer buttons at the bottom of every reader unit allow for linear reading without returning to the sidebar.
 - **Reader Settings:** An `Aa` button in the header opens a panel to customize font size, line spacing, paragraph spacing, line length (Narrow, Standard or Full) and the side panel (On or Off).
 - **Line Length:** The text is centred in the reading area and stops at 40 (Narrow) or 52 (Standard, the default) times the chosen text size, about 80 or 105 characters per line; Full fills the space between the panes.

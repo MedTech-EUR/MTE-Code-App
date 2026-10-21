@@ -109,7 +109,7 @@ A fresh request for a nested URL such as `/code/ch1` or
 `index.html`; otherwise direct links and browser refreshes will produce a server
 404 or a redirect to the home page.
 
-The current Cloudflare Worker in `server.js` provides this fallback for extensionless app paths after handling its reserved server routes. It requests `/` from the static-assets binding, not `/index.html`, because the binding redirects `/index.html` to `/`. That redirect sends every deep link to the home page. `tests/serverSpaFallback.test.mjs` guards this. If the app is moved to another host, configure that host with the equivalent single-page-app fallback before deployment.
+The current Cloudflare Worker in `server.js` provides this fallback for extensionless app paths after handling its reserved server routes, which include the content editor (`/admin/`) and Content history (`/admin/history/`): each is served as its own page, not the app. It requests `/` from the static-assets binding, not `/index.html`, because the binding redirects `/index.html` to `/`. That redirect sends every deep link to the home page. `tests/serverSpaFallback.test.mjs` guards this. If the app is moved to another host, configure that host with the equivalent single-page-app fallback before deployment.
 
 ## Verification
 

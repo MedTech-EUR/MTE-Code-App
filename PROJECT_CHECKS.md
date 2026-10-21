@@ -55,6 +55,14 @@ references remain valid. It also checks that the search phrasebook (`src/data/se
 
 It also checks cross-references. References such as "Chapter 4" or "Section 3 of Chapter 4" become links when the text is displayed, and every decision-tree result's Reference opens the provision it cites. A reference or citation that matches no chapter, annex, section or Q&A is an error.
 
+It also checks that the Code's texts are well-formed HTML (no tag left open or closed in the wrong order), and that the files the content editor writes (the Code chapters and `src/data/treeData.json`) are in its JSON layout. If one is not, for example after editing the JSON by hand, run:
+
+```powershell
+npm run format:data
+```
+
+`npm run build` runs this check first, so a content editor save that breaks the data is not published: the app keeps its previous version, and the build log shows the error.
+
 If validation fails, the output identifies the file and item involved. For example:
 
 ```text
@@ -221,7 +229,8 @@ also confirm its emitted asset appears in `dist/sw.js`.
 
 ## When To Run The Checks
 
-- After editing files in `src/data`, run `npm run validate:data`.
+- After editing files in `src/data`, run `npm run validate:data` (and `npm run format:data` after editing Code chapters or decision trees by hand).
+- After changing the content editor (`public/admin/`), run `npm test`: `tests/cmsConfig.test.mjs` checks its configuration against the data.
 - After editing `src/data/search/phrasebook.json`, run `npm run validate:data`.
 - After editing Disclosure Guidelines data or sources, also run `npm run verify:disclosure-guidelines`.
 - After changing TPPT, the event support checker or other tested logic, run `npm test`. The checker's wording is in `src/data/eventSupportRules.json`, so `npm run validate:data` also checks it, including every “Chapter N, Section N”, “Annex N” and “Q&A N” it cites.

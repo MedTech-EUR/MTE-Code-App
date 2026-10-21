@@ -1,0 +1,122 @@
+/* The content editor's preview pane (cms-fields.js), on top of the app's own stylesheet. */
+
+body {
+  margin: 0;
+  background: #fff;
+  color: #1e293b;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.mte-preview {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 3rem;
+}
+
+.mte-preview__kicker {
+  margin: 0 0 0.75rem;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mte-preview__summary {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: #f3effb;
+  border-radius: 8px;
+}
+
+/* Decision trees */
+.mte-tree__summary {
+  padding: 0.5rem 0.75rem;
+  background: #def7ec;
+  border-radius: 6px;
+}
+
+.mte-tree__summary--problems {
+  background: #fde8e8;
+  color: #9b1c1c;
+  font-weight: 600;
+}
+
+.mte-tree__tree {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.mte-tree__tree h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+}
+
+.mte-tree__meta,
+.mte-tree__unreached {
+  color: #475569;
+  font-size: 0.85rem;
+}
+
+.mte-tree__problems {
+  color: #9b1c1c;
+  font-weight: 600;
+}
+
+.mte-tree__steps {
+  padding-left: 1.25rem;
+}
+
+.mte-tree__step {
+  margin: 0.75rem 0;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid #7654a1;
+  background: #f8fafc;
+}
+
+.mte-tree__step--result {
+  border-left-color: #007a86;
+}
+
+.mte-tree__id {
+  margin: 0;
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+.mte-tree__text {
+  margin: 0.25rem 0;
+}
+
+.mte-tree__help,
+.mte-tree__ref {
+  margin: 0.25rem 0;
+  color: #475569;
+  font-size: 0.85rem;
+}
+
+.mte-tree__answers {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.mte-tree__broken {
+  color: #9b1c1c;
+}
+
+.mte-tree__outcome,
+.mte-tree__cvs {
+  margin-left: 0.5rem;
+  padding: 0 0.4rem;
+  border-radius: 4px;
+  background: #eef2f6;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+code {
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.85em;
+}

@@ -1,199 +1,199 @@
 {
-      "id": "glossary",
-      "part": "part3",
-      "title": "Glossary",
-      "icon": "ABC",
-      "summary": "Comprehensive definitions for terms and acronyms used throughout the Code.",
-      "sections": [
-        {
-          "title": "Charitable Donations",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Charitable Donations:</strong> means provision of cash, equipment, Member Company product or relevant third party product, for exclusive use for charitable or philanthropic purposes and/or to benefit a charitable or philanthropic cause. Charitable Donations may only be made to bona fide charities or other non-profit entities or bodies whose main objects are genuine charitable or philanthropic purposes.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Clinical Research",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Clinical Research:</strong> a type of research that studies tests and treatments and evaluates their effects on human health outcomes. This includes clinical investigations or interventional and non-interventional clinical performance studies where people volunteer to take part in order to test medical interventions including drugs, cells and other biological products, surgical procedures, radiological procedures, devices, behavioural treatments and preventive care.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Company Events",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Company Events:</strong> means activities of any type that are planned, budgeted, managed and executed in whole or in part by or on behalf of Member Companies to fulfil a legitimate, documented business need of the Member Company, including but not limited to a legitimate business need to interact with customers including Healthcare Professionals and/or Healthcare Organisations.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Conference Vetting System (CVS)",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Conference Vetting System (CVS):</strong> means the centralised decision-making process which reviews the compliance of Third Party Organised Educational Events with the Code and which is managed independently of MedTech Europe under the supervision of the MedTech Europe Compliance Panel. For more information see: http://www.ethicalmedtech.eu.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Code",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Code:</strong> means this MedTech Europe Code of Ethical Business Practice (including the incorporated Questions and Answers), the Disclosure Guidelines, and Part 2: Dispute Resolution Principles.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Consulting Arrangement",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Consulting Arrangement:</strong> means any provision of service by a Healthcare Professional or Healthcare Organisation for or on behalf of a Member Company. Consulting arrangements include, but are not limited to marketing and Clinical Research activities, providing technical expertise for the development, testing, etc. of Medical Technology, providing feedback in post-market evaluations and market research, providing speaking services at Events, teaching other Healthcare Professionals, providing training on how to use the Member Company’s Medical Technology, participating in research-related meetings, etc.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Delegate",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Delegate:</strong> means Healthcare Professionals that attend an Event neither as Faculty, nor as Healthcare Professionals providing services to Member Companies for the specific Event.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Disclosure Guidelines",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Disclosure Guidelines:</strong> means the Code provisions setting out the public disclosure requirements under the Code.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Demonstration Products (Demos)",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Demonstration Products (Demos):</strong> means either single-use or multiple-use products provided free of charge by or on behalf of a Member Company to HCOs or HCPs, who are equipped and qualified to use them. Demos are supplied solely for the purpose of demonstrating safe and effective use and appropriate functionality of a product and are not intended for clinical use. Demos do not include the following: Samples; Evaluation Products; Products provided at no charge as part of a Charitable Donation or as part of a Research or Educational Grant; or Products provided at no additional charge as part of the overall purchase price in a commercial supply arrangement, e.g. as part of an agreed discount arrangement, or as substitute products provided pursuant to a warranty agreement.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Educational Grants",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Educational Grants:</strong> means provision of funding, Member Company or third party products or other in kind support to a Healthcare Organisation by or on behalf of a Member Company solely for the support and advancement of genuine medical education of Healthcare Professionals, patients and/or the public on clinical, scientific and/or healthcare topics relevant to the therapeutic areas in which the Member Company is interested and/or involved and where such support is provided solely for a specified intended purpose within this category.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Employer Notification",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Employer Notification:</strong> means the prior written notification provided to a Healthcare Organisation (e.g. hospital administration), a Healthcare Professional’s superior or other locally-designated competent authority of any interaction, collaboration or other matter concerning any Member Company and any Healthcare Professional, the purpose and/or scope of which requires notification under this Code.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Entertainment",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Entertainment:</strong> Entertainment includes, but is not limited to, dancing or arrangements where live music is the main attraction, sight-seeing trips, theatre excursions, sporting events (e.g. skiing, golf or football match) and other leisure arrangements. For the avoidance of doubt, incidental, background music shall not constitute Entertainment.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Evaluation Products",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Evaluation Products:</strong> means either single-use or multiple-use products and/or equipment provided free of charge to a healthcare institution by or on behalf of a Member Company for purposes of obtaining defined, evaluative user feedback over a defined period of use when used within the scope of their intended purpose, as per the authorisation in the country where the supply occurs. Evaluation Products do not include the following: Demos; Samples; Products provided at no charge as part of a Charitable Donation or as part of a Research or Educational Grant; or Products provided at no additional charge as part of the overall purchase price in a commercial supply arrangement, e.g. as part of an agreed discount arrangement, or as substitute products provided pursuant to a warranty agreement.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Event",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Event:</strong> means either a Company Event or Third Party Organised Educational Event.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Faculty",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Faculty:</strong> means a podium speaker, moderator and/or chair, who presents during an Event. Poster- and abstract-presenters are not considered to be Faculty.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Fair Market Value (FMV)",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Fair Market Value (FMV):</strong> means the value of the specified services (or products, if applicable) which would be paid by the Member Company to the other party (for example a Healthcare Professional or a Healthcare Organisation), each dealing at arm’s length in an open and unrestricted market, and when neither party is under any compulsion to buy or sell, and both parties have reasonable knowledge of the relevant facts.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Financial Hardship",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Financial Hardship:</strong> means in relation to a Healthcare Organisation extreme and unavoidable financial distress resulting from matters outside the Healthcare Organisation’s control where the Healthcare Organisation is unable to operate and where patient care is consequently jeopardised. Financial distress resulting in whole or in part from mismanagement of the Healthcare Organisation’s funds or other matters within its control is not considered to be Financial Hardship. Financial Hardship must be documented and objectively substantiated.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Grants",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Grants:</strong> means either an Educational Grant or a Research Grant, or both.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Guests",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Guests:</strong> means spouses, partners, family or guests of Healthcare Professionals, or any other person who does not have a bona fide professional interest in the information being shared at an Event.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Healthcare Organisation (HCO)",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Healthcare Organisation (HCO):</strong> means any legal entity or body (irrespective of its legal or organisational form) that is a healthcare, medical or scientific association or organisation which may have a direct or indirect influence on the prescription, recommendation, purchase, order, supply, utilisation, sale or lease of Medical Technologies or related services such as a hospital or group purchasing organisation, clinic, laboratory, pharmacy, research institution, foundation, university or other teaching institution or learned or professional society (except for patient organisations); or through which one or more Healthcare Professionals provide services.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Healthcare Professional (HCP)",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Healthcare Professional (HCP):</strong> means any individual (with a clinical or non-clinical role; whether a government official, or employee or representative of a government agency or other public or private sector organisation; including but not limited to, physicians, nurses, technicians, laboratory scientists, researchers, research co-ordinators or procurement professionals) that in the course of their professional activities may directly or indirectly purchase, lease, recommend, administer, use, supply, procure or determine the purchase or lease of, or who may prescribe Medical Technologies or related services. This definition does not include a purchasing professional employed in the retail sector unless that individual purchaser arranges for the purchase of Member Companies’ Medical Technologies or related services for or on behalf of medical or clinical personnel. For example, if a Member Company’s Medical Technologies or related services are sold as part of the common merchandise of the retail outlet, interactions between the Member Company and the purchasing professional do not fall within the Code. However, where the Member Company’s Medical Technologies or related services are sold in a retail pharmacy (even if this is located within a supermarket unit), interactions between the Member Company and the responsible purchasing professional will fall within the Code.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "In kind",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>In kind:</strong> means the provision of Grants, Charitable Donations and other types of support in the form of goods or services other than money, including the provision of labour, lent or donated goods, or lent or donated services (e.g. catering services for Events, provision of venue space, company products and other services).</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Legitimate Business Need",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Legitimate Business Need:</strong> means a current and actual business objective pursued by a Member Company such as the advancement of medical education, Clinical Research and/or the safe and effective use of the Member Company’s Medical Technology. Engaging a Healthcare Professional or a Healthcare Organisation for the purpose of influencing the prescription, recommendation, purchase, order, supply, utilisation, sale or lease of Medical Technologies or related services directly or indirectly by a Healthcare Professional or Healthcare Organisation is never deemed a Legitimate Business Need.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Medical Technology or Medical Technologies",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Medical Technology or Medical Technologies:</strong> Within the framework of the Code, Medical Technology refers to Medical Devices and In Vitro Diagnostics medical devices as defined in Regulation (EU) 2017/745 of the European Parliament and of the Council of 5 April 2017 on medical devices and Regulation (EU) 2017/746 of the European Parliament and of the Council of 5 April 2017 on in vitro diagnostic medical devices, as amended from time to time.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Members",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Members:</strong> means all full and associate corporate members (“Member Companies”) of MedTech Europe as well as full and associate national association members of MedTech Europe (“Member Associations”), as defined in the MedTech Europe statutes and as applicable and amended from time to time.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Preceptorship",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Preceptorship:</strong> means a type of clinician-to-clinician training funded by a Member Company where the supervising clinician oversees the procedural training of the trainee clinician and the trainee does not have primary responsibility for the patient undergoing the procedure.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Proctorship",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Proctorship:</strong> means a type of clinician-to-clinician training funded by a Member Company where the trainee clinician performs a procedure under the supervision of another clinician and where the trainee clinician has primary responsibility for the patient undergoing the procedure.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Professional Conference Organiser (PCO)",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Professional Conference Organiser (PCO):</strong> a for-profit company or organisation which specialises in the management of congresses, conferences, seminars and similar events.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Product and Procedure Training and Education Event",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <div class=\"space-y-2\"><p><strong>Product and Procedure Training and Education Event:</strong> means a type of Company Event that is primarily intended to provide Healthcare Professionals with genuine education, including information and/or training on:</p><ul class=\"list-disc pl-6 space-y-1\"><li>The safe and effective use of Medical Technologies, therapies and/or related services, and/or</li><li>The safe and effective performance of clinical procedures, and/or</li><li>Related disease areas.</li></ul><p>In all cases the information and/or training directly concern a Member Company’s Medical Technologies, therapies and/or related services.</p></div> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Research Grants",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Research Grants:</strong> means the provision by or on behalf of a Member Company of funding, products/equipment and/or In Kind services to any organisation that conducts research which is made for the sole purpose of supporting the development or furtherance of clearly specified bona fide, scientifically valid and legitimate research by the recipient the purpose of which is to advance medical, scientific and healthcare knowledge, Medical Technologies and/or clinical techniques designed to improve patient outcomes.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Sales, Promotional and Other Business Meetings",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Sales, Promotional and Other Business Meetings:</strong> means any type of Company Event the objective of which is to effect the sale and/or promotion of a Member Company’s medical technologies and/or related services, including meetings to discuss product features, benefits and use and/or commercial terms of supply.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Samples",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Samples:</strong> means single-use or multiple-use products provided free of charge by or on behalf of a Member Company to HCOs or HCPs who are equipped and qualified to use them in order to enable HCPs to familiarise themselves with the products in clinical use. Samples do not include the following: Demos; Evaluation Products; products provided at no charge as part of a Charitable Donation or as part of a Research or Educational Grant; or products provided at no additional charge as part of the overall purchase price in a commercial supply arrangement, e.g. as part of an agreed discount arrangement, or as substitute products provided pursuant to a warranty agreement.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Scholarships and Fellowships",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Scholarships and Fellowships:</strong> means Educational Grants provided to a Healthcare Organisation by or on behalf of a Member Company to support fellowships or scholarships offered by the Healthcare Organisation. Scholarships in this context means an Educational Grant provided to support a medical school undergraduate whereas a fellowship is a period of intensive training for post-graduate physicians in a chosen clinical sub-specialty (e.g. medical training after a residency). “Scholars” and “Fellows” shall be understood accordingly.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Third Party Intermediary",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Third Party Intermediary:</strong> means any legal entity or person that markets, sells, promotes or otherwise brings to end-users Member Companies’ products or related services, and may include distributors, wholesalers, distribution or sales agents, marketing agents, brokers, commissionary commercial agents and independent sales representatives.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Third Party Organised Educational Events",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Third Party Organised Educational Events:</strong> means activities of any type that are planned, budgeted, managed and executed in whole or in part by or on behalf of a person or entity other than a Member Company to fulfil Healthcare Professional medical educational needs.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Third Party Organised Educational Conferences",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Third Party Organised Educational Conferences:</strong> means a type of Third Party Organised Educational Event that is a genuine, independent, educational, scientific, or policy-making conference organised to promote scientific knowledge, medical advancement and/or the delivery of effective healthcare and is consistent with relevant guidelines established by professional societies or organisations for such educational meetings. These typically include conferences organised by national, regional, or specialty medical associations/societies, hospitals, Professional Conference Organisers (PCOs), patients organisations or accredited continuing medical education providers.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Third Party Organised Procedure Training",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Third Party Organised Procedure Training:</strong> means a type of Third Party Organised Educational Event that is primarily intended to provide Healthcare Professionals with information and training on the safe and effective performance of one or more clinical procedures in circumstances where the information and training concern: Specific therapeutic, diagnostic or rehabilitative procedures, namely clinical courses of action, methods or techniques (rather than the use of Medical Technologies); and Practical demonstrations and/or training for HCPs, where the majority of the training programme is delivered in a clinical environment. For the avoidance of doubt, Proctorship and Preceptorship are not considered to constitute Third Party Organised Procedure Training.</p> </div> ",
-          "qas": []
-        },
-        {
-          "title": "Virtual Event",
-          "legalText": " <div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Virtual Event:</strong> A Virtual Event is a Third-Party Organised or Company Organised Event that is characterised by the participation of Healthcare Professionals Delegates who attend exclusively remotely. As a result, a Virtual Event is not connected in any way with a physical Third Party Organised Educational Event. For example, the filming of presentations, discussions, etc. taking place during a Third Party Organised Educational Event (“hybrid” events), and their broadcasting to audiences not present at the physically attended Event—whether contemporaneously or after the Event—do not qualify as a Virtual Event, and therefore need to comply with all requirements of (in person) Third Party Organised Events.</p> </div> ",
-          "qas": []
-        }
-      ]
+  "id": "glossary",
+  "part": "part3",
+  "title": "Glossary",
+  "icon": "ABC",
+  "summary": "Comprehensive definitions for terms and acronyms used throughout the Code.",
+  "sections": [
+    {
+      "title": "Charitable Donations",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Charitable Donations:</strong> means provision of cash, equipment, Member Company product or relevant third party product, for exclusive use for charitable or philanthropic purposes and/or to benefit a charitable or philanthropic cause. Charitable Donations may only be made to bona fide charities or other non-profit entities or bodies whose main objects are genuine charitable or philanthropic purposes.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Clinical Research",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Clinical Research:</strong> a type of research that studies tests and treatments and evaluates their effects on human health outcomes. This includes clinical investigations or interventional and non-interventional clinical performance studies where people volunteer to take part in order to test medical interventions including drugs, cells and other biological products, surgical procedures, radiological procedures, devices, behavioural treatments and preventive care.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Company Events",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Company Events:</strong> means activities of any type that are planned, budgeted, managed and executed in whole or in part by or on behalf of Member Companies to fulfil a legitimate, documented business need of the Member Company, including but not limited to a legitimate business need to interact with customers including Healthcare Professionals and/or Healthcare Organisations.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Conference Vetting System (CVS)",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Conference Vetting System (CVS):</strong> means the centralised decision-making process which reviews the compliance of Third Party Organised Educational Events with the Code and which is managed independently of MedTech Europe under the supervision of the MedTech Europe Compliance Panel. For more information see: http://www.ethicalmedtech.eu.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Code",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Code:</strong> means this MedTech Europe Code of Ethical Business Practice (including the incorporated Questions and Answers), the Disclosure Guidelines, and Part 2: Dispute Resolution Principles.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Consulting Arrangement",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Consulting Arrangement:</strong> means any provision of service by a Healthcare Professional or Healthcare Organisation for or on behalf of a Member Company. Consulting arrangements include, but are not limited to marketing and Clinical Research activities, providing technical expertise for the development, testing, etc. of Medical Technology, providing feedback in post-market evaluations and market research, providing speaking services at Events, teaching other Healthcare Professionals, providing training on how to use the Member Company’s Medical Technology, participating in research-related meetings, etc.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Delegate",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Delegate:</strong> means Healthcare Professionals that attend an Event neither as Faculty, nor as Healthcare Professionals providing services to Member Companies for the specific Event.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Disclosure Guidelines",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Disclosure Guidelines:</strong> means the Code provisions setting out the public disclosure requirements under the Code.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Demonstration Products (Demos)",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Demonstration Products (Demos):</strong> means either single-use or multiple-use products provided free of charge by or on behalf of a Member Company to HCOs or HCPs, who are equipped and qualified to use them. Demos are supplied solely for the purpose of demonstrating safe and effective use and appropriate functionality of a product and are not intended for clinical use. Demos do not include the following: Samples; Evaluation Products; Products provided at no charge as part of a Charitable Donation or as part of a Research or Educational Grant; or Products provided at no additional charge as part of the overall purchase price in a commercial supply arrangement, e.g. as part of an agreed discount arrangement, or as substitute products provided pursuant to a warranty agreement.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Educational Grants",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Educational Grants:</strong> means provision of funding, Member Company or third party products or other in kind support to a Healthcare Organisation by or on behalf of a Member Company solely for the support and advancement of genuine medical education of Healthcare Professionals, patients and/or the public on clinical, scientific and/or healthcare topics relevant to the therapeutic areas in which the Member Company is interested and/or involved and where such support is provided solely for a specified intended purpose within this category.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Employer Notification",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Employer Notification:</strong> means the prior written notification provided to a Healthcare Organisation (e.g. hospital administration), a Healthcare Professional’s superior or other locally-designated competent authority of any interaction, collaboration or other matter concerning any Member Company and any Healthcare Professional, the purpose and/or scope of which requires notification under this Code.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Entertainment",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Entertainment:</strong> Entertainment includes, but is not limited to, dancing or arrangements where live music is the main attraction, sight-seeing trips, theatre excursions, sporting events (e.g. skiing, golf or football match) and other leisure arrangements. For the avoidance of doubt, incidental, background music shall not constitute Entertainment.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Evaluation Products",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Evaluation Products:</strong> means either single-use or multiple-use products and/or equipment provided free of charge to a healthcare institution by or on behalf of a Member Company for purposes of obtaining defined, evaluative user feedback over a defined period of use when used within the scope of their intended purpose, as per the authorisation in the country where the supply occurs. Evaluation Products do not include the following: Demos; Samples; Products provided at no charge as part of a Charitable Donation or as part of a Research or Educational Grant; or Products provided at no additional charge as part of the overall purchase price in a commercial supply arrangement, e.g. as part of an agreed discount arrangement, or as substitute products provided pursuant to a warranty agreement.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Event",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Event:</strong> means either a Company Event or Third Party Organised Educational Event.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Faculty",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Faculty:</strong> means a podium speaker, moderator and/or chair, who presents during an Event. Poster- and abstract-presenters are not considered to be Faculty.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Fair Market Value (FMV)",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Fair Market Value (FMV):</strong> means the value of the specified services (or products, if applicable) which would be paid by the Member Company to the other party (for example a Healthcare Professional or a Healthcare Organisation), each dealing at arm’s length in an open and unrestricted market, and when neither party is under any compulsion to buy or sell, and both parties have reasonable knowledge of the relevant facts.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Financial Hardship",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Financial Hardship:</strong> means in relation to a Healthcare Organisation extreme and unavoidable financial distress resulting from matters outside the Healthcare Organisation’s control where the Healthcare Organisation is unable to operate and where patient care is consequently jeopardised. Financial distress resulting in whole or in part from mismanagement of the Healthcare Organisation’s funds or other matters within its control is not considered to be Financial Hardship. Financial Hardship must be documented and objectively substantiated.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Grants",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Grants:</strong> means either an Educational Grant or a Research Grant, or both.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Guests",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Guests:</strong> means spouses, partners, family or guests of Healthcare Professionals, or any other person who does not have a bona fide professional interest in the information being shared at an Event.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Healthcare Organisation (HCO)",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Healthcare Organisation (HCO):</strong> means any legal entity or body (irrespective of its legal or organisational form) that is a healthcare, medical or scientific association or organisation which may have a direct or indirect influence on the prescription, recommendation, purchase, order, supply, utilisation, sale or lease of Medical Technologies or related services such as a hospital or group purchasing organisation, clinic, laboratory, pharmacy, research institution, foundation, university or other teaching institution or learned or professional society (except for patient organisations); or through which one or more Healthcare Professionals provide services.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Healthcare Professional (HCP)",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Healthcare Professional (HCP):</strong> means any individual (with a clinical or non-clinical role; whether a government official, or employee or representative of a government agency or other public or private sector organisation; including but not limited to, physicians, nurses, technicians, laboratory scientists, researchers, research co-ordinators or procurement professionals) that in the course of their professional activities may directly or indirectly purchase, lease, recommend, administer, use, supply, procure or determine the purchase or lease of, or who may prescribe Medical Technologies or related services. This definition does not include a purchasing professional employed in the retail sector unless that individual purchaser arranges for the purchase of Member Companies’ Medical Technologies or related services for or on behalf of medical or clinical personnel. For example, if a Member Company’s Medical Technologies or related services are sold as part of the common merchandise of the retail outlet, interactions between the Member Company and the purchasing professional do not fall within the Code. However, where the Member Company’s Medical Technologies or related services are sold in a retail pharmacy (even if this is located within a supermarket unit), interactions between the Member Company and the responsible purchasing professional will fall within the Code.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "In kind",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>In kind:</strong> means the provision of Grants, Charitable Donations and other types of support in the form of goods or services other than money, including the provision of labour, lent or donated goods, or lent or donated services (e.g. catering services for Events, provision of venue space, company products and other services).</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Legitimate Business Need",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Legitimate Business Need:</strong> means a current and actual business objective pursued by a Member Company such as the advancement of medical education, Clinical Research and/or the safe and effective use of the Member Company’s Medical Technology. Engaging a Healthcare Professional or a Healthcare Organisation for the purpose of influencing the prescription, recommendation, purchase, order, supply, utilisation, sale or lease of Medical Technologies or related services directly or indirectly by a Healthcare Professional or Healthcare Organisation is never deemed a Legitimate Business Need.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Medical Technology or Medical Technologies",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Medical Technology or Medical Technologies:</strong> Within the framework of the Code, Medical Technology refers to Medical Devices and In Vitro Diagnostics medical devices as defined in Regulation (EU) 2017/745 of the European Parliament and of the Council of 5 April 2017 on medical devices and Regulation (EU) 2017/746 of the European Parliament and of the Council of 5 April 2017 on in vitro diagnostic medical devices, as amended from time to time.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Members",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Members:</strong> means all full and associate corporate members (“Member Companies”) of MedTech Europe as well as full and associate national association members of MedTech Europe (“Member Associations”), as defined in the MedTech Europe statutes and as applicable and amended from time to time.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Preceptorship",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Preceptorship:</strong> means a type of clinician-to-clinician training funded by a Member Company where the supervising clinician oversees the procedural training of the trainee clinician and the trainee does not have primary responsibility for the patient undergoing the procedure.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Proctorship",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Proctorship:</strong> means a type of clinician-to-clinician training funded by a Member Company where the trainee clinician performs a procedure under the supervision of another clinician and where the trainee clinician has primary responsibility for the patient undergoing the procedure.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Professional Conference Organiser (PCO)",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Professional Conference Organiser (PCO):</strong> a for-profit company or organisation which specialises in the management of congresses, conferences, seminars and similar events.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Product and Procedure Training and Education Event",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <div class=\"space-y-2\"><p><strong>Product and Procedure Training and Education Event:</strong> means a type of Company Event that is primarily intended to provide Healthcare Professionals with genuine education, including information and/or training on:</p><ul class=\"list-disc pl-6 space-y-1\"><li>The safe and effective use of Medical Technologies, therapies and/or related services, and/or</li><li>The safe and effective performance of clinical procedures, and/or</li><li>Related disease areas.</li></ul><p>In all cases the information and/or training directly concern a Member Company’s Medical Technologies, therapies and/or related services.</p></div> </div>",
+      "qas": []
+    },
+    {
+      "title": "Research Grants",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Research Grants:</strong> means the provision by or on behalf of a Member Company of funding, products/equipment and/or In Kind services to any organisation that conducts research which is made for the sole purpose of supporting the development or furtherance of clearly specified bona fide, scientifically valid and legitimate research by the recipient the purpose of which is to advance medical, scientific and healthcare knowledge, Medical Technologies and/or clinical techniques designed to improve patient outcomes.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Sales, Promotional and Other Business Meetings",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Sales, Promotional and Other Business Meetings:</strong> means any type of Company Event the objective of which is to effect the sale and/or promotion of a Member Company’s medical technologies and/or related services, including meetings to discuss product features, benefits and use and/or commercial terms of supply.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Samples",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Samples:</strong> means single-use or multiple-use products provided free of charge by or on behalf of a Member Company to HCOs or HCPs who are equipped and qualified to use them in order to enable HCPs to familiarise themselves with the products in clinical use. Samples do not include the following: Demos; Evaluation Products; products provided at no charge as part of a Charitable Donation or as part of a Research or Educational Grant; or products provided at no additional charge as part of the overall purchase price in a commercial supply arrangement, e.g. as part of an agreed discount arrangement, or as substitute products provided pursuant to a warranty agreement.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Scholarships and Fellowships",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Scholarships and Fellowships:</strong> means Educational Grants provided to a Healthcare Organisation by or on behalf of a Member Company to support fellowships or scholarships offered by the Healthcare Organisation. Scholarships in this context means an Educational Grant provided to support a medical school undergraduate whereas a fellowship is a period of intensive training for post-graduate physicians in a chosen clinical sub-specialty (e.g. medical training after a residency). “Scholars” and “Fellows” shall be understood accordingly.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Third Party Intermediary",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Third Party Intermediary:</strong> means any legal entity or person that markets, sells, promotes or otherwise brings to end-users Member Companies’ products or related services, and may include distributors, wholesalers, distribution or sales agents, marketing agents, brokers, commissionary commercial agents and independent sales representatives.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Third Party Organised Educational Events",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Third Party Organised Educational Events:</strong> means activities of any type that are planned, budgeted, managed and executed in whole or in part by or on behalf of a person or entity other than a Member Company to fulfil Healthcare Professional medical educational needs.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Third Party Organised Educational Conferences",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Third Party Organised Educational Conferences:</strong> means a type of Third Party Organised Educational Event that is a genuine, independent, educational, scientific, or policy-making conference organised to promote scientific knowledge, medical advancement and/or the delivery of effective healthcare and is consistent with relevant guidelines established by professional societies or organisations for such educational meetings. These typically include conferences organised by national, regional, or specialty medical associations/societies, hospitals, Professional Conference Organisers (PCOs), patients organisations or accredited continuing medical education providers.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Third Party Organised Procedure Training",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Third Party Organised Procedure Training:</strong> means a type of Third Party Organised Educational Event that is primarily intended to provide Healthcare Professionals with information and training on the safe and effective performance of one or more clinical procedures in circumstances where the information and training concern: Specific therapeutic, diagnostic or rehabilitative procedures, namely clinical courses of action, methods or techniques (rather than the use of Medical Technologies); and Practical demonstrations and/or training for HCPs, where the majority of the training programme is delivered in a clinical environment. For the avoidance of doubt, Proctorship and Preceptorship are not considered to constitute Third Party Organised Procedure Training.</p> </div>",
+      "qas": []
+    },
+    {
+      "title": "Virtual Event",
+      "legalText": "<div class=\"space-y-6 text-base lg:text-lg\"> <p><strong>Virtual Event:</strong> A Virtual Event is a Third-Party Organised or Company Organised Event that is characterised by the participation of Healthcare Professionals Delegates who attend exclusively remotely. As a result, a Virtual Event is not connected in any way with a physical Third Party Organised Educational Event. For example, the filming of presentations, discussions, etc. taking place during a Third Party Organised Educational Event (“hybrid” events), and their broadcasting to audiences not present at the physically attended Event—whether contemporaneously or after the Event—do not qualify as a Virtual Event, and therefore need to comply with all requirements of (in person) Third Party Organised Events.</p> </div>",
+      "qas": []
     }
+  ]
+}

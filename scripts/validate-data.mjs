@@ -14,12 +14,15 @@ import { normalizeCvsStatus } from '../src/utils/eventSupportCvs.js';
 import { TREE_CVS_MODES, TREE_CVS_TONES } from '../src/utils/treeCvs.js';
 import { loadSplitCodeData } from './lib/code-content.mjs';
 import { loadTransparencyData } from './lib/transparency-content.mjs';
+import { checkHtml } from '../public/admin/lib/html-tools.js';
+import { inspectTree } from '../public/admin/lib/trees.js';
+import { findUnformatted } from './format-cms-data.mjs';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIR, '..');
 
 const ALLOWED_PARTS = new Set(['intro', 'part1', 'part2', 'part3', 'website']);
-const ALLOWED_OUTCOMES = new Set([
+export const ALLOWED_OUTCOMES = new Set([
   'compliant',
   'non-compliant',
   'conditional',
@@ -48,11 +51,13 @@ function validateTreeCvsCheck(cvsCheck, path, errors) {
   }
   for (const mode of TREE_CVS_MODES) {
     const settings = cvsCheck[mode];
-    if (settings === undefined) continue;
+    // The content editor writes null for a mode left empty: that means "none".
+    if (settings == null) continue;
     const modePath = `${path}.${mode}`;
     if (!isNonEmptyString(settings?.intro)) errors.push(`${modePath}: missing intro.`);
     if (!isNonEmptyString(settings?.otherStatus)) errors.push(`${modePath}: missing otherStatus.`);
-    if (settings?.noMatch !== undefined && !isNonEmptyString(settings.noMatch)) errors.push(`${modePath}: noMatch must be text.`);
+    // The content editor writes an empty text for a field left empty: that means "none".
+    if (settings?.noMatch !== undefined && typeof settings.noMatch !== 'string') errors.push(`${modePath}: noMatch must be text.`);
     if (!Array.isArray(settings?.statuses)) {
       errors.push(`${modePath}: expected a statuses array.`);
       continue;
@@ -70,11 +75,17 @@ function validateTreeCvsCheck(cvsCheck, path, errors) {
         }
       }
       if (!isNonEmptyString(entry?.text)) errors.push(`${entryPath}: missing text.`);
-      if (entry?.tone !== undefined && !TREE_CVS_TONES.includes(entry.tone)) {
+      if (entry?.tone !== undefined && entry.tone !== '' && !TREE_CVS_TONES.includes(entry.tone)) {
         errors.push(`${entryPath}: unsupported tone "${entry.tone}".`);
       }
     });
   }
+}
+
+// HTML that would render differently from what was intended (an unclosed <strong>, say). The
+// content editor warns about it while typing; this stops such a save from being published.
+function reportHtmlProblems(html, path, errors) {
+  for (const problem of checkHtml(html)) errors.push(`${path}: ${problem.message}`);
 }
 
 function findDuplicates(values) {
@@ -519,6 +530,8 @@ export function validateProjectData({
       errors.push(`${chapterPath}: icon "${chapter.icon}" is not registered in AppIcons.jsx.`);
     }
 
+    if (typeof chapter?.summary === 'string') reportHtmlProblems(chapter.summary, `${chapterPath} summary`, errors);
+
     if (!Array.isArray(chapter?.sections)) {
       errors.push(`${chapterPath}: expected a sections array.`);
       return;
@@ -532,6 +545,7 @@ export function validateProjectData({
       sectionIdSet.add(sectionId);
 
       if (!isNonEmptyString(section?.legalText)) errors.push(`${sectionPath}: missing legalText.`);
+      else reportHtmlProblems(section.legalText, `${sectionPath} legalText`, errors);
       // Each Glossary section holds one definition and is titled with its term, so the
       // definition's link (built from the title) always names the term it opens.
       if (chapter.id === 'glossary' && isNonEmptyString(section?.legalText)) {
@@ -551,7 +565,9 @@ export function validateProjectData({
         qaCount += 1;
         const qaPath = `${sectionPath} qas[${qaIndex}]`;
         if (!isNonEmptyString(qa?.q)) errors.push(`${qaPath}: missing question text (q).`);
+        else reportHtmlProblems(qa.q, `${qaPath} q`, errors);
         if (!isNonEmptyString(qa?.a)) errors.push(`${qaPath}: missing answer text (a).`);
+        else reportHtmlProblems(qa.a, `${qaPath} a`, errors);
       });
     });
   });
@@ -612,7 +628,8 @@ export function validateProjectData({
         if (!ALLOWED_OUTCOMES.has(node.outcome)) {
           errors.push(`${nodePath}: unsupported outcome "${node?.outcome ?? ''}".`);
         }
-        if (node.cvsCheck !== undefined && !tree.cvsCheck?.[node.cvsCheck]) {
+        // An empty cvsCheck means the result has no live CVS check.
+        if (node.cvsCheck !== undefined && node.cvsCheck !== '' && !tree.cvsCheck?.[node.cvsCheck]) {
           errors.push(`${nodePath}: cvsCheck "${node.cvsCheck}" has no texts in the tree's cvsCheck.`);
         }
       } else {
@@ -620,8 +637,21 @@ export function validateProjectData({
       }
     });
 
-    if (tree.cvsCheck !== undefined) validateTreeCvsCheck(tree.cvsCheck, `${treePath} cvsCheck`, errors);
+    // A step no answer leads to is never shown; it is usually left over from an edit.
+    const unreached = inspectTree(tree).unreached.map((node) => node.id);
+    if (unreached.length) warnings.push(`${treePath} (${tree.id}): not reached from "start": ${unreached.join(', ')}.`);
 
+    // null: the tree has no live CVS check texts.
+    if (tree.cvsCheck != null) validateTreeCvsCheck(tree.cvsCheck, `${treePath} cvsCheck`, errors);
+
+    // Lists, as the content editor writes them: the chapters (at least one) and the sections
+    // (possibly none) the tree is listed with.
+    if (!Array.isArray(tree.relatedChapter) || tree.relatedChapter.length === 0) {
+      errors.push(`${treePath}: relatedChapter must be a list of at least one chapter ID.`);
+    }
+    if (!Array.isArray(tree.relatedSection)) {
+      errors.push(`${treePath}: relatedSection must be a list of section IDs (empty if none).`);
+    }
     for (const relatedChapter of asArray(tree.relatedChapter)) {
       if (!chapterIdSet.has(relatedChapter)) {
         errors.push(`${treePath}: relatedChapter "${relatedChapter}" does not exist.`);
@@ -899,6 +929,10 @@ export function validateCurrentProject() {
     eventSupportRules: readJson('src/data/eventSupportRules.json'),
   });
   if (phrasebook.error) result.errors.push(phrasebook.error);
+  // Files in the content editor's layout change only where an edit was made when it saves them.
+  for (const { path } of findUnformatted(PROJECT_ROOT)) {
+    result.errors.push(`${path}: not in the content editor's layout. Run \`npm run format:data\`.`);
+  }
   return result;
 }
 

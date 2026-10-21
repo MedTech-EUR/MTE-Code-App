@@ -1,167 +1,421 @@
+# Content editor (Sveltia CMS) configuration: https://sveltiacms.app/en/docs
+#
+# The editor writes the same JSON files the app reads. Every save is a commit on
+# main and goes live after the automatic build; `npm run validate:data` runs in
+# that build, so a save that breaks the data is not published.
+#
+# Keep in step with the data (tests/cmsConfig.test.mjs checks this):
+# - every file in src/data/code/ is listed once below, in the order of
+#   src/data/codeOrder.js;
+# - the select options for outcomes, categories, related chapters, CVS check
+#   modes and tones match what the app and scripts/validate-data.mjs accept.
+# The JSON layout the editor writes (2-space indentation, field order, empty
+# values) is described in scripts/lib/cms-format.mjs; `npm run format:data`
+# applies it, so a save changes only the lines that were edited.
+
+app_title: The Code App – Content editor
+logo:
+  src: /icon-192.png
+site_url: https://medtecheurope-code.org
+display_url: https://medtecheurope-code.org
+
 backend:
   name: github
-  repo: dicmitri/MTE-Code-App
+  repo: MedTech-EUR/MTE-Code-App
   branch: main
+  # GitHub sign-in goes through the MTE OAuth proxy Worker (oauth-proxy.js).
   base_url: https://mte-oauth-proxy.medtecheurope.workers.dev
-  auth_endpoint: /auth
+  auth_endpoint: auth
+  commit_messages:
+    create: 'Create {{collection}} “{{slug}}”'
+    update: 'Update {{collection}} “{{slug}}”'
+    delete: 'Delete {{collection}} “{{slug}}”'
+    uploadMedia: 'Upload “{{path}}”'
+    deleteMedia: 'Delete “{{path}}”'
 
-# On localhost, use the optional Decap proxy started by `npm run cms` so the
-# editor reads this working copy instead of the remote main branch.
-local_backend: true
+# Each save is published directly; Content history (/admin/history/) can undo it.
+publish_mode: simple
 
-media_folder: public
-public_folder: /
+# Images used in the Code's text (e.g. the Annex III map), served at /code-assets/<name>.
+media_folder: /public/code-assets
+public_folder: /code-assets
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+
+output:
+  json:
+    indent_style: space
+    indent_size: 2
 
 collections:
-  # ─── The Code — Chapters ────────────────────────────────────────
-  - name: "code"
-    label: "The Code — Chapters"
-    label_singular: "Code chapter"
-    folder: "src/data/code"
-    create: false
-    delete: false
-    extension: "json"
-    format: "json"
-    identifier_field: "id"
-    summary: "{{title}} ({{id}})"
-    sortable_fields: ["title", "part", "id"]
-    editor:
-      preview: false
-    fields:
-      - label: "Chapter ID"
-        name: "id"
-        widget: "hidden"
-      - label: "Navigation part"
-        name: "part"
-        widget: "hidden"
-      - label: "Title"
-        name: "title"
-        widget: "string"
-        hint: "This is the public chapter title. Changing it does not change the chapter URL."
-      - label: "Navigation icon"
-        name: "icon"
-        widget: "hidden"
-      - label: "Chapter summary"
-        name: "summary"
-        widget: "exact-html"
-        hint: "Short introduction shown near the top of the chapter. Edit the wording inside the HTML tags."
-      - label: "Sections"
-        name: "sections"
-        widget: "list"
-        allow_add: false
-        allow_remove: false
-        allow_reorder: false
-        collapsed: true
-        summary: "{{fields.title}}"
-        fields:
-          - label: "Section Title"
-            name: "title"
-            widget: "string"
-            hint: "Changing this can change the public section URL. Only do so as part of an approved heading change."
-          - label: "Section text"
-            name: "legalText"
-            widget: "exact-html"
-            hint: "Edit the wording inside the HTML tags. This editor preserves the stored HTML instead of converting it to Markdown."
-          - label: "Q&As"
-            name: "qas"
-            widget: "list"
+  # ─── The Code ───────────────────────────────────────────────────────────────
+  # One entry per chapter file. Chapters, sections and Q&As cannot be added,
+  # removed or reordered here: their positions make up the app's links.
+  - name: introductory
+    label: Introductory Chapters
+    icon: info
+    description: Scope, Administering the Code and the Introduction.
+    editor: { preview: true }
+    files:
+      - name: scope
+        label: Scope
+        file: src/data/code/scope.json
+        fields: &chapter_fields
+          - { name: id, label: Chapter ID, widget: hidden }
+          - { name: part, label: Part, widget: hidden }
+          - name: title
+            label: Chapter title
+            widget: string
+            hint: The title shown in the app. Changing it does not change the chapter's link.
+          - { name: icon, label: Icon, widget: hidden }
+          - name: summary
+            label: Chapter summary
+            widget: exact-html
+            hint: The short introduction at the top of the chapter.
+          - name: sections
+            label: Sections
+            label_singular: section
+            widget: list
             allow_add: false
             allow_remove: false
             allow_reorder: false
             collapsed: true
-            minimize_collapsed: true
-            summary: "{{fields.q}}"
+            summary: '{{fields.title}}'
             fields:
-              - label: "Question"
-                name: "q"
-                widget: "string"
-              - label: "Answer"
-                name: "a"
-                widget: "exact-html"
-                hint: "Edit the wording inside the HTML tags."
-
-  # ─── Decision Trees ─────────────────────────────────────────────
-  - name: "trees"
-    label: "Decision Trees"
-    editor:
-      preview: false
-    files:
-      - name: "treeData"
-        label: "All Decision Trees"
-        file: "src/data/treeData.json"
-        fields:
-          - label: "Trees"
-            name: "trees"
-            widget: "list"
-            collapsed: true
-            summary: "{{fields.title}}"
-            fields:
-              - label: "ID"
-                name: "id"
-                widget: "string"
-                hint: "Do not change — breaks routing."
-              - label: "Title"
-                name: "title"
-                widget: "string"
-              - label: "Category"
-                name: "category"
-                widget: "string"
-              - label: "Description"
-                name: "description"
-                widget: "text"
-              - label: "Related Chapter"
-                name: "relatedChapter"
-                widget: "string"
+              - name: title
+                label: Section title
+                widget: string
                 required: false
-              - label: "Related Section"
-                name: "relatedSection"
-                widget: "string"
+                hint: >-
+                  Changing a section title changes the section's link (and its Q&As' links), so
+                  bookmarks and links from other sites to it stop working. Change it only as part of an
+                  approved heading change.
+              - name: legalText
+                label: Text
+                widget: exact-html
+              - name: qas
+                label: Q&As
+                label_singular: Q&A
+                widget: list
                 required: false
-              - label: "Nodes"
-                name: "nodes"
-                widget: "list"
+                allow_add: false
+                allow_remove: false
+                allow_reorder: false
                 collapsed: true
-                summary: "{{fields.id}} — {{fields.type}}"
+                summary: '{{fields.q}}'
                 fields:
-                  - label: "Node ID"
-                    name: "id"
-                    widget: "string"
-                  - label: "Type"
-                    name: "type"
-                    widget: "select"
-                    options: ["question", "result"]
-                  - label: "Text"
-                    name: "text"
-                    widget: "text"
-                  - label: "Help Text"
-                    name: "helpText"
-                    widget: "text"
+                  - name: q
+                    label: Question
+                    widget: text
+                    hint: Starts with its number, e.g. “Q&A 31:”, exactly as printed in the Code.
+                  - name: a
+                    label: Answer
+                    widget: exact-html
+      - { name: admin, label: Administering the Code, file: src/data/code/admin.json, fields: *chapter_fields }
+      - { name: intro, label: Introduction, file: src/data/code/intro.json, fields: *chapter_fields }
+
+  - name: part1
+    label: 'Part 1: The Code'
+    icon: menu_book
+    description: Chapters 1 to 10.
+    editor: { preview: true }
+    files:
+      - { name: ch1, label: 'Chapter 1: General Criteria for Event', file: src/data/code/ch1.json, fields: *chapter_fields }
+      - { name: ch2, label: 'Chapter 2: Third Party Organised Educational Events', file: src/data/code/ch2.json, fields: *chapter_fields }
+      - { name: ch3, label: 'Chapter 3: Company Events', file: src/data/code/ch3.json, fields: *chapter_fields }
+      - { name: ch4, label: 'Chapter 4: Grants and Charitable Donations', file: src/data/code/ch4.json, fields: *chapter_fields }
+      - { name: ch5, label: 'Chapter 5: Consulting Arrangements', file: src/data/code/ch5.json, fields: *chapter_fields }
+      - { name: ch6, label: 'Chapter 6: Research', file: src/data/code/ch6.json, fields: *chapter_fields }
+      - { name: ch7, label: 'Chapter 7: Royalties', file: src/data/code/ch7.json, fields: *chapter_fields }
+      - { name: ch8, label: 'Chapter 8: Educational Items and Promotional Items', file: src/data/code/ch8.json, fields: *chapter_fields }
+      - { name: ch9, label: 'Chapter 9: Demonstration Products and Samples', file: src/data/code/ch9.json, fields: *chapter_fields }
+      - { name: ch10, label: 'Chapter 10: Third Party Intermediaries', file: src/data/code/ch10.json, fields: *chapter_fields }
+
+  - name: part2
+    label: 'Part 2: Complaint Handling'
+    icon: gavel
+    description: Complaint handling and dispute resolution.
+    editor: { preview: true }
+    files:
+      - { name: part2, label: Complaint handling and dispute resolution, file: src/data/code/part2.json, fields: *chapter_fields }
+
+  - name: part3
+    label: 'Part 3: Annexes & Glossary'
+    icon: library_books
+    description: The Glossary and Annexes I to VII.
+    editor: { preview: true }
+    files:
+      - name: glossary
+        label: Glossary
+        file: src/data/code/glossary.json
+        # Each section is one definition, titled with its term exactly as its bold headword gives it.
+        fields:
+          - { name: id, label: Chapter ID, widget: hidden }
+          - { name: part, label: Part, widget: hidden }
+          - { name: title, label: Chapter title, widget: string }
+          - { name: icon, label: Icon, widget: hidden }
+          - { name: summary, label: Chapter summary, widget: exact-html }
+          - name: sections
+            label: Definitions
+            label_singular: definition
+            widget: list
+            allow_add: false
+            allow_remove: false
+            allow_reorder: false
+            collapsed: true
+            summary: '{{fields.title}}'
+            fields:
+              - name: title
+                label: Term
+                widget: string
+                hint: >-
+                  Exactly as the definition's bold headword gives it (npm run validate:data checks this).
+                  Changing it changes the definition's link.
+              - name: legalText
+                label: Definition
+                widget: exact-html
+                hint: Starts with the term in bold, e.g. <p><strong>Term:</strong> …</p>, which the app uses to link the term in the text.
+              - name: qas
+                label: Q&As
+                label_singular: Q&A
+                widget: list
+                required: false
+                allow_add: false
+                allow_remove: false
+                allow_reorder: false
+                collapsed: true
+                summary: '{{fields.q}}'
+                fields:
+                  - { name: q, label: Question, widget: text }
+                  - { name: a, label: Answer, widget: exact-html }
+      - { name: annex1, label: 'Annex I: CVS Scope', file: src/data/code/annex1.json, fields: *chapter_fields }
+      - { name: annex2, label: 'Annex II: Calculating the value of In Kind Educational Grants', file: src/data/code/annex2.json, fields: *chapter_fields }
+      - { name: annex3, label: 'Annex III: The Geographical Area', file: src/data/code/annex3.json, fields: *chapter_fields }
+      - { name: annex4, label: 'Annex IV: Verification Of The Use Of Funds', file: src/data/code/annex4.json, fields: *chapter_fields }
+      - { name: annex5, label: 'Annex V: Methodology Note Example', file: src/data/code/annex5.json, fields: *chapter_fields }
+      - { name: annex6, label: 'Annex VI: Direct support to HCP participation in Events', file: src/data/code/annex6.json, fields: *chapter_fields }
+      - { name: annex7, label: 'Annex VII: Third Party Organised Procedure Trainings', file: src/data/code/annex7.json, fields: *chapter_fields }
+
+  # ─── Decision trees ─────────────────────────────────────────────────────────
+  - name: trees
+    label: Decision Trees
+    icon: account_tree
+    description: The interactive decision trees. The preview shows each tree's paths and flags any answer that leads nowhere.
+    editor: { preview: true }
+    files:
+      - name: treeData
+        label: All decision trees
+        file: src/data/treeData.json
+        fields:
+          - name: trees
+            label: Decision trees
+            label_singular: decision tree
+            widget: list
+            collapsed: true
+            summary: '{{fields.title}}'
+            fields:
+              - name: id
+                label: Tree ID
+                widget: string
+                pattern: ['^dt-[a-z0-9-]+$', 'Starts with “dt-”, then lowercase letters, digits and hyphens.']
+                hint: Part of the tree's link (/trees/<ID>). Changing it breaks existing links to the tree.
+              - { name: title, label: Title, widget: string }
+              - name: relatedChapter
+                label: Related chapters
+                widget: select
+                multiple: true
+                min: 1
+                hint: The chapters whose pages list this tree.
+                options: &chapter_options
+                  - { label: Scope, value: scope }
+                  - { label: Administering the Code, value: admin }
+                  - { label: Introduction, value: intro }
+                  - { label: 'Chapter 1: General Criteria for Event', value: ch1 }
+                  - { label: 'Chapter 2: Third Party Organised Educational Events', value: ch2 }
+                  - { label: 'Chapter 3: Company Events', value: ch3 }
+                  - { label: 'Chapter 4: Grants and Charitable Donations', value: ch4 }
+                  - { label: 'Chapter 5: Consulting Arrangements', value: ch5 }
+                  - { label: 'Chapter 6: Research', value: ch6 }
+                  - { label: 'Chapter 7: Royalties', value: ch7 }
+                  - { label: 'Chapter 8: Educational Items and Promotional Items', value: ch8 }
+                  - { label: 'Chapter 9: Demonstration Products and Samples', value: ch9 }
+                  - { label: 'Chapter 10: Third Party Intermediaries', value: ch10 }
+                  - { label: 'Part 2: Complaint handling and dispute resolution', value: part2 }
+                  - { label: Glossary, value: glossary }
+                  - { label: 'Annex I: CVS Scope', value: annex1 }
+                  - { label: 'Annex II: Calculating the value of In Kind Educational Grants', value: annex2 }
+                  - { label: 'Annex III: The Geographical Area', value: annex3 }
+                  - { label: 'Annex IV: Verification Of The Use Of Funds', value: annex4 }
+                  - { label: 'Annex V: Methodology Note Example', value: annex5 }
+                  - { label: 'Annex VI: Direct support to HCP participation in Events', value: annex6 }
+                  - { label: 'Annex VII: Third Party Organised Procedure Trainings', value: annex7 }
+              - name: relatedSection
+                label: Related sections
+                label_singular: section
+                widget: list
+                required: false
+                field:
+                  name: section
+                  label: Section link name
+                  widget: string
+                  pattern: ['^[a-z0-9-]+$', 'The part of the section link after “#”, e.g. ch1-2-event-location-and-venue.']
+                hint: >-
+                  Optional. To show the tree under one section instead of at the end of the chapter, add that
+                  section's link name: the part after “#” in its link (copy it with Cite/Link › Direct Link URL).
+              - name: category
+                label: Category
+                widget: select
+                hint: The group the tree is listed under on the Decision Trees page.
+                options:
+                  - { label: Scope & Applicability, value: scope }
+                  - { label: Events, value: events }
+                  - { label: Grants and Donations, value: grants }
+                  - { label: Consulting Agreements, value: consulting }
+                  - { label: Educational & Promotional Items, value: items }
+                  - { label: Research, value: research }
+                  - { label: General, value: default }
+              - { name: description, label: Description, widget: text }
+              - name: cvsCheck
+                label: Live CVS check texts
+                widget: object
+                required: false
+                collapsed: true
+                hint: >-
+                  Only for trees whose results look up the Event's status in CVS. Each status text appears under a
+                  result whose “Live CVS check” is set to that mode; “{status}” is replaced by the status found.
+                fields:
+                  - { name: title, label: Heading, widget: string }
+                  - name: required
+                    label: When a positive CVS decision is required
+                    widget: object
                     required: false
-                  - label: "Outcome"
-                    name: "outcome"
-                    widget: "select"
-                    options:
-                      - "compliant"
-                      - "non-compliant"
-                      - "conditional"
-                      - "in-scope"
-                      - "out-of-scope"
-                      - "not-applicable"
-                      - "not-required"
+                    collapsed: true
+                    fields: &cvs_mode_fields
+                      - { name: intro, label: Introduction, widget: text }
+                      - name: statuses
+                        label: Status texts
+                        label_singular: status text
+                        widget: list
+                        collapsed: true
+                        summary: '{{fields.labels}}'
+                        fields:
+                          - name: labels
+                            label: CVS statuses
+                            label_singular: status
+                            widget: list
+                            field: { name: label, label: CVS status, widget: string }
+                            hint: The statuses exactly as CVS shows them.
+                          - name: tone
+                            label: Colour
+                            widget: select
+                            options: &cvs_tones
+                              - { label: Green (positive), value: positive }
+                              - { label: Yellow (caution), value: caution }
+                              - { label: Red (negative), value: negative }
+                          - { name: text, label: Text, widget: text }
+                      - { name: otherStatus, label: For any other status, widget: text }
+                      - { name: noMatch, label: When the Event is not found in CVS, widget: text, required: false }
+                  - name: national
+                    label: For a national Event found in CVS
+                    widget: object
                     required: false
-                    hint: "Only for result nodes"
-                  - label: "Reference"
-                    name: "reference"
-                    widget: "string"
-                    required: false
-                  - label: "Options"
-                    name: "options"
-                    widget: "list"
-                    required: false
+                    collapsed: true
+                    fields: *cvs_mode_fields
+              - name: nodes
+                label: Questions and results
+                label_singular: step
+                widget: list
+                collapsed: true
+                hint: The tree starts at the step with ID “start”. Each answer leads to the step whose ID it names.
+                types:
+                  - name: question
+                    label: Question
+                    summary: '{{fields.id}} · {{fields.text}}'
                     fields:
-                      - label: "Label"
-                        name: "label"
-                        widget: "string"
-                      - label: "Next Node ID"
-                        name: "next"
-                        widget: "string"
+                      - name: id
+                        label: Step ID
+                        widget: string
+                        pattern: ['^[A-Za-z0-9_-]+$', 'Letters, digits, hyphens and underscores only.']
+                      - { name: text, label: Question, widget: text }
+                      - { name: helpText, label: Help text, widget: text, required: false }
+                      - name: options
+                        label: Answers
+                        label_singular: answer
+                        widget: list
+                        summary: '{{fields.label}} → {{fields.next}}'
+                        fields:
+                          - { name: label, label: Answer, widget: string }
+                          - name: next
+                            label: Leads to step
+                            widget: string
+                            hint: The ID of the question or result this answer leads to.
+                  - name: result
+                    label: Result
+                    summary: '{{fields.id}} · {{fields.outcome}}'
+                    fields:
+                      - name: id
+                        label: Step ID
+                        widget: string
+                        pattern: ['^[A-Za-z0-9_-]+$', 'Letters, digits, hyphens and underscores only.']
+                      - { name: text, label: Answer, widget: text }
+                      - name: outcome
+                        label: Outcome
+                        widget: select
+                        options:
+                          - { label: Compliant, value: compliant }
+                          - { label: Non-Compliant, value: non-compliant }
+                          - { label: Conditional, value: conditional }
+                          - { label: Consult Legal, value: consult-legal }
+                          - { label: CVS Assessment Not Required, value: not-required }
+                          - { label: Out of Scope, value: out-of-scope }
+                          - { label: Not Applicable, value: not-applicable }
+                          - { label: Prior Review Required, value: prior-review }
+                          - { label: In Scope of the Code, value: in-scope }
+                          - { label: More Information Needed, value: more-info }
+                      - name: reference
+                        label: Code reference
+                        widget: string
+                        required: false
+                        hint: E.g. “Chapter 1, Section 2” or “Annex I”. It opens the provision it names.
+                      - name: cvsCheck
+                        label: Live CVS check
+                        widget: select
+                        required: false
+                        hint: Shows the Event's live CVS status under this result, with the tree's texts for that mode.
+                        options:
+                          - { label: A positive CVS decision is required, value: required }
+                          - { label: National Event found in CVS, value: national }
+
+  # ─── Website pages ──────────────────────────────────────────────────────────
+  - name: website
+    label: Version History
+    icon: history
+    description: The in-app Version History. Write for the people who use the app.
+    editor: { preview: true }
+    files:
+      - name: changelog
+        label: Version History
+        file: src/data/code/changelog.json
+        fields:
+          - { name: id, label: Page ID, widget: hidden }
+          - { name: part, label: Part, widget: hidden }
+          - { name: title, label: Page title, widget: string }
+          - { name: icon, label: Icon, widget: hidden }
+          - { name: summary, label: Introduction, widget: exact-html }
+          - name: sections
+            label: Updates
+            label_singular: update
+            widget: list
+            add_to_top: true
+            allow_remove: false
+            collapsed: true
+            summary: '{{fields.title}}'
+            hint: >-
+              Newest first. A new update takes the “Current” badge from the previous one (copy the badge's HTML
+              from it and remove it there).
+            fields:
+              - { name: title, label: Title, widget: string, hint: 'E.g. “October 2026 Update 3”.' }
+              - { name: legalText, label: Text, widget: exact-html }
+              - { name: qas, label: Q&As, widget: list, required: false, allow_add: false, fields: [{ name: q, widget: text }, { name: a, widget: text }] }

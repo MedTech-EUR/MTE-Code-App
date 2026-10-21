@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import {defineConfig} from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { adminFiles } from './scripts/lib/admin-files.mjs';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -12,6 +13,8 @@ export default defineConfig(() => {
     plugins: [
       react(), 
       tailwindcss(),
+      // Content history's item list and the app stylesheet for the content editor's previews.
+      adminFiles(projectRoot),
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: [
@@ -31,6 +34,8 @@ export default defineConfig(() => {
             '**/inter-latin-wght-*.woff2',
           ],
           globIgnores: [
+            // The content editor and Content history are not part of the offline app.
+            'admin/**',
             '**/TPPTContent-*.js',
             '**/tppt-*.js',
             '**/pdf.worker*.mjs',

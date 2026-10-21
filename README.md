@@ -12,7 +12,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 
 ```text
 /
- ├── /public/        # Static assets (icons, manifest, Decap CMS config)
+ ├── /public/        # Static assets (icons, manifest) and /admin/: the content editor and Content history
  ├── /src/
  │   ├── /components/ # The building blocks of the UI (Header, Decision Trees, Quiz, etc.)
  │   ├── /config/     # Centralized registries (sections, routes, search indexes)
@@ -26,7 +26,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
  │   ├── main.jsx     # React entry point
  │   └── index.css    # Global styles, fonts, and print rules
  ├── server.js       # App/SPA Cloudflare Worker with optional same-origin OAuth endpoints
- ├── oauth-proxy.js  # Standalone OAuth proxy for Decap CMS
+ ├── oauth-proxy.js  # Standalone OAuth proxy Worker for the content editor's GitHub sign-in
  ├── CHANGELOG.md    # Developer technical version changelog
  ├── PROJECT_CHECKS.md # Plain-language validation and testing guide
  ├── ROUTING.md      # URL formats, compatibility rules, and route checks
@@ -216,24 +216,22 @@ To facilitate heavy professional reference usage, the app includes several quali
 ### 🖨️ Print & Export Mode
 The app features an optimized Print Mode. By pressing the **Print** icon in the header (or pressing `Ctrl+P`), the `index.css` `@media print` query strips away the Sidebar, Header, and interactive elements. It presents a clean, high-contrast, black-and-white view of the legal text — perfect for generating PDFs. Transparency printing includes every publication Q&A even when Q&As are hidden on screen; the non-normative Annex I CSV preview and interactive source/download controls are omitted.
 
-### 🛠️ Decap CMS & Cloudflare Worker Integration
-The application uses **Decap CMS** for content management, accessible at `/admin/`.
-- The CMS uses GitHub as its backend.
-- The hosted CMS uses the separately deployed `oauth-proxy.js`, configured by `public/admin/config.yml`, for GitHub OAuth.
-- `server.js` serves the static React application and SPA routes. It also contains optional same-origin OAuth endpoints, but it is not the OAuth service currently named by the hosted CMS configuration.
-- For local, uncommitted content, run `npm run cms` from the app root. This
-  starts both Vite and the local Decap proxy. The hosted CMS continues to read
-  only the GitHub `main` branch.
-- See [`docs/cms-guide.md`](docs/cms-guide.md) for the non-technical editing,
-  validation, troubleshooting, and release workflow.
+### 🛠️ Content Editor (Sveltia CMS) & Cloudflare Worker Integration
+The content editor at `/admin/` is **Sveltia CMS** (pinned version and integrity hash in `public/admin/index.html`), configured by `public/admin/config.yml`.
+- It edits the Code chapters, the decision trees and the Version History in GitHub (`main`); each save is a commit, published by the next build. The build runs `npm run validate:data` first, so a save that breaks the data is not published.
+- Code texts are edited as exact HTML with **Edit**, **Preview** (the app's own stylesheet) and **Changes** views, and a warning for unclosed tags (`public/admin/cms-fields.js`). The preview pane shows a chapter as the app does and walks each decision tree, flagging broken answers.
+- **Content history** (`/admin/history/`) shows every save field by field and undoes a save, a single change or a whole version as a new commit, without Git.
+- The files are kept in the editor's own JSON layout (`npm run format:data`, checked by `validate:data`), so a save changes only the lines edited.
+- Sign-in goes through the separately deployed `oauth-proxy.js`. `server.js` serves the app and SPA routes, and `/admin/` and `/admin/history/` as their own pages; it also contains optional same-origin OAuth endpoints that the editor does not use.
+- See [`docs/cms-guide.md`](docs/cms-guide.md) for the editors' guide and the maintainer's notes (layout, local editing, updating Sveltia).
 
 ---
 
 ## 📝 2. How to Edit & Add Legal Content (`FULL_CODE_DATA`)
 
-You can edit content directly in the JSON files or via the **Decap CMS** at `/admin/`.
+You can edit content directly in the JSON files or in the content editor at `/admin/` ([`docs/cms-guide.md`](docs/cms-guide.md)). After editing a JSON file by hand, run `npm run format:data` to keep it in the editor's layout.
 
-For local CMS editing, use `npm run cms`, not only `npm run dev`. The local proxy is what allows the CMS to read files that have not yet been committed to GitHub.
+To use the editor on your working copy, run `npm run dev`, open `http://localhost:3000/admin/` in Chrome or Edge and choose **Work with Local Repository**.
 
 The text, annexes, and Q&As are stored as **one canonical JSON file per chapter** in:
 👉 **`src/data/code/`**
@@ -309,7 +307,7 @@ Each chapter file in `src/data/code/` contains a single JSON object structured a
 ---
 
 ### How to Edit Existing Content
-1. **Fixing Typos:** Open the relevant file in `src/data/code/`, use `Ctrl+F` (or `Cmd+F`) to find the text, and change only the intended value. Alternatively, edit via Decap CMS.
+1. **Fixing Typos:** Open the relevant file in `src/data/code/`, use `Ctrl+F` (or `Cmd+F`) to find the text, and change only the intended value. Alternatively, use the content editor at `/admin/`.
 2. **Formatting Text:** The `legalText` and `a` (answer) fields support standard HTML:
    - Use `<strong>text</strong>` for bold text.
    - Use `<em>text</em>` for italics.
@@ -408,7 +406,7 @@ Or run the complete verification check:
 ```bash
 npm run check
 ```
-`npm run validate:data` checks JSON structure, registered icons, references, and generated-ID uniqueness. `npm run check` additionally runs route tests, Disclosure source verification, TypeScript checks, and the production build.
+`npm run validate:data` checks JSON structure, registered icons, references, generated-ID uniqueness, well-formed HTML in the Code's texts, and that the content editor's files are in its layout. `npm run check` additionally runs route tests, Disclosure source verification, TypeScript checks, and the production build.
 
 See [`docs/content-migration/README.md`](docs/content-migration/README.md) for PDF audit history and migration details.
 
@@ -484,13 +482,13 @@ Each tree is an object with these fields:
 | `in-scope` | Indigo | 🎯 | Within the Code's scope |
 
 ### How to add a new tree:
-1. Open `treeData.json` (or use Decap CMS).
-2. Add a new object to the top-level array.
+1. Open the content editor's **Decision Trees** (or `treeData.json`, then run `npm run format:data`).
+2. Add a new tree to the `trees` list.
 3. Give it a unique `id` starting with `dt-`.
-4. Set `relatedChapter` to the Code chapter's `id` (e.g. `"ch3"` for Company Events).
-5. Optionally set `relatedSection` to a specific section's `computedId` for precise cross-linking.
+4. Set `relatedChapter` to a list of the Code chapters' `id`s (e.g. `["ch3"]` for Company Events).
+5. Optionally list specific sections' `computedId`s in `relatedSection` for precise cross-linking (an empty list `[]` otherwise).
 6. Add your `nodes` array. The first question node **must** have `"id": "start"`.
-7. Make sure every `"next"` value in every option points to a valid node `id`.
+7. Make sure every `"next"` value in every option points to a valid node `id` (the editor's preview flags any that do not).
 
 ---
 
@@ -675,11 +673,12 @@ Alternatively, you can manually deploy using `npx wrangler deploy`.
 | Command | What it does |
 |---|---|
 | `npm run dev` | Start the development server with hot reload |
-| `npm run build` | Create a production-optimized build |
+| `npm run build` | Check the data (`validate:data`), then create a production-optimized build |
 | `npm run preview` | Preview the production build locally |
 | `npm run clean` | Delete the `dist/` folder (the current script requires a shell that provides `rm`; in PowerShell use `Remove-Item -Recurse -Force dist`) |
 | `npm run lint` | Run TypeScript checks without emitting files |
 | `npm run validate:data` | Check Code, Transparency, tree, and quiz data integrity |
+| `npm run format:data` | Put the content editor's files (Code chapters, decision trees) in its JSON layout after a hand edit |
 | `npm run verify:code-docx` | Compare the app's source-backed Code text with the pinned revised Word copy |
 | `npm run verify:disclosure-guidelines` | Verify verbatim Disclosure Guidelines data and pinned PDF/CSV sources |
 | `npm run verify:production-disclosure-assets` | After a build, prove the emitted Disclosure PDF/CSV remain byte-exact and precached |
@@ -740,5 +739,5 @@ User opens app
 ## 🔒 12. Security Notes
 
 - All HTML in `legalText` and Q&A answers is sanitized through **DOMPurify** before rendering. This prevents cross-site scripting (XSS) even if someone injects malicious code into the JSON content.
-- The hosted Decap CMS uses the separately deployed `oauth-proxy.js`; `server.js` serves the application and also offers optional same-origin OAuth endpoints. Both OAuth implementations use HMAC-signed state tokens for CSRF protection.
-- Public reader interactions and TPPT source documents are processed client-side. Bookmarks, history, and recent searches stay in `localStorage`; the separate `/admin/` CMS communicates with GitHub and its OAuth service when editors sign in or save content. Search runs entirely in the browser, and search events are not sent or stored anywhere.
+- The content editor signs in through the separately deployed `oauth-proxy.js`; `server.js` serves the application and also offers optional same-origin OAuth endpoints, which the editor does not use. Both OAuth implementations use HMAC-signed state tokens for CSRF protection. The editor page loads Sveltia CMS from unpkg with an integrity hash, so the browser refuses any other file.
+- Public reader interactions and TPPT source documents are processed client-side. Bookmarks, history, and recent searches stay in `localStorage`; the separate `/admin/` editor and `/admin/history/` page communicate with GitHub and its OAuth service when editors sign in or save content (Content history keeps its sign-in in the browser tab's `sessionStorage`). Search runs entirely in the browser, and search events are not sent or stored anywhere.

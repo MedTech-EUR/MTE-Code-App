@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "cms": "concurrently --kill-others-on-fail --names app,cms \"npm run dev\" \"npm run cms:proxy\"",
-    "cms:proxy": "decap-server",
-    "build": "vite build --configLoader runner",
+    "build": "node scripts/validate-data.mjs && vite build --configLoader runner",
     "preview": "vite preview",
     "dev:worker": "npm run build && wrangler dev --port 8787",
     "dev:worker:remote": "npm run build && wrangler dev --remote --port 8787",
@@ -18,6 +16,7 @@
     "verify:disclosure-guidelines": "node scripts/verify-disclosure-guidelines.mjs",
     "verify:production-disclosure-assets": "node scripts/verify-production-disclosure-assets.mjs",
     "validate:data": "node scripts/validate-data.mjs",
+    "format:data": "node scripts/format-cms-data.mjs",
     "search:explain": "node scripts/search-tools.mjs explain",
     "search:report": "node scripts/search-tools.mjs report",
     "test": "node --test",
@@ -42,13 +41,12 @@
     "@types/node": "^22.14.0",
     "@types/pdfmake": "^0.3.3",
     "autoprefixer": "^10.4.21",
-    "concurrently": "^10.0.3",
-    "decap-server": "^3.9.1",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-pwa": "^1.2.0",
-    "wrangler": "4.124.0"
+    "wrangler": "4.124.0",
+    "yaml": "^2.9.1"
   }
 }

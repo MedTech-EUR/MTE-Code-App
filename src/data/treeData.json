@@ -3,14 +3,17 @@
     {
       "id": "dt-scope",
       "title": "Is this interaction in scope of the Code?",
-      "relatedChapter": "scope",
-      "relatedSection": null,
+      "relatedChapter": [
+        "scope"
+      ],
+      "relatedSection": [],
       "category": "scope",
       "description": "Determine if an interaction, event, or activity is governed by the MedTech Europe Code based on geography and affiliations.",
+      "cvsCheck": null,
       "nodes": [
         {
-          "id": "start",
           "type": "question",
+          "id": "start",
           "text": "What type of product or service is the interaction primarily linked to?",
           "helpText": "The Code governs interactions related to Medical Technologies, understood as those products under the scope of MDR and IVDR.",
           "options": [
@@ -25,9 +28,10 @@
           ]
         },
         {
-          "id": "q_actor",
           "type": "question",
+          "id": "q_actor",
           "text": "Who is initiating or conducting the interaction / activity on behalf of the company?",
+          "helpText": "",
           "options": [
             {
               "label": "A Member Company Headquarter or a European Subsidiary",
@@ -44,9 +48,10 @@
           ]
         },
         {
-          "id": "q_tpi_check",
           "type": "question",
+          "id": "q_tpi_check",
           "text": "Is the Third Party Intermediary acting on behalf of the Member Company in connection with the sale, promotion, or other activity involving the Member Company products?",
+          "helpText": "",
           "options": [
             {
               "label": "Yes, they are acting on our behalf (direct or implicit oversight)",
@@ -59,8 +64,8 @@
           ]
         },
         {
-          "id": "q_hcp_region",
           "type": "question",
+          "id": "q_hcp_region",
           "text": "Where is the target Healthcare Professional (HCP) or Healthcare Organisation (HCO) registered and practicing?",
           "helpText": "Coverage is determined by the location of the HCP/HCO, regardless of where the actual activity takes place.",
           "options": [
@@ -91,8 +96,8 @@
           ]
         },
         {
-          "id": "q_activity_region",
           "type": "question",
+          "id": "q_activity_region",
           "text": "The HCPs themselves do not trigger the Code. However, where is the specific Activity or Event taking place?",
           "helpText": "The actual physical location of the event/interaction determines if the Code applies to the activity itself.",
           "options": [
@@ -115,60 +120,71 @@
           ]
         },
         {
+          "type": "result",
           "id": "res_not_medtech",
-          "type": "result",
-          "outcome": "out-of-scope",
           "text": "OUT OF SCOPE. The Code does not apply to interactions linked exclusively to non-Medical Technology products or services.",
-          "reference": "Scope — Q&A 2"
-        },
-        {
-          "id": "res_tpi_independent",
-          "type": "result",
-          "outcome": "not-applicable",
-          "text": "NOT APPLICABLE. If the TPI is acting completely independently, the Code does not directly govern the Member Company. However, monitor Chapter 10 liability closely.",
-          "reference": "Chapter 10"
-        },
-        {
-          "id": "res_in_scope_hcp",
-          "type": "result",
-          "outcome": "in-scope",
-          "text": "IN SCOPE. Because the HCP/HCO is registered in the MedTech Europe Geographic Area, the Code applies as a minimum standard, regardless of where the activity takes place. Note: Even if a non-European subsidiary initiates this, the activity is deemed attributable to the Member Company.",
-          "reference": "Scope — Section 1"
-        },
-        {
-          "id": "res_in_scope_activity",
-          "type": "result",
-          "outcome": "in-scope",
-          "text": "IN SCOPE. Even though the HCPs/HCOs are from outside the territory, the Activity takes place within the MedTech Europe Geographic Area. The Code applies to the event arrangements.",
-          "reference": "Scope — Section 1"
-        },
-        {
-          "id": "res_samed",
-          "type": "result",
-          "outcome": "not-applicable",
-          "text": "SAMED EXCEPTION. Interactions taking place in South Africa, or with South African HCPs locally, are governed by the South African MedTech industry code (SAMED) and are outside the scope of the MTE Code.",
-          "reference": "Annex III"
-        },
-        {
-          "id": "res_out_of_scope",
-          "type": "result",
           "outcome": "out-of-scope",
+          "reference": "Scope — Q&A 2",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_tpi_independent",
+          "text": "NOT APPLICABLE. If the TPI is acting completely independently, the Code does not directly govern the Member Company. However, monitor Chapter 10 liability closely.",
+          "outcome": "not-applicable",
+          "reference": "Chapter 10",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_in_scope_hcp",
+          "text": "IN SCOPE. Because the HCP/HCO is registered in the MedTech Europe Geographic Area, the Code applies as a minimum standard, regardless of where the activity takes place. Note: Even if a non-European subsidiary initiates this, the activity is deemed attributable to the Member Company.",
+          "outcome": "in-scope",
+          "reference": "Scope — Section 1",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_in_scope_activity",
+          "text": "IN SCOPE. Even though the HCPs/HCOs are from outside the territory, the Activity takes place within the MedTech Europe Geographic Area. The Code applies to the event arrangements.",
+          "outcome": "in-scope",
+          "reference": "Scope — Section 1",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_samed",
+          "text": "SAMED EXCEPTION. Interactions taking place in South Africa, or with South African HCPs locally, are governed by the South African MedTech industry code (SAMED) and are outside the scope of the MTE Code.",
+          "outcome": "not-applicable",
+          "reference": "Annex III",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_out_of_scope",
           "text": "OUT OF SCOPE. Both the HCP/HCO and the intended Activity are located entirely outside of the MedTech Europe Geographic Area. The MedTech Europe Code does not apply.",
-          "reference": "Scope — Q&A 1"
+          "outcome": "out-of-scope",
+          "reference": "Scope — Q&A 1",
+          "cvsCheck": ""
         }
       ]
     },
     {
       "id": "dt-ch1-event-location",
       "title": "Is My Event Location Compliant?",
-      "relatedChapter": "ch1",
-      "relatedSection": "ch1-2-event-location-and-venue",
+      "relatedChapter": [
+        "ch1"
+      ],
+      "relatedSection": [
+        "ch1-2-event-location-and-venue"
+      ],
       "category": "events",
       "description": "Assess whether a proposed event location meets MedTech Europe Code requirements for venue selection.",
+      "cvsCheck": null,
       "nodes": [
         {
-          "id": "start",
           "type": "question",
+          "id": "start",
           "text": "Is the event taking place in a country where MedTech Europe's Code of Ethical Business Practice applies?",
           "helpText": "The Code applies to interactions (by Member Companies of MedTech Europe) with Healthcare Professionals (HCPs) in Europe. See Scope chapter.",
           "options": [
@@ -183,8 +199,8 @@
           ]
         },
         {
-          "id": "q2",
           "type": "question",
+          "id": "q2",
           "text": "Is the event venue located in a city or town that is a recognised scientific, educational, or business centre?",
           "helpText": "Venues should be chosen for their appropriateness to the event, and not for their leisure or entertainment attributes.",
           "options": [
@@ -199,8 +215,8 @@
           ]
         },
         {
-          "id": "q3",
           "type": "question",
+          "id": "q3",
           "text": "Does the selected/proposed venue have a reputation primarily as a leisure or entertainment destination (e.g. ski resort, beach resort, theme park)?",
           "helpText": "Even if located near a scientific centre, the venue itself must not be known primarily for leisure.",
           "options": [
@@ -215,8 +231,8 @@
           ]
         },
         {
-          "id": "q4",
           "type": "question",
+          "id": "q4",
           "text": "Is the event taking place during the peak tourist season for this location?",
           "helpText": "Events in seasonal vacation destinations during peak season may create the appearance of impropriety, even if the venue is otherwise appropriate. In Europe, the ski season is considered to run from December 20 - March 31 and the summer season from June 15 - September 15. Equivalent, seasonally adjusted dates apply in other regions of the world.",
           "options": [
@@ -231,53 +247,61 @@
           ]
         },
         {
+          "type": "result",
           "id": "result-out-of-scope",
-          "type": "result",
-          "outcome": "conditional",
           "text": "The MedTech Europe Code may not directly apply, but local regulations and your company's own code of conduct should still be followed.",
-          "reference": "Scope — Geographic applicability of the Code"
+          "outcome": "conditional",
+          "reference": "Scope — Geographic applicability of the Code",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "result-fail-location",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "The venue location does not meet Code requirements. Events must be held in recognised scientific, educational, or business centres.",
-          "reference": "Chapter 1, Section 2 — Event Location and Venue"
+          "outcome": "non-compliant",
+          "reference": "Chapter 1, Section 2 — Event Location and Venue",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "result-fail-leisure",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "Venues known primarily for leisure or entertainment are not compliant, regardless of their geographic location.",
-          "reference": "Chapter 1, Section 2 — Appropriateness of Venue"
-        },
-        {
-          "id": "result-fail-season",
-          "type": "result",
           "outcome": "non-compliant",
-          "text": "Holding an event during peak tourist season at a vacation-associated location creates an appearance of impropriety.",
-          "reference": "Chapter 1, Q&A 7 — Seasonal considerations"
+          "reference": "Chapter 1, Section 2 — Appropriateness of Venue",
+          "cvsCheck": ""
         },
         {
-          "id": "result-pass",
           "type": "result",
-          "outcome": "compliant",
+          "id": "result-fail-season",
+          "text": "Holding an event during peak tourist season at a vacation-associated location creates an appearance of impropriety.",
+          "outcome": "non-compliant",
+          "reference": "Chapter 1, Q&A 7 — Seasonal considerations",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "result-pass",
           "text": "Based on these criteria, the event location appears to meet Code requirements. Ensure all other event criteria (hospitality, faculty, etc.) are also compliant.",
-          "reference": "Chapter 1 — General Criteria for Events"
+          "outcome": "compliant",
+          "reference": "Chapter 1 — General Criteria for Events",
+          "cvsCheck": ""
         }
       ]
     },
     {
       "id": "dt-ch5-consulting-arrangement",
       "title": "Is My Consulting Arrangement Compliant?",
-      "relatedChapter": "ch5",
-      "relatedSection": null,
+      "relatedChapter": [
+        "ch5"
+      ],
+      "relatedSection": [],
       "category": "consulting",
       "description": "Evaluate whether a proposed consulting arrangement with a Healthcare Professional meets Code requirements.",
+      "cvsCheck": null,
       "nodes": [
         {
-          "id": "start",
           "type": "question",
+          "id": "start",
           "text": "Is there a documented, legitimate business need for the consulting services that is identified in advance?",
           "helpText": "The need for the services must be clearly identified before selecting the consultant.",
           "options": [
@@ -292,8 +316,8 @@
           ]
         },
         {
-          "id": "q2",
           "type": "question",
+          "id": "q2",
           "text": "Was the Healthcare Professional selected based on their qualifications and expertise relevant to the identified need?",
           "helpText": "Selection must be based on qualifications, not on past or potential purchasing decisions.",
           "options": [
@@ -308,8 +332,8 @@
           ]
         },
         {
-          "id": "q3",
           "type": "question",
+          "id": "q3",
           "text": "Is there a written agreement signed by both parties that specifies the nature of the services, the deliverables, and the compensation?",
           "helpText": "A written contract must be in place before services begin.",
           "options": [
@@ -324,8 +348,8 @@
           ]
         },
         {
-          "id": "q4",
           "type": "question",
+          "id": "q4",
           "text": "Is the compensation reasonable and reflective of fair market value for the services provided?",
           "helpText": "Compensation must not be excessive and should reflect the consultant's actual time and expertise.",
           "options": [
@@ -340,39 +364,44 @@
           ]
         },
         {
+          "type": "result",
           "id": "result-fail-need",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "A consulting arrangement must be based on a documented, legitimate business need identified before the consultant is selected.",
-          "reference": "Chapter 5 — Criteria for Consulting Arrangements"
+          "outcome": "non-compliant",
+          "reference": "Chapter 5 — Criteria for Consulting Arrangements",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "result-fail-selection",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "Consultants must be selected based on their qualifications and expertise, not on volume or value of business they generate.",
-          "reference": "Chapter 5 — Selection of Consultants"
+          "outcome": "non-compliant",
+          "reference": "Chapter 5 — Selection of Consultants",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "result-fail-contract",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "A written agreement specifying services, deliverables, and compensation must be signed before services begin.",
-          "reference": "Chapter 5 — Written Agreements"
-        },
-        {
-          "id": "result-fail-compensation",
-          "type": "result",
           "outcome": "non-compliant",
-          "text": "Compensation must reflect fair market value. Excessive payments may be viewed as an inducement.",
-          "reference": "Chapter 5 — Fair Market Value"
+          "reference": "Chapter 5 — Written Agreements",
+          "cvsCheck": ""
         },
         {
-          "id": "result-pass",
           "type": "result",
-          "outcome": "compliant",
+          "id": "result-fail-compensation",
+          "text": "Compensation must reflect fair market value. Excessive payments may be viewed as an inducement.",
+          "outcome": "non-compliant",
+          "reference": "Chapter 5 — Fair Market Value",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "result-pass",
           "text": "Based on these criteria, the consulting arrangement appears to meet Code requirements. Ensure proper documentation is maintained throughout the engagement.",
-          "reference": "Chapter 5 — Consulting Arrangements"
+          "outcome": "compliant",
+          "reference": "Chapter 5 — Consulting Arrangements",
+          "cvsCheck": ""
         }
       ]
     },
@@ -383,13 +412,14 @@
         "ch2",
         "annex6"
       ],
-      "relatedSection": null,
+      "relatedSection": [],
       "category": "events",
       "description": "Determine if direct support for Healthcare Professional (HCP) attendance at an event is compliant based on Annex VI rules.",
+      "cvsCheck": null,
       "nodes": [
         {
-          "id": "start",
           "type": "question",
+          "id": "start",
           "text": "What type of event is the direct support intended for?",
           "helpText": "Support rules differ significantly depending on the event type.",
           "options": [
@@ -408,8 +438,8 @@
           ]
         },
         {
-          "id": "q_tpoe_setting",
           "type": "question",
+          "id": "q_tpoe_setting",
           "text": "What is the specific setting within the Third Party Organised Educational Conference?",
           "helpText": "Support restrictions apply differently to the main event versus satellite symposia or booths.",
           "options": [
@@ -428,8 +458,8 @@
           ]
         },
         {
-          "id": "q_tpoe_sat_role",
           "type": "question",
+          "id": "q_tpoe_sat_role",
           "text": "What is the intended role of the Healthcare Professional at the Satellite Symposium or Booth?",
           "helpText": "Faculty are those considered speakers or moderators needing preparation. Delegates attend passively.",
           "options": [
@@ -444,8 +474,8 @@
           ]
         },
         {
-          "id": "q_company_event_type",
           "type": "question",
+          "id": "q_company_event_type",
           "text": "What type of Company Event is it?",
           "helpText": "Identify if the primary purpose is procedural training or general product/business promotion.",
           "options": [
@@ -460,8 +490,8 @@
           ]
         },
         {
-          "id": "q_comp_training_timing",
           "type": "question",
+          "id": "q_comp_training_timing",
           "text": "Is the Product and Procedure Training and Education Event taking place at or about the same time as a Third Party Organised Educational Event?",
           "helpText": "Proximity to third-party events alters the compliance logic.",
           "options": [
@@ -476,8 +506,8 @@
           ]
         },
         {
-          "id": "q_comp_training_role",
           "type": "question",
+          "id": "q_comp_training_role",
           "text": "What is the intended role of the Healthcare Professional across the events?",
           "helpText": "Faculty/Speakers present or moderate. Delegates attend passively.",
           "options": [
@@ -492,8 +522,8 @@
           ]
         },
         {
-          "id": "q_comp_sales_timing",
           "type": "question",
+          "id": "q_comp_sales_timing",
           "text": "Is the Sales, Promotional and Other Business Meeting taking place at or about the same time as a Third Party Organised Educational Event?",
           "helpText": "Proximity to third-party events alters the compliance logic.",
           "options": [
@@ -508,8 +538,8 @@
           ]
         },
         {
-          "id": "q_comp_sales_notime_role",
           "type": "question",
+          "id": "q_comp_sales_notime_role",
           "text": "What is the intended role of the Healthcare Professional?",
           "helpText": "Faculty/Speakers present or moderate. Delegates attend passively.",
           "options": [
@@ -524,8 +554,8 @@
           ]
         },
         {
-          "id": "q_comp_sales_time_role",
           "type": "question",
+          "id": "q_comp_sales_time_role",
           "text": "What is the intended role of the Healthcare Professional across the events?",
           "helpText": "Faculty/Speakers present or moderate. Delegates attend passively.",
           "options": [
@@ -540,61 +570,70 @@
           ]
         },
         {
+          "type": "result",
           "id": "res_tpoe_main_fail",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "Direct support for HCP attendance at the Main Event / Independent Scientific Program of a Third Party Organised Educational Conference is strictly prohibited for both Faculty/Speakers and Delegates.",
-          "reference": "Annex VI — Third Party Organised Educational Conference"
-        },
-        {
-          "id": "res_proc_training_allowed",
-          "type": "result",
-          "outcome": "compliant",
-          "text": "Direct support for HCP attendance at a Third Party Organised Procedure Training meeting is allowed for both Faculty/Speakers and Delegates.",
-          "reference": "Annex VI — Third Party Organised Procedure Training meeting"
-        },
-        {
-          "id": "res_comp_training_notime",
-          "type": "result",
-          "outcome": "compliant",
-          "text": "Direct support for a Product and Procedure Training and Education Event that is NOT taking place at or about the same time as a TPOE is allowed for both Faculty/Speakers and Delegates.",
-          "reference": "Annex VI — Company Events"
-        },
-        {
-          "id": "res_comp_sales_notime_delegate",
-          "type": "result",
-          "outcome": "conditional",
-          "text": "Direct support for Delegates attending a Sales, Promotional and Other Business Meeting is generally NOT ALLOWED. Exception: Allowed ONLY for demonstration of non-portable equipment.",
-          "reference": "Annex VI — Company Events"
-        },
-        {
-          "id": "res_allowed_faculty",
-          "type": "result",
-          "outcome": "compliant",
-          "text": "Direct support for HCP attendance is ALLOWED for Faculty/Speakers.",
-          "reference": "Annex VI — Direct support for HCP attendance"
-        },
-        {
-          "id": "res_allowed_faculty_agreement",
-          "type": "result",
-          "outcome": "compliant",
-          "text": "Direct support for HCP attendance is ALLOWED for Faculty/Speakers, provided a consulting agreement is required and in place.",
-          "reference": "Annex VI — Direct support for HCP attendance"
-        },
-        {
-          "id": "res_not_allowed_delegate",
-          "type": "result",
           "outcome": "non-compliant",
+          "reference": "Annex VI — Third Party Organised Educational Conference",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_proc_training_allowed",
+          "text": "Direct support for HCP attendance at a Third Party Organised Procedure Training meeting is allowed for both Faculty/Speakers and Delegates.",
+          "outcome": "compliant",
+          "reference": "Annex VI — Third Party Organised Procedure Training meeting",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_comp_training_notime",
+          "text": "Direct support for a Product and Procedure Training and Education Event that is NOT taking place at or about the same time as a TPOE is allowed for both Faculty/Speakers and Delegates.",
+          "outcome": "compliant",
+          "reference": "Annex VI — Company Events",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_comp_sales_notime_delegate",
+          "text": "Direct support for Delegates attending a Sales, Promotional and Other Business Meeting is generally NOT ALLOWED. Exception: Allowed ONLY for demonstration of non-portable equipment.",
+          "outcome": "conditional",
+          "reference": "Annex VI — Company Events",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_allowed_faculty",
+          "text": "Direct support for HCP attendance is ALLOWED for Faculty/Speakers.",
+          "outcome": "compliant",
+          "reference": "Annex VI — Direct support for HCP attendance",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_allowed_faculty_agreement",
+          "text": "Direct support for HCP attendance is ALLOWED for Faculty/Speakers, provided a consulting agreement is required and in place.",
+          "outcome": "compliant",
+          "reference": "Annex VI — Direct support for HCP attendance",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_not_allowed_delegate",
           "text": "Direct support for HCP attendance is NOT ALLOWED for Delegates in this scenario.",
-          "reference": "Annex VI — Direct support for HCP attendance"
+          "outcome": "non-compliant",
+          "reference": "Annex VI — Direct support for HCP attendance",
+          "cvsCheck": ""
         }
       ]
     },
     {
       "id": "dt-annex1-cvs-scope",
       "title": "Conference Vetting System check",
-      "relatedChapter": "annex1",
-      "relatedSection": null,
+      "relatedChapter": [
+        "annex1"
+      ],
+      "relatedSection": [],
       "category": "events",
       "description": "Check in a few questions whether support for a Third Party Organised Educational Event needs a CVS decision under Annex I, and look up the Event’s current status in CVS.",
       "cvsCheck": {
@@ -671,13 +710,14 @@
               "text": "CVS has assessed the Event as outside its scope, which is consistent with a national Event."
             }
           ],
-          "otherStatus": "You have indicated that this is a national Event, but the Event has been submitted to CVS (status “{status}”). The organiser or another Member Company may have different information about the countries from which HCP Delegates are expected to attend. Clarify the Event’s intended audience with the organiser and consider refraining from making a definitive commitment to provide support until the position is clear."
+          "otherStatus": "You have indicated that this is a national Event, but the Event has been submitted to CVS (status “{status}”). The organiser or another Member Company may have different information about the countries from which HCP Delegates are expected to attend. Clarify the Event’s intended audience with the organiser and consider refraining from making a definitive commitment to provide support until the position is clear.",
+          "noMatch": ""
         }
       },
       "nodes": [
         {
-          "id": "start",
           "type": "question",
+          "id": "start",
           "text": "Where will the Event take place?",
           "helpText": "The MedTech Europe Geographic Area covers the countries of the European Economic Area and the other countries where Member Associations are located (Annex III), including the countries covered by Mecomed. For Events in countries covered by Mecomed, CVS applies Mecomed’s guidelines. A hybrid Event, held in person with sessions also broadcast online, counts as held in person.",
           "options": [
@@ -696,8 +736,8 @@
           ]
         },
         {
-          "id": "q_audience",
           "type": "question",
+          "id": "q_audience",
           "text": "Do you expect HCP Delegates from more than one country in the MedTech Europe Geographic Area to attend the Event?",
           "helpText": "Count the HCPs attending as Delegates, including poster and abstract presenters, but not the Faculty. Answer on the information available to your company, for example from the organiser, from your own support arrangements or from previous editions of the Event. You do not need to provide evidence. For a national Event, the result lets you check whether it has been submitted to CVS anyway.",
           "options": [
@@ -720,8 +760,8 @@
           ]
         },
         {
-          "id": "q_area_hcps",
           "type": "question",
+          "id": "q_area_hcps",
           "text": "Will HCPs registered and practising in the MedTech Europe Geographic Area attend the Event, as speakers or Delegates?",
           "helpText": "The Code applies to interactions with HCPs and Healthcare Organisations from the Area wherever the Event takes place.",
           "options": [
@@ -740,8 +780,8 @@
           ]
         },
         {
+          "type": "question",
           "id": "q_support_national",
-          "type": "question",
           "text": "What does the company plan to provide?",
           "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
           "options": [
@@ -780,8 +820,8 @@
           ]
         },
         {
+          "type": "question",
           "id": "q_support_international",
-          "type": "question",
           "text": "What does the company plan to provide?",
           "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
           "options": [
@@ -820,8 +860,8 @@
           ]
         },
         {
-          "id": "q_support_outside_area_hcps",
           "type": "question",
+          "id": "q_support_outside_area_hcps",
           "text": "What does the company plan to provide?",
           "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
           "options": [
@@ -860,8 +900,8 @@
           ]
         },
         {
-          "id": "q_support_outside_no_area_hcps",
           "type": "question",
+          "id": "q_support_outside_no_area_hcps",
           "text": "What does the company plan to provide?",
           "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
           "options": [
@@ -900,8 +940,8 @@
           ]
         },
         {
-          "id": "q_support_virtual",
           "type": "question",
+          "id": "q_support_virtual",
           "text": "What does the company plan to provide?",
           "helpText": "These are the types of support in Annex I. If the company plans several, check each one. Company representatives are the company’s own staff: an HCP engaged by the company is a speaker, not a representative.",
           "options": [
@@ -940,8 +980,8 @@
           ]
         },
         {
-          "id": "q_grant_funds_area_hcps",
           "type": "question",
+          "id": "q_grant_funds_area_hcps",
           "text": "Will the grant fund the attendance of HCPs registered and practising in the MedTech Europe Geographic Area?",
           "helpText": "For an Event held outside the Area, a grant that funds HCPs’ attendance needs a CVS decision only when HCPs from the Area benefit from it (Annex I, footnote 3).",
           "options": [
@@ -960,111 +1000,125 @@
           ]
         },
         {
-          "id": "res_national",
           "type": "result",
-          "outcome": "not-required",
+          "id": "res_national",
           "text": "CVS approval not required but the Code and local laws and regulations still apply. The company checks the Event itself against the Code, including Chapter 1 (General Criteria for Events).",
+          "outcome": "not-required",
           "reference": "Annex I — National Events",
           "cvsCheck": "national"
         },
         {
-          "id": "res_subject_to_cvs",
           "type": "result",
-          "outcome": "conditional",
+          "id": "res_subject_to_cvs",
           "text": "Subject to CVS decision. The company may provide this support only once CVS has assessed the Event as Compliant.",
+          "outcome": "conditional",
           "reference": "Annex I — International Events",
           "cvsCheck": "required"
         },
         {
+          "type": "result",
           "id": "res_allowed_outside",
-          "type": "result",
-          "outcome": "not-required",
           "text": "Allowed. Not subject to CVS decision. The Code and local laws and regulations still apply.",
-          "reference": "Annex I — International Events"
+          "outcome": "not-required",
+          "reference": "Annex I — International Events",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_grant_no_area_beneficiaries",
-          "type": "result",
-          "outcome": "not-required",
           "text": "No CVS decision is needed, because the grant does not fund the attendance of HCPs from the MedTech Europe Geographic Area (Annex I, footnote 3). The Code applies to the grant only if it goes to a Healthcare Organisation located in the Area (Annex I, footnote 5).",
-          "reference": "Annex I — Footnotes"
-        },
-        {
-          "id": "res_out_of_scope_grant",
-          "type": "result",
-          "outcome": "out-of-scope",
-          "text": "Out of scope of the application of the Code, unless the grant goes to a Healthcare Organisation located in the MedTech Europe Geographic Area: the Code then applies, but no CVS decision is needed (Annex I, footnote 5).",
-          "reference": "Annex I — Footnotes"
-        },
-        {
-          "id": "res_na_grant",
-          "type": "result",
-          "outcome": "not-applicable",
-          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, the Code does not apply to this support, unless the grant goes to a Healthcare Organisation located in the Area. No CVS decision is needed then (Annex I, footnote 5).",
-          "reference": "Annex I — Footnotes"
-        },
-        {
-          "id": "res_na",
-          "type": "result",
-          "outcome": "not-applicable",
-          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, as speakers or Delegates, the Code does not apply to this support.",
-          "reference": "Annex I"
-        },
-        {
-          "id": "res_prior_review",
-          "type": "result",
-          "outcome": "prior-review",
-          "text": "Member Company prior internal review against Code principles required. Before going ahead, the company reviews internally whether this is appropriate under the Code’s principles, in particular image and perception, whatever the Event’s CVS status.",
-          "reference": "Q&A 16"
-        },
-        {
-          "id": "res_direct_not_allowed",
-          "type": "result",
-          "outcome": "non-compliant",
-          "text": "Not allowed. Annex I does not allow direct sponsorship of HCPs registered and practising in the MedTech Europe Geographic Area, whether as Delegates or as Faculty in the main programme, and a positive CVS decision does not change this. The company can support the Event through an Educational Grant instead. The company’s own satellite symposium or booth, and procedure trainings that meet the Annex VII criteria, have their own rules; the TPPT Checker checks a procedure training’s agenda.",
-          "reference": "Annex I — Direct Sponsorship"
-        },
-        {
-          "id": "res_virtual",
-          "type": "result",
           "outcome": "not-required",
-          "text": "No CVS decision is needed: Virtual Events are not subject to CVS. The Code and local laws and regulations still apply to the support.",
-          "reference": "Chapter 1, Section 7"
+          "reference": "Annex I — Footnotes",
+          "cvsCheck": ""
         },
         {
-          "id": "res_virtual_direct",
           "type": "result",
+          "id": "res_out_of_scope_grant",
+          "text": "Out of scope of the application of the Code, unless the grant goes to a Healthcare Organisation located in the MedTech Europe Geographic Area: the Code then applies, but no CVS decision is needed (Annex I, footnote 5).",
+          "outcome": "out-of-scope",
+          "reference": "Annex I — Footnotes",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_na_grant",
+          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, the Code does not apply to this support, unless the grant goes to a Healthcare Organisation located in the Area. No CVS decision is needed then (Annex I, footnote 5).",
+          "outcome": "not-applicable",
+          "reference": "Annex I — Footnotes",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_na",
+          "text": "Annex I marks this N/A: when no HCPs from the MedTech Europe Geographic Area attend an Event held outside the Area, as speakers or Delegates, the Code does not apply to this support.",
+          "outcome": "not-applicable",
+          "reference": "Annex I",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_prior_review",
+          "text": "Member Company prior internal review against Code principles required. Before going ahead, the company reviews internally whether this is appropriate under the Code’s principles, in particular image and perception, whatever the Event’s CVS status.",
+          "outcome": "prior-review",
+          "reference": "Q&A 16",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_direct_not_allowed",
+          "text": "Not allowed. Annex I does not allow direct sponsorship of HCPs registered and practising in the MedTech Europe Geographic Area, whether as Delegates or as Faculty in the main programme, and a positive CVS decision does not change this. The company can support the Event through an Educational Grant instead. The company’s own satellite symposium or booth, and procedure trainings that meet the Annex VII criteria, have their own rules; the TPPT Checker checks a procedure training’s agenda.",
           "outcome": "non-compliant",
+          "reference": "Annex I — Direct Sponsorship",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_virtual",
+          "text": "No CVS decision is needed: Virtual Events are not subject to CVS. The Code and local laws and regulations still apply to the support.",
+          "outcome": "not-required",
+          "reference": "Chapter 1, Section 7",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_virtual_direct",
           "text": "Not allowed. The company may not directly sponsor HCPs to take part in a Third Party Organised Educational Event, as Delegates or as Faculty, and this applies to Virtual Events too. The company can support the Event through an Educational Grant instead.",
-          "reference": "Chapter 1, Section 7"
+          "outcome": "non-compliant",
+          "reference": "Chapter 1, Section 7",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_audience_unclassified",
-          "type": "result",
-          "outcome": "more-info",
           "text": "Annex I does not classify this audience, which is neither local HCPs only nor Delegates from at least two countries of the MedTech Europe Geographic Area. Ask CVS whether the Event is within its scope before relying on either position.",
-          "reference": "Annex I"
+          "outcome": "more-info",
+          "reference": "Annex I",
+          "cvsCheck": ""
         },
         {
-          "id": "res_more_info",
           "type": "result",
-          "outcome": "more-info",
+          "id": "res_more_info",
           "text": "Whether a CVS decision is needed depends on this answer. Find out, for example from the organiser, then go back and answer it.",
-          "reference": "Annex I"
+          "outcome": "more-info",
+          "reference": "Annex I",
+          "cvsCheck": ""
         }
       ]
     },
     {
       "id": "dt-ch4-grants-donations",
       "title": "Grants and Charitable Donations",
-      "relatedChapter": "ch4",
-      "relatedSection": null,
+      "relatedChapter": [
+        "ch4"
+      ],
+      "relatedSection": [],
       "category": "grants",
       "description": "Determine if you can provide a grant or donation to a specific entity, and evaluate what conditions can be lawfully imposed under the General Criteria.",
+      "cvsCheck": null,
       "nodes": [
         {
-          "id": "start",
           "type": "question",
+          "id": "start",
           "text": "General Criteria: Who is deciding upon, or approving, the provision of these funds?",
           "helpText": "Chapter 4 explicitly mandates an independent review process to mitigate corruption risks.",
           "options": [
@@ -1079,9 +1133,10 @@
           ]
         },
         {
-          "id": "q_contingency",
           "type": "question",
+          "id": "q_contingency",
           "text": "General Criteria: Are these funds contingent in any way on past, present, or potential future purchases, leases, prescriptions, or recommendations of the Member Company’s products?",
+          "helpText": "",
           "options": [
             {
               "label": "Yes, there is a commercial expectation or contingency",
@@ -1094,9 +1149,10 @@
           ]
         },
         {
-          "id": "q_entity_target",
           "type": "question",
+          "id": "q_entity_target",
           "text": "To what type of entity does the Member Company intend to provide the funds or in-kind support?",
+          "helpText": "",
           "options": [
             {
               "label": "Individual Healthcare Professional (HCP)",
@@ -1125,9 +1181,10 @@
           ]
         },
         {
-          "id": "q_hco_purpose",
           "type": "question",
+          "id": "q_hco_purpose",
           "text": "What is the intended purpose of the funds provided to the Healthcare Organisation (HCO)?",
+          "helpText": "",
           "options": [
             {
               "label": "Charitable Donation (philanthropic aid or financial support)",
@@ -1144,9 +1201,10 @@
           ]
         },
         {
-          "id": "q_charity_purpose",
           "type": "question",
+          "id": "q_charity_purpose",
           "text": "What is the intended purpose of the funds provided to the charitable/philanthropic organisation?",
+          "helpText": "",
           "options": [
             {
               "label": "Charitable Donation (for philanthropic relief/charity)",
@@ -1163,8 +1221,8 @@
           ]
         },
         {
-          "id": "q_hco_hardship",
           "type": "question",
+          "id": "q_hco_hardship",
           "text": "Are these Charitable Donations intended to address a demonstrated Financial Hardship of the non-profit hospital/HCO?",
           "helpText": "Hospitals are not philanthropic entities by nature. Donations to them are strictly limited.",
           "options": [
@@ -1179,9 +1237,10 @@
           ]
         },
         {
-          "id": "q_fundraiser",
           "type": "question",
+          "id": "q_fundraiser",
           "text": "Are you inviting Healthcare Professionals (HCPs) to attend the fundraiser at the Member Company expense?",
+          "helpText": "",
           "options": [
             {
               "label": "Yes, we intend to invite HCPs or suggest names to the organiser",
@@ -1194,9 +1253,10 @@
           ]
         },
         {
-          "id": "q_donation_conditions",
           "type": "question",
+          "id": "q_donation_conditions",
           "text": "What conditions or specifications does the Member Company intend to impose on the Charitable Donation?",
+          "helpText": "",
           "options": [
             {
               "label": "We want to control the specific, final use of the funds by the recipient",
@@ -1213,8 +1273,8 @@
           ]
         },
         {
-          "id": "q_grant_conditions",
           "type": "question",
+          "id": "q_grant_conditions",
           "text": "What conditions or controls does the Member Company intend to impose on the Educational Grant?",
           "helpText": "The Code demands extreme separation between providing funds and directing their use.",
           "options": [
@@ -1237,8 +1297,8 @@
           ]
         },
         {
-          "id": "q_grant_identifiable",
           "type": "question",
+          "id": "q_grant_identifiable",
           "text": "Are the objective criteria or the chosen hospital department so narrow that you can effectively identify the individual HCP beneficiaries upfront?",
           "helpText": "e.g., granting funds to a specific sub-department that only employs one or two specific doctors.",
           "options": [
@@ -1253,145 +1313,167 @@
           ]
         },
         {
+          "type": "result",
           "id": "res_sales_influence",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. The Member Company sales and/or commercial function shall not decide upon and/or approve decisions to provide Grants or Charitable Donations. An independent review process is mandatory.",
-          "reference": "Chapter 4 — General Principles (e)"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — General Principles (e)",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_commercial_link",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Grants and Donations shall NEVER be contingent in any way on past, present or potential future purchase, lease, or recommendation of products.",
-          "reference": "Chapter 4 — General Principles (b)"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — General Principles (b)",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_individual",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. A Member Company shall not provide Grants or Charitable Donations to individual Healthcare Professionals. Funds must go directly to a qualifying entity.",
-          "reference": "Chapter 4 — General Principles (c)"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — General Principles (c)",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_lieu_of_fee",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. It is not appropriate to support the favourite charity of a Healthcare Professional in response to a request by that HCP in lieu of a professional fee.",
-          "reference": "Chapter 4 — Q&A 28"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — Q&A 28",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_for_profit",
-          "type": "result",
-          "outcome": "out-of-scope",
           "text": "OUT OF SCOPE. For-profit organisations (like commercial PCOs) do not fall within the definition of Educational Grants or Donations. Such arrangements are generally commercial agreements.",
-          "reference": "Chapter 4 — Q&A 35"
+          "outcome": "out-of-scope",
+          "reference": "Chapter 4 — Q&A 35",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_patient_org",
-          "type": "result",
-          "outcome": "not-applicable",
           "text": "NOT APPLICABLE. The Code does not cover Grants or Charitable Donations to Patient Organisations. Please refer to the MedTech Europe Patient Organisation Guidelines.",
-          "reference": "Chapter 4 — General Principles (a)"
+          "outcome": "not-applicable",
+          "reference": "Chapter 4 — General Principles (a)",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_general_hco_donation",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. A Member Company cannot make a general Charitable Donation to support an HCO. Hospitals have health functions, not philanthropic functions as their main purposes.",
-          "reference": "Chapter 4 — Q&A 26"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — Q&A 26",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_overhead",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Member Companies must not cover an HCO normal overhead or routine costs of operation.",
-          "reference": "Chapter 4 — Q&A 36"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — Q&A 36",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_control",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Member Companies shall have no control over the specific, final use of funds they provide as Charitable Donations.",
-          "reference": "Chapter 4 — Charitable Donations"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — Charitable Donations",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_donation_broad",
-          "type": "result",
-          "outcome": "compliant",
           "text": "COMPLIANT. Specifying a broad, general purpose (e.g., relief of a specific disaster) is ALLOWED, provided the company carefully exercises NO control over the specific, final use.",
-          "reference": "Chapter 4 — Q&A 27"
+          "outcome": "compliant",
+          "reference": "Chapter 4 — Q&A 27",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_donation_allowed",
-          "type": "result",
-          "outcome": "compliant",
           "text": "COMPLIANT. Charitable Donations to philanthropic entities (or HCOs under demonstrated hardship) are ALLOWED without specific final controls.",
-          "reference": "Chapter 4"
+          "outcome": "compliant",
+          "reference": "Chapter 4",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_fundraiser_hcps",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. A Member Company shall not invite HCPs to attend a fundraiser at its expense, nor suggest names of HCPs to the sponsoring organisation.",
-          "reference": "Chapter 4 — Fundraisers"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — Fundraisers",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_fundraiser_allowed",
-          "type": "result",
-          "outcome": "compliant",
           "text": "COMPLIANT. Participating in fundraisers is ALLOWED provided tickets are used by employees or returned, and no HCPs are subsidized by the Member Company.",
-          "reference": "Chapter 4 — Fundraisers"
+          "outcome": "compliant",
+          "reference": "Chapter 4 — Fundraisers",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_hcp_selection",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. The receiving HCO must be solely responsible for HCP selection. Member Companies must not proactively seek to receive the names of HCP beneficiaries.",
-          "reference": "Chapter 4 — Educational Grants (1)"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — Educational Grants (1)",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_program_control",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Member Companies shall not have any detailed involvement in determining the educational program content or selecting Faculty.",
-          "reference": "Chapter 4 — Educational Grants (2)"
-        },
-        {
-          "id": "res_no_identifiable",
-          "type": "result",
           "outcome": "non-compliant",
+          "reference": "Chapter 4 — Educational Grants (2)",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_no_identifiable",
           "text": "NOT ALLOWED. Grants are prohibited if the geographical/specialty criteria or chosen hospital department are so narrow that the final beneficiaries are identifiable upfront.",
-          "reference": "Chapter 4 — Q&A 30 & 31"
+          "outcome": "non-compliant",
+          "reference": "Chapter 4 — Q&A 30 & 31",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_grant_criteria_allowed",
-          "type": "result",
-          "outcome": "compliant",
           "text": "COMPLIANT. Providing objective criteria to assist the HCO is ALLOWED, provided the metrics are relevant to educational needs and do not effectively identify individual HCPs.",
-          "reference": "Chapter 4 — Q&A 33"
+          "outcome": "compliant",
+          "reference": "Chapter 4 — Q&A 33",
+          "cvsCheck": ""
         },
         {
-          "id": "res_grant_allowed",
           "type": "result",
-          "outcome": "compliant",
+          "id": "res_grant_allowed",
           "text": "COMPLIANT. Providing Educational Grants is ALLOWED, provided a written agreement secures your right to verify intended use.",
-          "reference": "Chapter 4 — Educational Grants"
+          "outcome": "compliant",
+          "reference": "Chapter 4 — Educational Grants",
+          "cvsCheck": ""
         }
       ]
     },
     {
       "id": "dt-ch8-items",
       "title": "Educational and Promotional Items",
-      "relatedChapter": "ch8",
-      "relatedSection": null,
+      "relatedChapter": [
+        "ch8"
+      ],
+      "relatedSection": [],
       "category": "items",
       "description": "Determine if you can provide a specific item, gift, or prize to a Healthcare Professional or Healthcare Organisation.",
+      "cvsCheck": null,
       "nodes": [
         {
-          "id": "start",
           "type": "question",
+          "id": "start",
           "text": "What is the format or nature of the item the Member Company intends to provide?",
+          "helpText": "",
           "options": [
             {
               "label": "Cash or cash equivalents",
@@ -1408,8 +1490,8 @@
           ]
         },
         {
-          "id": "q_intent_triggers",
           "type": "question",
+          "id": "q_intent_triggers",
           "text": "Are any of the following statements true regarding this specific item?",
           "helpText": "Select the statement that applies, or None.",
           "options": [
@@ -1432,9 +1514,10 @@
           ]
         },
         {
-          "id": "q_recipient",
           "type": "question",
+          "id": "q_recipient",
           "text": "Who is the direct, intended recipient of the Educational or Promotional Item?",
+          "helpText": "",
           "options": [
             {
               "label": "Individual Healthcare Professional (HCP)",
@@ -1447,9 +1530,10 @@
           ]
         },
         {
-          "id": "q_item_value_hcp",
           "type": "question",
+          "id": "q_item_value_hcp",
           "text": "What is the monetary value of the item being provided locally?",
+          "helpText": "",
           "options": [
             {
               "label": "It is of Modest / Inexpensive value (within limits of national laws/codes)",
@@ -1462,8 +1546,8 @@
           ]
         },
         {
-          "id": "q_hcp_item_nature",
           "type": "question",
+          "id": "q_hcp_item_nature",
           "text": "Does the modest-value item relate to the HCP practice, benefit patients, or serve a genuine educational function without being mainly for personal use?",
           "helpText": "For example, stationary or clinical wipes vs. food, alcohol or home/car items.",
           "options": [
@@ -1478,9 +1562,10 @@
           ]
         },
         {
-          "id": "q_item_value_hco",
           "type": "question",
+          "id": "q_item_value_hco",
           "text": "What is the monetary value of the item being provided to the HCO?",
+          "helpText": "",
           "options": [
             {
               "label": "It is of Modest / Inexpensive value",
@@ -1493,9 +1578,10 @@
           ]
         },
         {
-          "id": "q_hco_greater_value_conditions",
           "type": "question",
+          "id": "q_hco_greater_value_conditions",
           "text": "Does the higher value item serve a genuine educational function/benefit patients AND directly relate to the therapeutic area of the Member Company?",
+          "helpText": "",
           "options": [
             {
               "label": "Yes, it relates to our therapeutic area and serves an educational/patient benefit",
@@ -1508,9 +1594,10 @@
           ]
         },
         {
-          "id": "q_hco_overhead_check",
           "type": "question",
+          "id": "q_hco_overhead_check",
           "text": "Is this higher-value item offsetting the HCO normal overheads or routine costs of operation?",
+          "helpText": "",
           "options": [
             {
               "label": "Yes, it covers routine operational overhead",
@@ -1523,81 +1610,93 @@
           ]
         },
         {
+          "type": "result",
           "id": "res_no_cash",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Educational and promotional items must NEVER be given in the form of cash or cash equivalents.",
-          "reference": "Chapter 8"
+          "outcome": "non-compliant",
+          "reference": "Chapter 8",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_out_of_scope_samples",
-          "type": "result",
-          "outcome": "not-applicable",
           "text": "OUT OF SCOPE. Please refer to Chapter 9 (Demonstration Products and Samples) or Chapter 6 (Research).",
-          "reference": "Chapter 8"
+          "outcome": "not-applicable",
+          "reference": "Chapter 8",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_improper_intent",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Items must not mark life events, be given in response to HCP requests, act as commercial incentives, or replace consulting fees (even if declined).",
-          "reference": "Chapter 8 / Q&A 42"
+          "outcome": "non-compliant",
+          "reference": "Chapter 8 / Q&A 42",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_high_value_hcp",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Only items of modest/inexpensive value may be provided to an individual HCP. Greater value items can only be provided to an HCO.",
-          "reference": "Chapter 8"
+          "outcome": "non-compliant",
+          "reference": "Chapter 8",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_no_personal_use",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Items cannot be mainly for personal/home/car use, nor consist of food/alcohol. They must relate to the HCP practice or benefit patients.",
-          "reference": "Q&A 41"
+          "outcome": "non-compliant",
+          "reference": "Q&A 41",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_hcp_allowed",
-          "type": "result",
-          "outcome": "compliant",
           "text": "COMPLIANT. Modest-value items related to practice or education are ALLOWED. Prize draws/competitions at events distributing such items are also permissible.",
-          "reference": "Chapter 8"
-        },
-        {
-          "id": "res_no_hco_unrelated",
-          "type": "result",
-          "outcome": "non-compliant",
-          "text": "NOT ALLOWED. Educational items of greater value to an HCO must strictly relate to the therapeutic areas the Member Company is involved in.",
-          "reference": "Q&A 43"
-        },
-        {
-          "id": "res_no_overhead_items",
-          "type": "result",
-          "outcome": "non-compliant",
-          "text": "NOT ALLOWED. Member Companies cannot provide higher value educational items that simply offset the HCO normal overhead or routine operational costs.",
-          "reference": "Chapter 8"
-        },
-        {
-          "id": "res_hco_greater_value_allowed",
-          "type": "result",
           "outcome": "compliant",
+          "reference": "Chapter 8",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_no_hco_unrelated",
+          "text": "NOT ALLOWED. Educational items of greater value to an HCO must strictly relate to the therapeutic areas the Member Company is involved in.",
+          "outcome": "non-compliant",
+          "reference": "Q&A 43",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_no_overhead_items",
+          "text": "NOT ALLOWED. Member Companies cannot provide higher value educational items that simply offset the HCO normal overhead or routine operational costs.",
+          "outcome": "non-compliant",
+          "reference": "Chapter 8",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_hco_greater_value_allowed",
           "text": "COMPLIANT. A Member Company may occasionally provide educational items of greater value to an HCO provided appropriate records are maintained.",
-          "reference": "Chapter 8"
+          "outcome": "compliant",
+          "reference": "Chapter 8",
+          "cvsCheck": ""
         }
       ]
     },
     {
       "id": "dt-ch10-tpi",
       "title": "Third Party Intermediaries (TPI)",
-      "relatedChapter": "ch10",
-      "relatedSection": null,
+      "relatedChapter": [
+        "ch10"
+      ],
+      "relatedSection": [],
       "category": "default",
       "description": "Evaluate the compliance and liability risks when engaging a Third Party Intermediary to act on your behalf.",
+      "cvsCheck": null,
       "nodes": [
         {
-          "id": "start",
           "type": "question",
+          "id": "start",
           "text": "Does the contractual documentation with the Third Party Intermediary (TPI) explicitly impose obligations to comply with the Code and other applicable guidelines?",
           "helpText": "Local laws permitting, this is a mandatory requirement to limit Member Company liability.",
           "options": [
@@ -1612,8 +1711,8 @@
           ]
         },
         {
-          "id": "q_dd_risk",
           "type": "question",
+          "id": "q_dd_risk",
           "text": "Has the Member Company performed a Risk Assessment and robust Due Diligence process on the TPI?",
           "helpText": "Assessing risk profiles and local market requirements is highly recommended prior to engagement.",
           "options": [
@@ -1628,8 +1727,8 @@
           ]
         },
         {
-          "id": "q_training_oversight",
           "type": "question",
+          "id": "q_training_oversight",
           "text": "Does the Member Company maintain an assessment of the TPI training needs, provide necessary training, AND exercise risk-based monitoring?",
           "helpText": "Member Companies are expected to audit and train intermediaries.",
           "options": [
@@ -1644,32 +1743,36 @@
           ]
         },
         {
+          "type": "result",
           "id": "res_mandatory_fail",
-          "type": "result",
-          "outcome": "non-compliant",
           "text": "NOT ALLOWED. Member Companies SHALL ensure contractual documentation imposes obligations on the TPI to comply with the Code and provides for appropriate oversight.",
-          "reference": "Chapter 10"
+          "outcome": "non-compliant",
+          "reference": "Chapter 10",
+          "cvsCheck": ""
         },
         {
+          "type": "result",
           "id": "res_dd_fail",
-          "type": "result",
-          "outcome": "conditional",
           "text": "HIGH RISK. While the contract may be sound, the Code strongly requires that Member Companies evaluate risk profiles and perform robust due diligence to identify and mitigate risks.",
-          "reference": "Chapter 10 — Risk Assessment & Due diligence"
-        },
-        {
-          "id": "res_oversight_fail",
-          "type": "result",
           "outcome": "conditional",
-          "text": "HIGH RISK. The Code strongly recommends assessing training needs, providing regular training, and performing risk-based routine monitoring of TPIs to prevent liability.",
-          "reference": "Chapter 10 — Training & Oversight"
+          "reference": "Chapter 10 — Risk Assessment & Due diligence",
+          "cvsCheck": ""
         },
         {
-          "id": "res_compliant_tpi",
           "type": "result",
-          "outcome": "compliant",
+          "id": "res_oversight_fail",
+          "text": "HIGH RISK. The Code strongly recommends assessing training needs, providing regular training, and performing risk-based routine monitoring of TPIs to prevent liability.",
+          "outcome": "conditional",
+          "reference": "Chapter 10 — Training & Oversight",
+          "cvsCheck": ""
+        },
+        {
+          "type": "result",
+          "id": "res_compliant_tpi",
           "text": "COMPLIANT. The TPI arrangement includes mandatory contractual obligations and strictly follows the recommended due diligence, training, and oversight processes.",
-          "reference": "Chapter 10"
+          "outcome": "compliant",
+          "reference": "Chapter 10",
+          "cvsCheck": ""
         }
       ]
     }

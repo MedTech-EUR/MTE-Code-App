@@ -4,6 +4,9 @@ import { readFileSync } from 'node:fs';
 
 import { normalizeCvsStatus } from '../src/utils/eventSupportCvs.js';
 
+// A result without a live CVS check: the content editor stores the empty field as "".
+const NO_CVS_CHECK = '';
+
 const readJson = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 const tree = readJson('../src/data/treeData.json').trees.find((item) => item.id === 'dt-annex1-cvs-scope');
 // The Annex I cells, quoted verbatim in the event support checker's rules and checked there.
@@ -51,7 +54,7 @@ test('outside the Area, an attendance grant that funds no HCPs from the Area nee
   const result = follow(WHERE.outside, AREA_HCPS.yes, 1, 1);
   assert.equal(result.id, 'res_grant_no_area_beneficiaries');
   assert.equal(result.outcome, 'not-required');
-  assert.equal(result.cvsCheck, undefined);
+  assert.equal(result.cvsCheck, NO_CVS_CHECK);
 });
 
 test('online Events are outside CVS; direct sponsorship stays not allowed', () => {
@@ -60,7 +63,7 @@ test('online Events are outside CVS; direct sponsorship stays not allowed', () =
     if (row.startsWith('direct')) assert.equal(result.outcome, 'non-compliant', row);
     else if (row === 'company-attendance') assert.equal(result.id, 'res_prior_review');
     else assert.equal(result.id, 'res_virtual', row);
-    assert.equal(result.cvsCheck, undefined, row);
+    assert.equal(result.cvsCheck, NO_CVS_CHECK, row);
   });
 });
 
@@ -74,7 +77,7 @@ test('the CVS check appears exactly where the answer depends on CVS', () => {
   for (const result of tree.nodes.filter((item) => item.type === 'result')) {
     if (result.text.startsWith('Subject to CVS decision')) assert.equal(result.cvsCheck, 'required', result.id);
     else if (result.id === 'res_national') assert.equal(result.cvsCheck, 'national');
-    else assert.equal(result.cvsCheck, undefined, result.id);
+    else assert.equal(result.cvsCheck, NO_CVS_CHECK, result.id);
   }
 });
 

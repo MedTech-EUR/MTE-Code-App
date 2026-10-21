@@ -22,8 +22,8 @@ function makeValidFixture() {
       trees: [{
         id: 'dt-example',
         title: 'Example tree',
-        relatedChapter: 'intro',
-        relatedSection: 'intro-purpose',
+        relatedChapter: ['intro'],
+        relatedSection: ['intro-purpose'],
         nodes: [
           { id: 'start', type: 'question', text: 'Continue?', options: [{ label: 'Yes', next: 'result' }] },
           { id: 'result', type: 'result', text: 'Done', outcome: 'compliant' },
@@ -297,4 +297,37 @@ test('does not report phrasebook errors when searchPhrasebook is undefined', () 
   const result = validateProjectData(fixture);
   assert.deepEqual(result.stats.phrasebookGroups, 0);
   assert.ok(!result.errors.some((e) => e.includes('phrasebook')));
+});
+
+test('reports HTML that is not well formed, with its place', () => {
+  const fixture = makeValidFixture();
+  fixture.codeData.chapters[0].sections[0].legalText = '<p><strong>Reference</p> text';
+  const { errors } = validateProjectData(fixture);
+  assert.ok(errors.some((error) => /sections\[0\] legalText: <strong> \(line 1\) is not closed before <\/p>/.test(error)), errors.join('\n'));
+});
+
+test('requires related chapters and sections as lists, as the content editor writes them', () => {
+  const fixture = makeValidFixture();
+  fixture.treeData.trees[0].relatedChapter = 'intro';
+  fixture.treeData.trees[0].relatedSection = null;
+  const { errors } = validateProjectData(fixture);
+  assert.ok(errors.some((error) => error.includes('relatedChapter must be a list')), errors.join('\n'));
+  assert.ok(errors.some((error) => error.includes('relatedSection must be a list')), errors.join('\n'));
+});
+
+test('reads the content editor’s empty fields as “not set”', () => {
+  const fixture = makeValidFixture();
+  fixture.treeData.trees[0].relatedSection = [];
+  fixture.treeData.trees[0].cvsCheck = null;
+  Object.assign(fixture.treeData.trees[0].nodes[1], { reference: '', cvsCheck: '' });
+  Object.assign(fixture.treeData.trees[0].nodes[0], { helpText: '' });
+  assert.deepEqual(validateProjectData(fixture).errors, []);
+
+  // A CVS check mode left empty is null; a result that uses it is still caught.
+  const statuses = [{ labels: ['Compliant'], tone: '', text: 'Met.' }];
+  fixture.treeData.trees[0].cvsCheck = { title: 'Check', required: { intro: 'Find it.', statuses, otherStatus: '{status}', noMatch: '' }, national: null };
+  fixture.treeData.trees[0].nodes[1].cvsCheck = 'required';
+  assert.deepEqual(validateProjectData(fixture).errors, []);
+  fixture.treeData.trees[0].nodes[1].cvsCheck = 'national';
+  assert.ok(validateProjectData(fixture).errors.some((error) => error.includes('cvsCheck "national" has no texts')));
 });

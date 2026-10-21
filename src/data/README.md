@@ -15,7 +15,7 @@ This directory serves as the source of truth for application content.
   `transparency/disclosure-guidelines/source-manifest.json`.
 - `declaration-csv-template.csv` is the local Annex I download and the sole
   source for its non-normative in-app preview.
-- `treeData.json` and `quizData.json` contain decision-tree and quiz content. A tree may add `cvsCheck` texts, keyed by CVS's own status labels, for results that set `cvsCheck` to `required` (the support needs a positive CVS decision) or `national` (a national Event found in CVS is flagged).
+- `treeData.json` and `quizData.json` contain decision-tree and quiz content. The Code chapters and `treeData.json` are written by the content editor (`/admin/`) in its JSON layout (`public/admin/lib/cms-format.js`): a tree's `relatedChapter` and `relatedSection` are always lists, empty optional fields are spelled out (`""`, `[]`, or `null` for a tree without `cvsCheck` texts), and an empty value means "not set". After editing these files by hand, run `npm run format:data`. A tree may add `cvsCheck` texts, keyed by CVS's own status labels, for results that set `cvsCheck` to `required` (the support needs a positive CVS decision) or `national` (a national Event found in CVS is flagged).
 - `eventSupportRules.json` holds the event support checker's wording, the Annex I and Annex VI tables, its sources and the CVS status labels. See `docs/event-support.md`.
 - `search/phrasebook.json` is the general-English search phrasebook (everyday words mapped to formal ones; never Code content references). It needs no edits when the Code changes. See `search/README.md`.
 

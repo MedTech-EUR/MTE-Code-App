@@ -1,6 +1,6 @@
 /**
  * Cloudflare Worker entry point for MTE Code App.
- * Handles the Decap CMS OAuth flow, the Historical Declarations API, and
+ * Handles the content editor's OAuth flow, the Historical Declarations API, and
  * serves the React app as static assets.
  *
  * Security: Uses HMAC-signed state tokens for CSRF protection,
@@ -160,9 +160,13 @@ export default {
     }
 
     // 4. Fallback: Serve static assets
-    // Ensure the Decap CMS admin interface is served correctly
+    // The content editor (/admin/) and Content history (/admin/history/) are their own pages,
+    // not the app, so they are kept out of the app-shell fallback below.
     if (url.pathname === '/admin' || url.pathname === '/admin/') {
       return env.ASSETS.fetch(new Request(new URL('/admin/index.html', request.url), request));
+    }
+    if (url.pathname === '/admin/history' || url.pathname === '/admin/history/') {
+      return env.ASSETS.fetch(new Request(new URL('/admin/history/index.html', request.url), request));
     }
 
     // For any other SPA route, serve the app shell. Request "/" rather than

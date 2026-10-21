@@ -3,7 +3,7 @@ import { DocumentReader } from './DocumentReader';
 import { LandingPage } from './LandingPage';
 import { AppIcon } from './AppIcons';
 import { CODE_CHAPTERS, WEBSITE_CHAPTERS, WEBSITE_PART_ID } from '../data/codeData';
-import { getTreesByChapter } from '../data/treeData';
+import { getTreesByChapter, isSectionTree } from '../data/treeData';
 import { buildCodeSectionPath } from '../utils/routeUtils';
 
 export const MainContent = ({
@@ -27,7 +27,7 @@ export const MainContent = ({
   const renderRelatedTrees = (content) => {
     if (!onNavigateTree) return null;
 
-    const chapterTrees = getTreesByChapter(content?.id).filter((tree) => !tree.relatedSection);
+    const chapterTrees = getTreesByChapter(content?.id).filter((tree) => !isSectionTree(tree));
     if (chapterTrees.length === 0) return null;
 
     return (

@@ -8,8 +8,8 @@
  * - Code chapters (src/data/code/*.json): keys in the order the editor lists the fields.
  * - Decision trees (src/data/treeData.json): keys in the editor's field order, the related
  *   chapters and sections always as lists, and optional fields present even when empty ("" for
- *   texts, null for the CVS check texts of a tree without them), because the editor writes every
- *   field it shows.
+ *   texts, null for the CVS check texts of a tree without them and for a CVS mode without
+ *   texts), because the editor writes every field it shows.
  */
 
 export const TREES_PATH = 'src/data/treeData.json';
@@ -78,7 +78,7 @@ const CVS_MODE_KEYS = ['intro', 'statuses', 'otherStatus', 'noMatch'];
 const CVS_STATUS_KEYS = ['labels', 'tone', 'text'];
 
 function canonicalCvsCheck(cvsCheck) {
-  const result = ordered(cvsCheck, ['title', 'required', 'national']);
+  const result = ordered(cvsCheck, ['title', 'required', 'national'], { required: null, national: null });
   for (const mode of ['required', 'national']) {
     if (!result[mode]) continue;
     result[mode] = ordered(

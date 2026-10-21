@@ -51,7 +51,8 @@ function validateTreeCvsCheck(cvsCheck, path, errors) {
   }
   for (const mode of TREE_CVS_MODES) {
     const settings = cvsCheck[mode];
-    if (settings === undefined) continue;
+    // The content editor writes null for a mode left empty: that means "none".
+    if (settings == null) continue;
     const modePath = `${path}.${mode}`;
     if (!isNonEmptyString(settings?.intro)) errors.push(`${modePath}: missing intro.`);
     if (!isNonEmptyString(settings?.otherStatus)) errors.push(`${modePath}: missing otherStatus.`);

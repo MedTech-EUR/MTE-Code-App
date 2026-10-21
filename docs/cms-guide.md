@@ -92,9 +92,10 @@ Click **Content history: see and undo changes** in the purple bar (it opens a ne
 - If a text was changed again by a later save, it cannot be undone from the older save without
   losing that later work. The page says which text, and what to do instead (undo the later save
   first, or restore a version).
-- A save that added or removed a part (a Version History update, a decision-tree step) is undone
-  whole: the item is put back as it was before that save. That is only possible while nobody has
-  saved the item since; otherwise the page says so, and you can restore a version instead.
+- A save that added, removed or reordered parts (a Version History update, a decision-tree step)
+  is undone whole: the item is put back as it was before that save. That is only possible while
+  nobody has saved the item since; otherwise the page says so, and you can restore a version
+  instead.
 - **History** (or the search box) lists every version of a chapter or of the decision trees.
   **Restore this version** puts that whole version back.
 - Before anything happens, you see exactly what will change, and nothing changes until you confirm.
@@ -129,7 +130,8 @@ Sveltia CMS rewrites the whole file on each save: 2-space JSON, fields in the or
 lists them, every field it shows (empty ones as `""`, `[]` or `null`), and every text trimmed.
 The files are kept in exactly that layout (`npm run format:data`), so a save changes only the lines
 that were edited, and `npm run validate:data` fails if a file drifts from it. After editing the
-JSON by hand, run `npm run format:data`.
+JSON by hand, run `npm run format:data`. Content history writes in the same layout, including when
+it puts back a version saved before the layout existed.
 
 `tests/cmsConfig.test.mjs` keeps `config.yml` in step: every chapter file listed once in the Code's
 order, fields in the layout's order, and choices (outcomes, categories, chapters, CVS modes and

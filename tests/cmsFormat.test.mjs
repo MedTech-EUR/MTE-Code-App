@@ -47,7 +47,9 @@ test('trees spell out what the editor writes, in its order', () => {
 
 test('CVS check texts get the editor’s empty fields', () => {
   const [tree] = canonicalTrees({ trees: [{ id: 'dt-x', cvsCheck: { national: { statuses: [{ text: 'T', labels: 'Compliant' }], intro: 'I', otherStatus: 'O' }, title: 'Check' }, nodes: [] }] }).trees;
-  assert.deepEqual(Object.keys(tree.cvsCheck), ['title', 'national']);
+  // A mode without texts is null, as the editor writes an optional group left empty.
+  assert.deepEqual(Object.keys(tree.cvsCheck), ['title', 'required', 'national']);
+  assert.equal(tree.cvsCheck.required, null);
   assert.deepEqual(tree.cvsCheck.national, { intro: 'I', statuses: [{ labels: ['Compliant'], tone: '', text: 'T' }], otherStatus: 'O', noMatch: '' });
 });
 

@@ -24,7 +24,7 @@ import {
   undoMessage,
   undoSteps,
 } from './history-core.js';
-import { changeName, compareContent, planUndo, summarizeChanges } from './content-model.js';
+import { changeName, compareContent, inEditorLayout, planUndo, summarizeChanges } from './content-model.js';
 import { htmlToText } from '../lib/html-tools.js';
 import { ConflictError, GitHubError, createGitHub, forgetToken, signIn, storedToken } from './github.js';
 
@@ -287,13 +287,16 @@ function renderComparison(path, beforeText, afterText, { save } = {}) {
   if (comparison.layoutOnly) return h('p', { class: 'note' }, layoutNote(path));
   if (comparison.changes.length === 0) return h('p', { class: 'note' }, 'No difference.');
   const box = h('div', { class: 'changes' });
+  // One change can be undone on its own only in a file the save edited in place (not one it added,
+  // removed or renamed).
+  const editedInPlace = Boolean(save && state.canWrite && save.files?.some((file) => file.filename === path && file.status === 'modified'));
   let group = null;
   for (const change of comparison.changes) {
     if (change.group !== group) {
       group = change.group;
       box.append(h('h4', { class: 'changes__group' }, group));
     }
-    const onUndo = save && state.canWrite && change.status === 'changed' ? (picked) => confirmUndo(save, { path, change: picked }) : null;
+    const onUndo = editedInPlace && change.status === 'changed' ? (picked) => confirmUndo(save, { path, change: picked }) : null;
     box.append(renderChange(change, { onUndo }));
   }
   return box;
@@ -636,14 +639,20 @@ async function confirmRestore(path, item, version) {
   say('Preparing…');
   try {
     const head = await state.gh.headSha();
-    const [current, target, expectedSha] = await Promise.all([readText(path, head), readText(path, version.ref), state.gh.blobSha(path, head)]);
+    const [current, stored, expectedSha] = await Promise.all([readText(path, head), readText(path, version.ref), state.gh.blobSha(path, head)]);
+    // The version as the editor writes it, so that an old version stays in its layout.
+    const target = inEditorLayout(path, stored);
+    if ((target ?? stored) === current) {
+      say('This version is the same as the current one: there is nothing to restore.', 'success');
+      return;
+    }
     say('');
     confirm({
       title: 'Restore this version?',
       intro: `“${itemTitle(path)}” will go back to how it was after the save of ${formatDate(version.date)}. Every change saved after that to this item will be undone; the changes are listed below.`,
-      previews: [h('h4', {}, itemTitle(path)), renderComparison(path, current, target)],
+      previews: [h('h4', {}, itemTitle(path)), renderComparison(path, current, target ?? stored)],
       confirmLabel: 'Restore this version',
-      steps: [{ path, expectedSha, from: { ref: version.ref, path } }],
+      steps: [target == null ? { path, expectedSha, from: { ref: version.ref, path } } : { path, expectedSha, text: target }],
       message: restoreMessage(item, version.date),
     });
   } catch (error) {
@@ -661,11 +670,10 @@ async function confirmUndo(save, only = null) {
   try {
     const parent = save.parents[0]?.sha;
     const head = await state.gh.headSha();
-    const files = only ? [{ filename: only.path, status: 'modified' }] : save.files;
+    const files = only ? save.files.filter((file) => file.filename === only.path) : save.files;
     const steps = [];
     const previews = [];
     const blocked = [];
-    let alreadyUndone = 0;
     for (const file of files) {
       const path = file.filename;
       const [parentText, saveText, headText, expectedSha] = await Promise.all([
@@ -677,26 +685,36 @@ async function confirmUndo(save, only = null) {
       const plan = file.status === 'modified' ? planUndo(path, { parentText, saveText, headText }, only ? [only.change.key] : null) : null;
       if (plan) {
         if (plan.conflicts.length) blocked.push({ path, changes: plan.conflicts, reason: 'later' });
-        else if (plan.structural.length) {
-          // A save that added or removed parts is undone by putting the whole file back, which
-          // is only safe if nothing was saved to it since.
-          if (headText === saveText) {
-            steps.push({ path, expectedSha, from: { ref: parent, path } });
-            previews.push(h('h4', {}, itemTitle(path)), renderComparison(path, headText, parentText));
-          } else blocked.push({ path, changes: plan.structural, reason: 'structure' });
+        else if (plan.structural.length || plan.reordered) {
+          // A save that added, removed or reordered parts is undone by putting the whole file
+          // back, which is only safe if nothing was saved to it since.
+          const before = inEditorLayout(path, parentText);
+          if (inEditorLayout(path, headText) !== inEditorLayout(path, saveText)) blocked.push({ path, changes: plan.structural, reason: 'structure' });
+          else if (before !== headText) {
+            steps.push({ path, expectedSha, text: before });
+            previews.push(h('h4', {}, itemTitle(path)), renderComparison(path, headText, before));
+          }
         // Putting the old value back can leave the file as it is (only spaces at the ends of a
         // text changed, which the editor trims anyway): nothing to undo there.
         } else if (plan.text && plan.text !== headText) {
           steps.push({ path, expectedSha, text: plan.text });
           previews.push(h('h4', {}, itemTitle(path)), renderComparison(path, headText, plan.text));
-        } else alreadyUndone += 1;
+        }
         continue;
       }
-      // Added, removed or unreadable files: whole-file undo, only if nothing changed since.
-      const whole = undoSteps({ ...save, files: [file] });
-      for (const step of whole) {
-        steps.push(step);
-        previews.push(h('h4', {}, itemTitle(step.path)), renderComparison(step.path, await readText(step.path, head), step.from ? await readText(step.from.path, step.from.ref) : null));
+      if (only) {
+        explainBlocked('This change can’t be undone on its own', [
+          h('p', {}, 'This item could not be compared field by field. Open the item’s History and restore the version you want.'),
+        ]);
+        return;
+      }
+      // Added, removed or unreadable files: whole-file undo, only if nothing changed since. A
+      // content file is put back as the editor writes it.
+      for (const step of undoSteps({ ...save, files: [file] })) {
+        const stored = step.from ? await readText(step.from.path, step.from.ref) : null;
+        const text = inEditorLayout(step.path, stored);
+        steps.push(text == null ? step : { path: step.path, expectedRef: step.expectedRef, text });
+        previews.push(h('h4', {}, itemTitle(step.path)), renderComparison(step.path, await readText(step.path, head), text ?? stored));
       }
     }
     say('');
@@ -713,15 +731,17 @@ async function confirmUndo(save, only = null) {
           ...(only ? [] : list(later)),
         ] : []),
         ...(structure.length ? [
-          h('p', {}, 'This save added or removed parts (for example a Version History update or a decision-tree step), and the item has been saved again since, so it cannot be undone part by part:'),
-          ...list(structure),
+          h('p', {}, 'This save added, removed or reordered parts (for example a Version History update or a decision-tree step), and the item has been saved again since, so it cannot be undone part by part:'),
+          ...structure.map(({ path, changes }) => h('div', {}, h('h4', {}, itemTitle(path)), h('ul', {}, changes.length
+            ? [...new Set(changes.map(describe))].map((line) => h('li', {}, line))
+            : h('li', {}, 'The order of its parts')))),
         ] : []),
         h('p', {}, 'Undo the later saves first (newest first), or open the item’s History and restore the version you want.'),
       ]);
       return;
     }
     if (steps.length === 0) {
-      say(alreadyUndone ? 'Nothing to undo: these changes have already been undone.' : 'Nothing to undo.', 'success');
+      say('Nothing to undo: the content is already as it was before this save.', 'success');
       return;
     }
     confirm({

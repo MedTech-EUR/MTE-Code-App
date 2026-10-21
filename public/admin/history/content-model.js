@@ -6,7 +6,9 @@
  * A field's key is the same in every version of the file: chapters are keyed by position (the
  * editor cannot add, remove or reorder their sections and Q&As), Version History updates by title
  * (new ones are added at the top) and decision trees by tree and step ID (steps can be added and
- * reordered).
+ * reordered). A step's answers and a CVS check's status texts can be reordered too, but have no
+ * name of their own, so they are keyed by position and grouped as a "unit": an undo writes to one
+ * only while the whole unit is still the one the save left (see planUndo).
  */
 import { CHAPTER_PATH, formatEditorFile, TREES_PATH } from '../lib/cms-format.js';
 import { OUTCOME_LABELS } from '../lib/trees.js';
@@ -25,13 +27,14 @@ function shown(value, kind) {
 const sameValue = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 /**
- * The fields of a parsed content file: a Map of key → { key, path, group, label, kind, value }.
+ * The fields of a parsed content file: a Map of key → { key, path, group, label, kind, value, unit }.
  * `path` locates the value in this version's JSON; `kind` is 'html' (shown as text, its HTML on
- * request), 'text', 'list' (of texts) or 'value'.
+ * request), 'text', 'list' (of texts) or 'value'; `unit`, for a field of a list item keyed by its
+ * position in a list that can be reordered, names that item (the fields with the same `unit`).
  */
 export function fieldsOf(path, data) {
   const fields = new Map();
-  const add = (key, at, group, label, kind, value) => fields.set(key, { key, path: at, group, label, kind, value: shown(value, kind) });
+  const add = (key, at, group, label, kind, value, unit = null) => fields.set(key, { key, path: at, group, label, kind, value: shown(value, kind), unit });
   if (CHAPTER_PATH.test(path)) {
     const glossary = data.id === 'glossary';
     const website = data.part === 'website';
@@ -44,12 +47,14 @@ export function fieldsOf(path, data) {
     (data.sections ?? []).forEach((section, i) => {
       const group = section.title || `Section ${i + 1} (untitled)`;
       const base = byTitle ? `update:${section.title}` : `sections.${i}`;
-      if (!byTitle) add(`${base}.title`, ['sections', i, 'title'], group, glossary ? 'Term' : 'Section title', 'text', section.title);
-      add(`${base}.legalText`, ['sections', i, 'legalText'], group, glossary ? 'Definition' : 'Text', 'html', section.legalText);
+      // Updates can be reordered: keyed by position (two share a title), each one is a unit.
+      const unit = website && !byTitle ? base : null;
+      if (!byTitle) add(`${base}.title`, ['sections', i, 'title'], group, glossary ? 'Term' : 'Section title', 'text', section.title, unit);
+      add(`${base}.legalText`, ['sections', i, 'legalText'], group, glossary ? 'Definition' : 'Text', 'html', section.legalText, unit);
       (section.qas ?? []).forEach((qa, k) => {
         const number = qaNumber(qa.q, k);
-        add(`${base}.qas.${k}.q`, ['sections', i, 'qas', k, 'q'], group, `${number} · Question`, 'text', qa.q);
-        add(`${base}.qas.${k}.a`, ['sections', i, 'qas', k, 'a'], group, `${number} · Answer`, 'html', qa.a);
+        add(`${base}.qas.${k}.q`, ['sections', i, 'qas', k, 'q'], group, `${number} · Question`, 'text', qa.q, unit);
+        add(`${base}.qas.${k}.a`, ['sections', i, 'qas', k, 'a'], group, `${number} · Answer`, 'html', qa.a, unit);
       });
     });
     return fields;
@@ -76,9 +81,10 @@ export function fieldsOf(path, data) {
           }
           (texts.statuses ?? []).forEach((status, k) => {
             const label = `Live CVS check · ${name} · Status text ${k + 1}`;
-            add(`${base}/cvsCheck.${mode}.statuses.${k}.labels`, at('cvsCheck', mode, 'statuses', k, 'labels'), group, `${label} · CVS statuses`, 'list', status.labels);
-            add(`${base}/cvsCheck.${mode}.statuses.${k}.tone`, at('cvsCheck', mode, 'statuses', k, 'tone'), group, `${label} · Colour`, 'text', status.tone);
-            add(`${base}/cvsCheck.${mode}.statuses.${k}.text`, at('cvsCheck', mode, 'statuses', k, 'text'), group, `${label} · Text`, 'text', status.text);
+            const unit = `${base}/cvsCheck.${mode}.statuses.${k}`;
+            add(`${unit}.labels`, at('cvsCheck', mode, 'statuses', k, 'labels'), group, `${label} · CVS statuses`, 'list', status.labels, unit);
+            add(`${unit}.tone`, at('cvsCheck', mode, 'statuses', k, 'tone'), group, `${label} · Colour`, 'text', status.tone, unit);
+            add(`${unit}.text`, at('cvsCheck', mode, 'statuses', k, 'text'), group, `${label} · Text`, 'text', status.text, unit);
           });
         }
       }
@@ -91,8 +97,9 @@ export function fieldsOf(path, data) {
         if (node.type === 'question') {
           add(`${stepKey}/helpText`, nodeAt('helpText'), stepGroup, 'Help text', 'text', node.helpText);
           (node.options ?? []).forEach((option, o) => {
-            add(`${stepKey}/options.${o}.label`, nodeAt('options', o, 'label'), stepGroup, `Answer ${o + 1}`, 'text', option.label);
-            add(`${stepKey}/options.${o}.next`, nodeAt('options', o, 'next'), stepGroup, `Answer ${o + 1} · leads to`, 'text', option.next);
+            const unit = `${stepKey}/options.${o}`;
+            add(`${unit}.label`, nodeAt('options', o, 'label'), stepGroup, `Answer ${o + 1}`, 'text', option.label, unit);
+            add(`${unit}.next`, nodeAt('options', o, 'next'), stepGroup, `Answer ${o + 1} · leads to`, 'text', option.next, unit);
           });
         } else {
           add(`${stepKey}/outcome`, nodeAt('outcome'), stepGroup, 'Outcome', 'text', OUTCOME_LABELS[node.outcome] ? `${OUTCOME_LABELS[node.outcome]} (${node.outcome})` : node.outcome);
@@ -116,6 +123,16 @@ function parse(text) {
   } catch {
     return undefined;
   }
+}
+
+/**
+ * A version of a content file as the editor would write it, so that putting an old version back
+ * (written before the editor's layout, say) leaves the file in that layout. Null for a file the
+ * editor does not write or that cannot be read; then the stored version is put back as it is.
+ */
+export function inEditorLayout(path, text) {
+  const data = parse(text);
+  return data ? formatEditorFile(path, data) : null;
 }
 
 /**
@@ -163,17 +180,32 @@ export function summarizeChanges(changes, limit = 4) {
 }
 
 /**
+ * Puts the parent's value back into `target` (a copy of a version) for each of `changes`. A field
+ * the parent did not have is removed, so the editor's layout fills in its empty value.
+ */
+function putBack(target, targetFields, parent, parentFields, changes) {
+  for (const change of changes) {
+    const at = targetFields.get(change.key).path;
+    const parentValue = valueAt(parent, parentFields.get(change.key).path);
+    const owner = valueAt(target, at.slice(0, -1));
+    if (parentValue === undefined) delete owner[at.at(-1)];
+    else owner[at.at(-1)] = structuredClone(parentValue);
+  }
+}
+
+/**
  * Plans an undo of the fields a save changed, keeping everything changed since in other fields.
  * `keys` limits it to some of those fields ("undo just this change").
- * Returns { changes, ready, done, conflicts, structural, text }:
+ * Returns { changes, ready, done, conflicts, structural, reordered, text }:
  * - ready: changes that can be undone (the field is still as the save left it);
  * - done: changes already undone (the field is back as it was before the save);
  * - conflicts: changes to fields edited again later, which cannot be undone here without losing
- *   that later work;
- * - structural: fields the save added or removed (a new update, a tree step): undone only by
+ *   that later work (for a field of a unit, an answer say: the answer was edited or moved since);
+ * - structural: fields the save added or removed (a new update, a tree step), and `reordered`:
+ *   the save also changed the order of parts (trees, steps, updates). Both are undone only by
  *   putting the whole file back, which the page offers when nothing changed since;
  * - text: the file with the ready changes undone, or null when there is nothing to do, or a
- *   conflict or a structural change stops a field-by-field undo.
+ *   conflict, a structural change or a new order stops a field-by-field undo.
  */
 export function planUndo(path, { parentText, saveText, headText }, keys = null) {
   const parent = parse(parentText);
@@ -183,7 +215,16 @@ export function planUndo(path, { parentText, saveText, headText }, keys = null) 
   const comparison = compareContent(path, parentText, saveText);
   if (!comparison) return null;
   const P = fieldsOf(path, parent);
+  const S = fieldsOf(path, saved);
   const H = fieldsOf(path, head);
+  const changedKeys = new Set(comparison.changes.filter((change) => change.status === 'changed').map((change) => change.key));
+  // The fields of a unit (an answer, a status text) in the latest version are as the save left
+  // them, apart from fields this save changed that have since been put back: it is the same item.
+  const unitIntact = (unit) => {
+    const keysIn = (fields) => [...fields.values()].filter((field) => field.unit === unit).map((field) => field.key);
+    if (!sameValue(keysIn(S), keysIn(H))) return false;
+    return keysIn(S).every((key) => sameValue(H.get(key).value, S.get(key).value) || (changedKeys.has(key) && sameValue(H.get(key).value, P.get(key).value)));
+  };
   const changes = comparison.changes.filter((change) => !keys || keys.includes(change.key));
   const ready = [];
   const done = [];
@@ -192,18 +233,21 @@ export function planUndo(path, { parentText, saveText, headText }, keys = null) 
   for (const change of changes) {
     const now = H.get(change.key);
     if (change.status !== 'changed') structural.push(change);
-    else if (!now) conflicts.push(change);
+    else if (!now || (change.unit && !unitIntact(change.unit))) conflicts.push(change);
     else if (sameValue(now.value, change.after)) ready.push(change);
     else if (sameValue(now.value, change.before)) done.push(change);
     else conflicts.push(change);
   }
-  if (conflicts.length || structural.length || ready.length === 0) return { changes, ready, done, conflicts, structural, text: null };
-  const next = structuredClone(head);
-  for (const change of ready) {
-    const target = H.get(change.key).path;
-    const parentValue = valueAt(parent, P.get(change.key).path);
-    const owner = valueAt(next, target.slice(0, -1));
-    owner[target.at(-1)] = structuredClone(parentValue);
+  // Whatever the fields do not show (the order of trees, steps or updates) changed too if putting
+  // every changed field back into the save does not give the version before it.
+  let reordered = false;
+  if (!keys && structural.length === 0) {
+    const reverted = structuredClone(saved);
+    putBack(reverted, S, parent, P, comparison.changes);
+    reordered = formatEditorFile(path, reverted) !== formatEditorFile(path, parent);
   }
-  return { changes, ready, done, conflicts, structural, text: formatEditorFile(path, next) };
+  if (conflicts.length || structural.length || reordered || ready.length === 0) return { changes, ready, done, conflicts, structural, reordered, text: null };
+  const next = structuredClone(head);
+  putBack(next, H, parent, P, ready);
+  return { changes, ready, done, conflicts, structural, reordered, text: formatEditorFile(path, next) };
 }

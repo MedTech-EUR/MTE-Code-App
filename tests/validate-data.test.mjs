@@ -322,4 +322,12 @@ test('reads the content editor’s empty fields as “not set”', () => {
   Object.assign(fixture.treeData.trees[0].nodes[1], { reference: '', cvsCheck: '' });
   Object.assign(fixture.treeData.trees[0].nodes[0], { helpText: '' });
   assert.deepEqual(validateProjectData(fixture).errors, []);
+
+  // A CVS check mode left empty is null; a result that uses it is still caught.
+  const statuses = [{ labels: ['Compliant'], tone: '', text: 'Met.' }];
+  fixture.treeData.trees[0].cvsCheck = { title: 'Check', required: { intro: 'Find it.', statuses, otherStatus: '{status}', noMatch: '' }, national: null };
+  fixture.treeData.trees[0].nodes[1].cvsCheck = 'required';
+  assert.deepEqual(validateProjectData(fixture).errors, []);
+  fixture.treeData.trees[0].nodes[1].cvsCheck = 'national';
+  assert.ok(validateProjectData(fixture).errors.some((error) => error.includes('cvsCheck "national" has no texts')));
 });

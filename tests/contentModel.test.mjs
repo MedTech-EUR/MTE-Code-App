@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { compareContent, fieldsOf, planUndo, summarizeChanges } from '../public/admin/history/content-model.js';
+import { compareContent, fieldsOf, inEditorLayout, planUndo, summarizeChanges } from '../public/admin/history/content-model.js';
 import { formatEditorFile } from '../public/admin/lib/cms-format.js';
 
 const CH4 = 'src/data/code/ch4.json';
@@ -167,4 +167,81 @@ test('summaries say what was added, changed and removed, naming a new update or 
   assert.equal(summarizeChanges(compareContent(CH4, text(CH4, chapter()), text(CH4, c2)).changes), 'Changed: Chapter title.');
   const many = Array.from({ length: 6 }, (_, i) => ({ status: 'changed', group: `S${i}`, label: 'Text', wholeGroup: false }));
   assert.equal(summarizeChanges(many), 'Changed: S0 › Text; S1 › Text; S2 › Text; S3 › Text; and 2 more.');
+});
+
+test('an answer or status text moved since the save is not undone in its new place', () => {
+  const statuses = () => [
+    { labels: ['Pending'], tone: 'caution', text: 'Wait for the decision.' },
+    { labels: ['Rejected'], tone: 'negative', text: 'Not allowed.' },
+  ];
+  const withCheck = () => {
+    const data = trees();
+    data.trees[0].cvsCheck = { title: 'Check', required: { intro: 'Find it.', statuses: statuses(), otherStatus: '{status}', noMatch: '' }, national: null };
+    data.trees[0].nodes[0].options.push({ label: 'No', next: 'r' });
+    return data;
+  };
+  const parent = withCheck();
+  const saved = withCheck();
+  saved.trees[0].cvsCheck.required.statuses[0].tone = 'negative'; // Pending turns red
+  // Nothing moved since: the colour goes back.
+  const plan = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, saved), headText: text(TREES, saved) });
+  assert.equal(JSON.parse(plan.text).trees[0].cvsCheck.required.statuses[0].tone, 'caution');
+  // Pending and Rejected swapped places since: Rejected must not turn yellow.
+  const moved = withCheck();
+  moved.trees[0].cvsCheck.required.statuses = [saved.trees[0].cvsCheck.required.statuses[1], saved.trees[0].cvsCheck.required.statuses[0]];
+  const blocked = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, saved), headText: text(TREES, moved) });
+  assert.equal(blocked.text, null);
+  assert.equal(blocked.conflicts.length, 1);
+
+  // The same for a question's answers, which can be reordered.
+  const edited = withCheck();
+  edited.trees[0].nodes[0].options[0].next = 'start';
+  const swapped = withCheck();
+  swapped.trees[0].nodes[0].options = [edited.trees[0].nodes[0].options[1], edited.trees[0].nodes[0].options[0]];
+  assert.equal(planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, edited), headText: text(TREES, swapped) }).text, null);
+
+  // An answer whose other change from the same save was already undone is still the same answer.
+  const both = withCheck();
+  Object.assign(both.trees[0].nodes[0].options[0], { label: 'Yes, always', next: 'start' });
+  const half = withCheck();
+  half.trees[0].nodes[0].options[0].next = 'start'; // the label was put back on its own
+  const rest = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, both), headText: text(TREES, half) });
+  assert.deepEqual([rest.ready.map((c) => c.label), rest.done.map((c) => c.label)], [['Answer 1 · leads to'], ['Answer 1']]);
+  assert.equal(rest.text, text(TREES, parent));
+});
+
+test('undoing a field the older version did not have keeps the editor’s layout', () => {
+  // Written before the editor's layout: the result has no reference at all.
+  const parent = trees();
+  delete parent.trees[0].nodes[1].reference;
+  const saved = trees();
+  saved.trees[0].nodes[1].reference = 'Chapter 1, Section 2';
+  const plan = planUndo(TREES, { parentText: JSON.stringify(parent), saveText: text(TREES, saved), headText: text(TREES, saved) });
+  assert.equal(plan.text, text(TREES, trees()));
+  assert.equal(JSON.parse(plan.text).trees[0].nodes[1].reference, '');
+});
+
+test('a save that changed the order of trees or steps is undone whole, or not at all', () => {
+  const parent = trees();
+  parent.trees.push({ ...trees().trees[0], id: 'dt-y', title: 'Tree Y' });
+  const reversed = structuredClone(parent);
+  reversed.trees.reverse();
+  const plan = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, reversed), headText: text(TREES, reversed) });
+  assert.deepEqual([plan.changes, plan.reordered, plan.text], [[], true, null]);
+  // Reordered and edited in the same save: still whole.
+  reversed.trees[0].title = 'Tree Y (revised)';
+  assert.equal(planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, reversed), headText: text(TREES, reversed) }).reordered, true);
+  // A save that changed only the file's layout has nothing to undo.
+  const layout = planUndo(TREES, { parentText: JSON.stringify(parent), saveText: text(TREES, parent), headText: text(TREES, parent) });
+  assert.deepEqual([layout.changes, layout.reordered, layout.text], [[], false, null]);
+});
+
+test('old versions are put back in the editor’s layout', () => {
+  const old = trees();
+  old.trees[0].relatedChapter = 'ch1';
+  delete old.trees[0].nodes[0].helpText;
+  assert.equal(inEditorLayout(TREES, JSON.stringify(old, null, 4)), text(TREES, trees()));
+  assert.equal(inEditorLayout(TREES, '{ not json'), null);
+  assert.equal(inEditorLayout(TREES, null), null);
+  assert.equal(inEditorLayout('src/data/quizData.json', '[]'), null);
 });

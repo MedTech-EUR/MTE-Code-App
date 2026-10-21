@@ -6,8 +6,13 @@
       "summary": "<div><p>Track updates and changes to the MedTech Europe Code App.</p></div>",
       "sections": [
         {
+          "title": "October 2026 Update 2",
+          "legalText": "<div class=\"space-y-4\"><div class=\"flex items-center gap-2 mb-2\"><span class=\"text-xs font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800\">Current</span></div><p class=\"text-sm font-semibold text-slate-700 mb-2\">Official Q&As</p><ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600 mb-4\"><li>Every official Q&A now has its own Bookmark, Cite/Link and Copy Text buttons, in the Code and in the Disclosure Guidelines.</li><li>Cite/Link copies a link that opens that exact Q&A, and citations name it, for example “Ch 4 - 3. Educational Grants, Q&A 31”.</li><li>Copy Text copies just that Q&A, with its section title.</li><li>Copied text no longer puts “Q:” in front of numbered Code Q&As.</li></ul></div>",
+          "qas": []
+        },
+        {
           "title": "October 2026 Update 1",
-          "legalText": "<div class=\"space-y-4\"><div class=\"flex items-center gap-2 mb-2\"><span class=\"text-xs font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800\">Current</span></div><p class=\"text-sm font-semibold text-slate-700 mb-2\">Glossary</p><ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600 mb-4\"><li>Every Glossary definition now has its own link. Copy it with Cite/Link or save it with Bookmark.</li><li>The Glossary’s “On this page” list now shows every defined term, so you can jump straight to one.</li><li>“Open the Glossary” from a definition, and the Glossary sources in “Can we support this event?”, now open that exact definition.</li></ul></div>",
+          "legalText": "<div class=\"space-y-4\"><p class=\"text-sm font-semibold text-slate-700 mb-2\">Glossary</p><ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600 mb-4\"><li>Every Glossary definition now has its own link. Copy it with Cite/Link or save it with Bookmark.</li><li>The Glossary’s “On this page” list now shows every defined term, so you can jump straight to one.</li><li>“Open the Glossary” from a definition, and the Glossary sources in “Can we support this event?”, now open that exact definition.</li></ul></div>",
           "qas": []
         },
         {

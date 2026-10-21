@@ -18,6 +18,7 @@
     "verify:disclosure-guidelines": "node scripts/verify-disclosure-guidelines.mjs",
     "verify:production-disclosure-assets": "node scripts/verify-production-disclosure-assets.mjs",
     "validate:data": "node scripts/validate-data.mjs",
+    "format:data": "node scripts/format-cms-data.mjs",
     "search:explain": "node scripts/search-tools.mjs explain",
     "search:report": "node scripts/search-tools.mjs report",
     "test": "node --test",

@@ -1,14 +1,14 @@
 {
-      "id": "ch7",
-      "part": "part1",
-      "title": "Royalties",
-      "icon": "7",
-      "summary": "<div><p><strong>Intellectual Property:</strong> Royalties are payments for the purchase of IP rights (e.g., patents, design rights).</p><ul><li><strong>Not an Inducement:</strong> Royalty arrangements must not be conditional on the HCP purchasing the company's products.</li><li><strong>Reasonable Rate:</strong> The royalty rate must reflect fair commercial value for the innovation.</li></ul></div>",
-      "sections": [
-        {
-          "title": "",
-          "legalText": "Healthcare Professionals, acting individually or as part of a group in which they are an active participant, often make valuable contributions that improve products or Medical Technologies. They may develop intellectual property, for example, patents, trade secrets, or know-how, under a product or technology development or intellectual property licensing agreement.<br/><br/> A royalty arrangement between a Member Company and a Healthcare Professional should be entered into only where the Healthcare Professional is expected to make or has made a novel, significant, or innovative contribution to, for example, the development of a product, technology, process, or method, such that the Healthcare Professional would be considered to be the sole or joint owner of such intellectual property under applicable laws and regulations. The foregoing is without prejudice to Member Companies’ obligations to comply with any applicable obligations to pay royalties which may arise under applicable laws and regulations in some countries.<br/><br/> Arrangements involving the payment of royalties by or on behalf of Member Companies to a Healthcare Professional must be set out in a written agreement providing appropriate and reasonable remuneration in accordance with applicable laws and regulations. For example, royalties paid in exchange for intellectual property should not be conditional on:<br/> <ul class=\"list-disc pl-5 mt-2 space-y-2\"> <li>A requirement that the Healthcare Professional purchase, order or recommend any product, services or Medical Technology of the Member Company or any product or technology produced as a result of the development project; or</li> <li>A requirement to market the product or Medical Technology upon commercialisation.</li> </ul><br/> Subject to national regulations and requirements, Member Companies should exclude from the calculation of royalties the number of units purchased, prescribed, used, or ordered by the Healthcare Professional and/or members of the Healthcare Professional’s practice or Healthcare Organisation.",
-          "qas": []
-        }
-      ]
+  "id": "ch7",
+  "part": "part1",
+  "title": "Royalties",
+  "icon": "7",
+  "summary": "<div><p><strong>Intellectual Property:</strong> Royalties are payments for the purchase of IP rights (e.g., patents, design rights).</p><ul><li><strong>Not an Inducement:</strong> Royalty arrangements must not be conditional on the HCP purchasing the company's products.</li><li><strong>Reasonable Rate:</strong> The royalty rate must reflect fair commercial value for the innovation.</li></ul></div>",
+  "sections": [
+    {
+      "title": "",
+      "legalText": "Healthcare Professionals, acting individually or as part of a group in which they are an active participant, often make valuable contributions that improve products or Medical Technologies. They may develop intellectual property, for example, patents, trade secrets, or know-how, under a product or technology development or intellectual property licensing agreement.<br/><br/> A royalty arrangement between a Member Company and a Healthcare Professional should be entered into only where the Healthcare Professional is expected to make or has made a novel, significant, or innovative contribution to, for example, the development of a product, technology, process, or method, such that the Healthcare Professional would be considered to be the sole or joint owner of such intellectual property under applicable laws and regulations. The foregoing is without prejudice to Member Companies’ obligations to comply with any applicable obligations to pay royalties which may arise under applicable laws and regulations in some countries.<br/><br/> Arrangements involving the payment of royalties by or on behalf of Member Companies to a Healthcare Professional must be set out in a written agreement providing appropriate and reasonable remuneration in accordance with applicable laws and regulations. For example, royalties paid in exchange for intellectual property should not be conditional on:<br/> <ul class=\"list-disc pl-5 mt-2 space-y-2\"> <li>A requirement that the Healthcare Professional purchase, order or recommend any product, services or Medical Technology of the Member Company or any product or technology produced as a result of the development project; or</li> <li>A requirement to market the product or Medical Technology upon commercialisation.</li> </ul><br/> Subject to national regulations and requirements, Member Companies should exclude from the calculation of royalties the number of units purchased, prescribed, used, or ordered by the Healthcare Professional and/or members of the Healthcare Professional’s practice or Healthcare Organisation.",
+      "qas": []
     }
+  ]
+}

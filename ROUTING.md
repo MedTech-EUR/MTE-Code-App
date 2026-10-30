@@ -105,11 +105,17 @@ Keeping URL construction in these files prevents individual components from inve
 ## Hosting Requirement
 
 A fresh request for a nested URL such as `/code/ch1` or
-`/transparency/disclosure-guidelines/dg-chapter-1` must return the React app's
-`index.html`; otherwise direct links and browser refreshes will produce a server
-404 or a redirect to the home page.
+`/transparency/disclosure-guidelines/dg-chapter-1` must return the React app;
+otherwise direct links and browser refreshes will produce a server 404 or a
+redirect to the home page.
 
-The current Cloudflare Worker in `server.js` provides this fallback for extensionless app paths after handling its reserved server routes, which include the content editor (`/admin/`) and Content history (`/admin/history/`): each is served as its own page, not the app. It requests `/` from the static-assets binding, not `/index.html`, because the binding redirects `/index.html` to `/`. That redirect sends every deep link to the home page. `tests/serverSpaFallback.test.mjs` guards this. If the app is moved to another host, configure that host with the equivalent single-page-app fallback before deployment.
+Each page is served its own copy of the app's `index.html`, so search engines and link previews see the page's own title, description, canonical address and text before any script runs:
+
+- `src/utils/pageMeta.js` lists every page a visitor can open directly (`createPageList()`): its canonical path, heading, title and description, taken from the Code, decision-tree and Transparency data and `config/sections.js`. `src/config/pages.js` builds the list in the app, and `useAppRouting.js` shows the current page's title, description and canonical link as the reader moves around. A new kind of page needs an entry here as well as a route; `tests/pageMeta.test.mjs` checks that every listed path is a canonical route and every chapter, tree and reader unit is listed.
+- `npm run build` ends with `scripts/prerender-pages.mjs`, which writes one HTML file per page to `dist/prerendered/` (the built `index.html` with that page's title, description, canonical link and text in `<div id="root">`, which the app replaces when it starts; `scripts/lib/prerender.mjs`) and `dist/sitemap.xml` from the same list. It runs after the service worker is generated, so the installed app keeps opening the plain `index.html` for every page. Cloudflare's build command must stay `npm run build`.
+- The Cloudflare Worker in `server.js` runs before the static files for every request outside `/assets/` (`run_worker_first` in `wrangler.toml`). It redirects `www.` and trailing-slash addresses of pages to the canonical address (301), then handles its reserved server routes, which include the content editor (`/admin/`) and Content history (`/admin/history/`), each its own page rather than the app. Any other extensionless path is served its file from `dist/prerendered/` (`prerendered-pages.js` maps the two); a path that is not a page gets the app shell with a 404, and the app then opens its home page. If the build wrote no page files, every path gets the app shell as before. The files are never served at their own `/prerendered/` addresses. `tests/serverSpaFallback.test.mjs` guards this.
+
+If the app is moved to another host, configure that host to serve each page's file from `dist/prerendered/` at the page's address and the app shell for any other extensionless path, before deployment.
 
 ## Verification
 

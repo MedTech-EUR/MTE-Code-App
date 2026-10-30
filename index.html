@@ -9,9 +9,10 @@
     <title>MedTech Europe Code of Ethical Business Practice | The Code App</title>
     <meta name="description" content="The full MedTech Europe Code of Ethical Business Practice: chapter text, Disclosure Guidelines, decision trees, the TPPT checker and the declarations archive." />
 
-    <!-- Social sharing. og:url is deliberately omitted: this is a single-page app,
-         so a static og:url would point every shared deep link back at the homepage.
-         Platforms fall back to the URL actually shared, which is correct here. -->
+    <!-- Social sharing. og:url and the canonical link are deliberately omitted: this file is
+         also the app shell the installed app opens for every page, so a fixed address would
+         point every deep link back at the homepage. Each page's own copy, written by
+         scripts/prerender-pages.mjs, adds both along with its own title and description. -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="MedTech Europe: The Code App" />
     <meta property="og:title" content="MedTech Europe Code of Ethical Business Practice" />

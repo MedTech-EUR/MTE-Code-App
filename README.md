@@ -673,7 +673,7 @@ Alternatively, you can manually deploy using `npx wrangler deploy`.
 | Command | What it does |
 |---|---|
 | `npm run dev` | Start the development server with hot reload |
-| `npm run build` | Check the data (`validate:data`), then create a production-optimized build |
+| `npm run build` | Check the data (`validate:data`), create a production-optimized build, then write each page's own HTML and the sitemap (`scripts/prerender-pages.mjs`) |
 | `npm run preview` | Preview the production build locally |
 | `npm run clean` | Delete the `dist/` folder (the current script requires a shell that provides `rm`; in PowerShell use `Remove-Item -Recurse -Force dist`) |
 | `npm run lint` | Run TypeScript checks without emitting files |

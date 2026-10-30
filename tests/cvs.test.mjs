@@ -72,7 +72,7 @@ before(async () => {
   const options = {
     compatibilityDate: '2024-09-02', modulesRoot: root,
     modules: [{ type: 'ESModule', path: `${root}/cvs-test-entry.js`, contents: harness },
-      ...['cvs-parser.js', 'cvs-adapter.js', 'cvs-api.js', 'server.js', 'historical-declarations-api.js'].map((name) => ({
+      ...['cvs-parser.js', 'cvs-adapter.js', 'cvs-api.js', 'server.js', 'historical-declarations-api.js', 'prerendered-pages.js'].map((name) => ({
         type: 'ESModule', path: `${root}/${name}`, contents: readFileSync(new URL(`../${name}`, import.meta.url), 'utf8'),
       }))],
   };
@@ -268,11 +268,11 @@ test('CVS API returns explicit unknown technical errors without assigning a subs
   assert.equal(JSON.stringify(data.json).includes('secret'), false);
 });
 
-// SPA deep links are covered by serverSpaFallback.test.mjs; this checks the CVS API is
-// answered by the Worker before the app-shell fallback.
-test('Worker answers the CVS API itself instead of serving the app shell', async () => {
+// Pages are covered by serverSpaFallback.test.mjs; this checks the CVS API is answered by the
+// Worker before the page fallback.
+test('Worker answers the CVS API itself instead of serving a page', async () => {
   assert.deepEqual((await run({ op: 'workerRoute', path: '/api/cvs/unknown' })).data,
     { httpStatus: 404, location: null, assets: [] });
   assert.deepEqual((await run({ op: 'workerRoute', path: '/event-support' })).data,
-    { httpStatus: 200, location: null, assets: ['/'] });
+    { httpStatus: 200, location: null, assets: ['/prerendered/event-support'] });
 });

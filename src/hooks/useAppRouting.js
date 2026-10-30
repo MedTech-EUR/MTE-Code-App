@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { getPageForUrl } from '../config/pages';
 import { parseAppLocation } from '../config/routes';
+import { setDocumentPageMeta } from '../utils/pageMeta';
 import { createRouteEffectScheduler } from '../utils/routeEffects';
 import {
   buildChapterPath,
@@ -39,6 +41,7 @@ export const useAppRouting = ({
     setActiveSection(route.activeSection);
     setActiveId(route.activeId);
     setActiveDocumentId?.(route.activeDocumentId ?? null);
+    setDocumentPageMeta(getPageForUrl(route.canonicalUrl));
 
     if (route.anchor) {
       setShowSummary(true);

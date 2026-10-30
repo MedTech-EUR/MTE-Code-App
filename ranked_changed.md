@@ -115,3 +115,9 @@ See `PROJECT_CHECKS.md` for detailed instructions and troubleshooting.
 ## Found While Combining the Checker and Expandable References — 2026-09-29
 
 - Existing installed-app caches on local preview ports 8787 and 8788 served obsolete app shells referencing removed bundles, leaving the page blank. The server returned the current build, and an unused preview origin loaded it correctly. Include an upgrade check from older installed versions in future PWA work; do not clear readers' stored bookmarks or settings to work around it.
+
+## Found While Preparing Pages for Search Engines — 2026-10-30
+
+- The live site answers `http://medtecheurope-code.org/` with the page instead of redirecting to https, so Google can see two copies of every page. Fix in Cloudflare (SSL/TLS, Edge Certificates, "Always Use HTTPS"), not in `server.js`: `wrangler dev` hands the Worker the site's own address over plain http, so a Worker redirect loops locally.
+- The app's sidebar and cards navigate with buttons rather than links, so the only links search engines can follow are in each page's file (`scripts/lib/prerender.mjs`) and the sitemap. Making the sidebar's entries real `<a href>` links (still handled by the app on click) would let the rendered app link its pages too.
+- The Disclosure Guidelines' own description ("Read the October 2025 Disclosure Guidelines.") and the opening of their Annex I ("Please find the Declaration csv Template downloadable at this link.") become those pages' search descriptions. A fuller `description` in `transparency/disclosure-guidelines/document.json` would read better in search results.

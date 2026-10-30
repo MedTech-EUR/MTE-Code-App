@@ -9,6 +9,56 @@
 
 import { handleHistoricalDeclarationsRequest } from './historical-declarations-api.js';
 import { handleCvsRequest } from './cvs-api.js';
+import { isPrerenderedFilePath, prerenderedAssetPathFor } from './prerendered-pages.js';
+
+/**
+ * The one address each page is indexed under: without "www." and without a trailing slash.
+ * Returns the URL to redirect to, or null when the request already uses it. The API and the
+ * content editor (whose own address ends in a slash) are left alone, so their requests and
+ * sign-in keep working on either host. (http to https is Cloudflare's "Always Use HTTPS"
+ * setting: `wrangler dev` hands the Worker the site's own address over http.)
+ */
+export function canonicalRedirectUrl(request) {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return null;
+
+  const url = new URL(request.url);
+  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/admin')) return null;
+
+  const target = new URL(url);
+  if (target.hostname.startsWith('www.')) target.hostname = target.hostname.slice(4);
+  if (target.pathname !== '/' && target.pathname.endsWith('/')) {
+    target.pathname = target.pathname.replace(/\/+$/, '') || '/';
+  }
+
+  return target.href === url.href ? null : target.href;
+}
+
+/**
+ * A page of the app: the HTML the build wrote for it, with its own title, description and text.
+ * Any other address gets the app shell with a 404, so search engines drop it while a visitor
+ * still lands in the app (which opens its home page).
+ */
+async function servePage(request, env, url) {
+  if (!isPrerenderedFilePath(url.pathname)) {
+    const page = await env.ASSETS.fetch(
+      new Request(new URL(prerenderedAssetPathFor(url.pathname), url), request),
+    );
+    if (page.ok || page.status === 304) return page;
+  }
+
+  // A build that skipped scripts/prerender-pages.mjs has no page files at all: then every
+  // address keeps getting the app shell, rather than every page being reported missing.
+  const home = await env.ASSETS.fetch(
+    new Request(new URL(prerenderedAssetPathFor('/'), url), { method: 'HEAD' }),
+  );
+  const status = home.ok ? 404 : 200;
+
+  // Requested without the browser's cache validators, which belong to another file.
+  const shell = await env.ASSETS.fetch(new Request(new URL('/', url), { method: request.method }));
+  const headers = new Headers(shell.headers);
+  headers.delete('ETag');
+  return new Response(shell.body, { status, headers });
+}
 
 /**
  * Generate an HMAC-signed state token for CSRF protection.
@@ -48,6 +98,9 @@ async function verifyState(state, secret, maxAgeMs = 600000) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    const canonicalUrl = canonicalRedirectUrl(request);
+    if (canonicalUrl) return Response.redirect(canonicalUrl, 301);
 
     // 1. Handle OAuth Initiation: /api/auth
     if (url.pathname === '/api/auth') {
@@ -162,21 +215,17 @@ export default {
     // 4. Fallback: Serve static assets
     // The content editor (/admin/) and Content history (/admin/history/) are their own pages,
     // not the app, so they are kept out of the app-shell fallback below.
-    if (url.pathname === '/admin' || url.pathname === '/admin/') {
-      return env.ASSETS.fetch(new Request(new URL('/admin/index.html', request.url), request));
-    }
-    if (url.pathname === '/admin/history' || url.pathname === '/admin/history/') {
-      return env.ASSETS.fetch(new Request(new URL('/admin/history/index.html', request.url), request));
-    }
-
-    // For any other SPA route, serve the app shell. Request "/" rather than
-    // "/index.html": the assets binding answers /index.html with a 307 to "/",
-    // which would send every deep link to the home page.
-    let assetReq = request;
-    if (!url.pathname.includes('.')) {
-      assetReq = new Request(new URL('/', request.url), request);
+    // The assets binding serves each folder's index.html at its address with the slash (and
+    // redirects the other spellings to it), so these requests go to it unchanged.
+    if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
+      return env.ASSETS.fetch(request);
     }
 
-    return env.ASSETS.fetch(assetReq);
+    // Any other extensionless path is a page of the app (or an address that is not one).
+    if (!url.pathname.includes('.') || isPrerenderedFilePath(url.pathname)) {
+      return servePage(request, env, url);
+    }
+
+    return env.ASSETS.fetch(request);
   },
 };

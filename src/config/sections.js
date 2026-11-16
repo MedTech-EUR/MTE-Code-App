@@ -1,7 +1,10 @@
+import { CVS_CHECK_URL } from '../../moved-pages.js';
+
 /**
- * The decision tree that the Home Hub's Conference Vetting System check card and the sidebar open.
+ * The CVS and e4ethics check, on ethicalmedtech.eu: the Home Hub card and the sidebar entry open
+ * it in a new tab. It was a decision tree of this app until November 2026.
  */
-export const CVS_CHECK_TREE_ID = 'dt-annex1-cvs-scope';
+export { CVS_CHECK_URL };
 
 /**
  * Home Hub metadata registry.
@@ -42,15 +45,16 @@ export const SECTIONS = [
     available: true,
   },
   {
-    // Opens the decision tree CVS_CHECK_TREE_ID. It takes the event support checker's place
-    // here and in the sidebar for now; the checker is listed with the decision trees.
+    // A card with `href` opens another site in a new tab instead of a section of this app.
+    // The event support checker is listed with the decision trees.
     id: 'cvs-check',
-    title: 'Conference Vetting System check',
-    subtitle: 'Annex I and the Event’s CVS status',
-    description: 'Check in a few questions whether support for a Third Party Organised Educational Event needs a CVS decision under Annex I, and look up the Event’s current status in CVS.',
+    title: 'CVS and e4ethics check',
+    subtitle: 'On ethicalmedtech.eu',
+    description: 'Check in a few questions whether support for a Third Party Organised Educational Event needs a CVS decision under Annex I, or whether the Event is in scope of e4ethics, and look up its current status.',
     icon: 'CVSBadge',
-    color: '#D97706', // a decision tree, so it shares their amber
+    color: '#D97706', // kept amber: it was a decision tree here, and readers know it by this colour
     textColor: '#B45309',
+    href: CVS_CHECK_URL,
     available: true,
   },
   {

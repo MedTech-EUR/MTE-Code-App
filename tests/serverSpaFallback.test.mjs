@@ -128,6 +128,17 @@ test('redirects www and trailing-slash addresses to the canonical address', asyn
   }
 });
 
+test('redirects a page that moved to another site to its new address', async () => {
+  for (const [origin, path] of [[undefined, '/trees/dt-annex1-cvs-scope'], [undefined, '/trees/dt-annex1-cvs-scope/'], ['https://www.medtecheurope-code.org', '/trees/dt-annex1-cvs-scope']]) {
+    const { response, env } = await fetchFromWorker(path, undefined, origin);
+    assert.equal(response.status, 301, path);
+    assert.equal(new URL(response.headers.get('Location')).href, 'https://www.ethicalmedtech.eu/cvs-e4ethics-check/');
+    assert.deepEqual(env.ASSETS.requestedPaths, []);
+  }
+  // Other decision trees stay pages of the app.
+  assert.notEqual((await fetchFromWorker('/trees/dt-scope')).response.status, 301);
+});
+
 test('leaves the API, the content editor and other methods on their own addresses', () => {
   const unchanged = [
     new Request('https://medtecheurope-code.org/code/ch7'),

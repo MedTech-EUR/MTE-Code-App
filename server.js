@@ -10,6 +10,7 @@
 import { handleHistoricalDeclarationsRequest } from './historical-declarations-api.js';
 import { handleCvsRequest } from './cvs-api.js';
 import { isPrerenderedFilePath, prerenderedAssetPathFor } from './prerendered-pages.js';
+import { movedPageUrl } from './moved-pages.js';
 
 /**
  * The one address each page is indexed under: without "www." and without a trailing slash.
@@ -98,6 +99,11 @@ async function verifyState(state, secret, maxAgeMs = 600000) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // A page that has moved to another site (moved-pages.js): one redirect, whichever spelling
+    // of its old address was asked for.
+    const movedUrl = request.method === 'GET' || request.method === 'HEAD' ? movedPageUrl(url) : null;
+    if (movedUrl) return Response.redirect(movedUrl, 301);
 
     const canonicalUrl = canonicalRedirectUrl(request);
     if (canonicalUrl) return Response.redirect(canonicalUrl, 301);

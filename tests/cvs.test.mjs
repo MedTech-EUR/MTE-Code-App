@@ -57,9 +57,9 @@ export default { async fetch(request) {
     if (input.op === 'api') {
       const result = await handleCvsRequest(new Request('https://app.example' + input.path, {
         method: input.method || 'POST', headers: { 'Content-Type': 'application/json', ...input.headers },
-        body: input.method === 'GET' ? undefined : (input.body ?? JSON.stringify(input.filters)),
+        body: ['GET', 'OPTIONS'].includes(input.method) ? undefined : (input.body ?? JSON.stringify(input.filters)),
       }), adapter);
-      data = { httpStatus: result.status, headers: Object.fromEntries(result.headers), json: await result.json() };
+      data = { httpStatus: result.status, headers: Object.fromEntries(result.headers), json: result.status === 204 ? null : await result.json() };
     }
     return Response.json({ data, calls });
   } catch(error) { return Response.json({ error: { code: error.code, message: error.message }, calls }); }
@@ -72,7 +72,7 @@ before(async () => {
   const options = {
     compatibilityDate: '2024-09-02', modulesRoot: root,
     modules: [{ type: 'ESModule', path: `${root}/cvs-test-entry.js`, contents: harness },
-      ...['cvs-parser.js', 'cvs-adapter.js', 'cvs-api.js', 'server.js', 'historical-declarations-api.js', 'prerendered-pages.js'].map((name) => ({
+      ...['cvs-parser.js', 'cvs-adapter.js', 'cvs-api.js', 'server.js', 'historical-declarations-api.js', 'prerendered-pages.js', 'moved-pages.js'].map((name) => ({
         type: 'ESModule', path: `${root}/${name}`, contents: readFileSync(new URL(`../${name}`, import.meta.url), 'utf8'),
       }))],
   };
@@ -257,6 +257,42 @@ test('CVS API rejects wrong methods, malformed/large JSON, foreign origins and a
     assert.equal(data.httpStatus, expected);
     assert.equal(data.headers['cache-control'], 'no-store');
     assert.equal(calls.length, 0);
+  }
+});
+
+test('CVS API answers ethicalmedtech.eu, which hosts the CVS and e4ethics check, and no other site', async () => {
+  const site = 'https://www.ethicalmedtech.eu';
+  const search = await run({ op: 'api', path: '/api/cvs/search', filters: { name: 'Heart' }, replies: replies(), headers: { Origin: site, 'Sec-Fetch-Site': 'cross-site' } });
+  assert.equal(search.data.httpStatus, 200);
+  assert.equal(search.data.headers['access-control-allow-origin'], site);
+  assert.equal(search.data.headers.vary, 'Origin');
+  assert.equal(search.data.headers['access-control-allow-credentials'], undefined);
+
+  const status = await run({ op: 'api', method: 'GET', path: '/api/cvs/events/EMT-26-11175', replies: [{ body: detail }], headers: { Origin: 'https://some-branch.ethicalmedtech.pages.dev' } });
+  assert.equal(status.data.httpStatus, 200);
+  assert.equal(status.data.headers['access-control-allow-origin'], 'https://some-branch.ethicalmedtech.pages.dev');
+
+  // The browser asks first whether it may send the JSON search.
+  const preflight = await run({ op: 'api', method: 'OPTIONS', path: '/api/cvs/search', headers: { Origin: site, 'Access-Control-Request-Method': 'POST' } });
+  assert.equal(preflight.data.httpStatus, 204);
+  assert.equal(preflight.data.headers['access-control-allow-origin'], site);
+  assert.equal(preflight.data.headers['access-control-allow-methods'], 'POST');
+  assert.equal(preflight.data.headers['access-control-allow-headers'], 'Content-Type');
+  assert.equal(preflight.calls.length, 0);
+
+  // An error still reaches the listed site's page, so it can say what went wrong.
+  const failed = await run({ op: 'api', path: '/api/cvs/search', body: '{bad', headers: { Origin: site } });
+  assert.equal(failed.data.httpStatus, 400);
+  assert.equal(failed.data.headers['access-control-allow-origin'], site);
+
+  for (const origin of ['https://ethicalmedtech.eu.evil.example', 'https://evil.pages.dev', 'http://www.ethicalmedtech.eu', 'https://ethicalmedtech.pages.dev.evil.example']) {
+    for (const method of ['POST', 'OPTIONS']) {
+      const { data, calls } = await run({ op: 'api', method, path: '/api/cvs/search', filters: { name: 'Heart' }, headers: { Origin: origin } });
+      assert.notEqual(data.httpStatus, 200, `${origin} ${method}`);
+      assert.notEqual(data.httpStatus, 204, `${origin} ${method}`);
+      assert.equal(data.headers['access-control-allow-origin'], undefined, `${origin} ${method}`);
+      assert.equal(calls.length, 0);
+    }
   }
 });
 

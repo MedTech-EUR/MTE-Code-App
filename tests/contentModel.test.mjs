@@ -29,10 +29,9 @@ const trees = () => ({
     relatedSection: [],
     category: 'events',
     description: 'D',
-    cvsCheck: null,
     nodes: [
       { type: 'question', id: 'start', text: 'Q?', helpText: '', options: [{ label: 'Yes', next: 'r' }] },
-      { type: 'result', id: 'r', text: 'OK', outcome: 'compliant', reference: '', cvsCheck: '' },
+      { type: 'result', id: 'r', text: 'OK', outcome: 'compliant', reference: '' },
     ],
   }],
 });
@@ -57,7 +56,7 @@ test('compareContent lists changed, added and removed fields; trees by tree and 
 
   const t1 = trees();
   const t2 = trees();
-  t2.trees[0].nodes.unshift({ type: 'result', id: 'new', text: 'New', outcome: 'conditional', reference: '', cvsCheck: '' });
+  t2.trees[0].nodes.unshift({ type: 'result', id: 'new', text: 'New', outcome: 'conditional', reference: '' });
   t2.trees[0].nodes[2].text = 'Fine';
   const treeChanges = compareContent(TREES, text(TREES, t1), text(TREES, t2)).changes;
   assert.ok(treeChanges.some((c) => c.key === 'tree:dt-x/step:new/text' && c.status === 'added'));
@@ -119,7 +118,7 @@ test('planUndo of one change leaves the save’s other changes in place', () => 
 test('planUndo of a save that added a tree step cannot be done field by field', () => {
   const parent = trees();
   const saved = trees();
-  saved.trees[0].nodes.push({ type: 'result', id: 'extra', text: 'E', outcome: 'conditional', reference: '', cvsCheck: '' });
+  saved.trees[0].nodes.push({ type: 'result', id: 'extra', text: 'E', outcome: 'conditional', reference: '' });
   const plan = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, saved), headText: text(TREES, saved) });
   assert.ok(plan.structural.length > 0, 'the added step is a structural change');
   assert.deepEqual(plan.conflicts, []);
@@ -154,7 +153,7 @@ test('summaries say what was added, changed and removed, naming a new update or 
   // A new step is named once; a new answer to an existing question is named field by field.
   const t1 = trees();
   const t2 = trees();
-  t2.trees[0].nodes.push({ type: 'result', id: 'extra', text: 'E', outcome: 'conditional', reference: '', cvsCheck: '' });
+  t2.trees[0].nodes.push({ type: 'result', id: 'extra', text: 'E', outcome: 'conditional', reference: '' });
   t2.trees[0].nodes[0].options.push({ label: 'No', next: 'extra' });
   assert.equal(
     summarizeChanges(compareContent(TREES, text(TREES, t1), text(TREES, t2)).changes),
@@ -169,36 +168,26 @@ test('summaries say what was added, changed and removed, naming a new update or 
   assert.equal(summarizeChanges(many), 'Changed: S0 › Text; S1 › Text; S2 › Text; S3 › Text; and 2 more.');
 });
 
-test('an answer or status text moved since the save is not undone in its new place', () => {
-  const statuses = () => [
-    { labels: ['Pending'], tone: 'caution', text: 'Wait for the decision.' },
-    { labels: ['Rejected'], tone: 'negative', text: 'Not allowed.' },
-  ];
-  const withCheck = () => {
+test('an answer moved since the save is not undone in its new place', () => {
+  // A question's answers can be reordered.
+  const withTwoAnswers = () => {
     const data = trees();
-    data.trees[0].cvsCheck = { title: 'Check', required: { intro: 'Find it.', statuses: statuses(), otherStatus: '{status}', noMatch: '' }, national: null };
     data.trees[0].nodes[0].options.push({ label: 'No', next: 'r' });
     return data;
   };
-  const parent = withCheck();
-  const saved = withCheck();
-  saved.trees[0].cvsCheck.required.statuses[0].tone = 'negative'; // Pending turns red
-  // Nothing moved since: the colour goes back.
-  const plan = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, saved), headText: text(TREES, saved) });
-  assert.equal(JSON.parse(plan.text).trees[0].cvsCheck.required.statuses[0].tone, 'caution');
-  // Pending and Rejected swapped places since: Rejected must not turn yellow.
-  const moved = withCheck();
-  moved.trees[0].cvsCheck.required.statuses = [saved.trees[0].cvsCheck.required.statuses[1], saved.trees[0].cvsCheck.required.statuses[0]];
-  const blocked = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, saved), headText: text(TREES, moved) });
+  const withCheck = withTwoAnswers;
+  const parent = withTwoAnswers();
+  const edited = withTwoAnswers();
+  edited.trees[0].nodes[0].options[0].next = 'start';
+  // Nothing moved since: the answer leads where it did before.
+  const plan = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, edited), headText: text(TREES, edited) });
+  assert.equal(JSON.parse(plan.text).trees[0].nodes[0].options[0].next, 'r');
+  // The two answers swapped places since: the other answer must not be changed.
+  const swapped = withTwoAnswers();
+  swapped.trees[0].nodes[0].options = [edited.trees[0].nodes[0].options[1], edited.trees[0].nodes[0].options[0]];
+  const blocked = planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, edited), headText: text(TREES, swapped) });
   assert.equal(blocked.text, null);
   assert.equal(blocked.conflicts.length, 1);
-
-  // The same for a question's answers, which can be reordered.
-  const edited = withCheck();
-  edited.trees[0].nodes[0].options[0].next = 'start';
-  const swapped = withCheck();
-  swapped.trees[0].nodes[0].options = [edited.trees[0].nodes[0].options[1], edited.trees[0].nodes[0].options[0]];
-  assert.equal(planUndo(TREES, { parentText: text(TREES, parent), saveText: text(TREES, edited), headText: text(TREES, swapped) }).text, null);
 
   // An answer whose other change from the same save was already undone is still the same answer.
   const both = withCheck();

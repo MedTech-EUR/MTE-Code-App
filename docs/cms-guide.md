@@ -64,14 +64,14 @@ category, the chapters it is listed with, and its **questions and results** ("st
 
 - The tree starts at the step whose ID is **start**.
 - A **question** has answers; each answer **leads to** the ID of another step.
-- A **result** has an answer text, an **outcome** (the coloured label), an optional Code reference
-  (e.g. "Chapter 1, Section 2"), and optionally a **live CVS check**.
+- A **result** has an answer text, an **outcome** (the coloured label) and an optional Code reference
+  (e.g. "Chapter 1, Section 2").
 
 The preview pane walks each tree from its start and shows, in red, any answer that leads to a step
 that does not exist, and any step that cannot be reached.
 
-**Live CVS check texts** (only on trees that check an Event's status in CVS) hold the text shown
-for each CVS status. "{status}" is replaced by the status found in CVS.
+The Conference Vetting System check is no longer one of these trees: it is the **CVS and e4ethics
+check** on ethicalmedtech.eu, and its questions and status texts are edited in that site's editor.
 
 ## Version History
 

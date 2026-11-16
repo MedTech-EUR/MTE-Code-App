@@ -262,8 +262,7 @@ const ChapterPreview = createClass({
 
 const TreeStep = ({ node, byId }) => h('li', { className: `mte-tree__step mte-tree__step--${node.type}` },
   h('p', { className: 'mte-tree__id' }, node.type === 'question' ? 'Question' : 'Result', ' · ', h('code', {}, node.id),
-    node.type === 'result' ? h('span', { className: `mte-tree__outcome mte-tree__outcome--${node.outcome}` }, OUTCOME_LABELS[node.outcome] ?? 'No outcome') : null,
-    node.type === 'result' && node.cvsCheck ? h('span', { className: 'mte-tree__cvs' }, `Live CVS check: ${node.cvsCheck}`) : null),
+    node.type === 'result' ? h('span', { className: `mte-tree__outcome mte-tree__outcome--${node.outcome}` }, OUTCOME_LABELS[node.outcome] ?? 'No outcome') : null),
   h('p', { className: 'mte-tree__text' }, node.text),
   node.helpText ? h('p', { className: 'mte-tree__help' }, node.helpText) : null,
   node.type === 'result' && node.reference ? h('p', { className: 'mte-tree__ref' }, `Reference: ${node.reference}`) : null,

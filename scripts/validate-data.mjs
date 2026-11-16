@@ -11,7 +11,6 @@ import {
 import { tokenizeAllWithOffsets, tokenizeWords } from '../src/utils/searchText.js';
 import { CONDITION_TAGS, findSourceSectionIndex } from '../src/utils/eventSupportRules.js';
 import { normalizeCvsStatus } from '../src/utils/eventSupportCvs.js';
-import { TREE_CVS_MODES, TREE_CVS_TONES } from '../src/utils/treeCvs.js';
 import { loadSplitCodeData } from './lib/code-content.mjs';
 import { loadTransparencyData } from './lib/transparency-content.mjs';
 import { checkHtml } from '../public/admin/lib/html-tools.js';
@@ -38,49 +37,6 @@ export const ALLOWED_OUTCOMES = new Set([
 
 function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
-}
-
-// A decision tree's texts for the live CVS check under its results (see src/utils/treeCvs.js).
-function validateTreeCvsCheck(cvsCheck, path, errors) {
-  if (!cvsCheck || typeof cvsCheck !== 'object' || Array.isArray(cvsCheck)) {
-    errors.push(`${path}: expected an object.`);
-    return;
-  }
-  if (!isNonEmptyString(cvsCheck.title)) errors.push(`${path}: missing title.`);
-  for (const key of Object.keys(cvsCheck)) {
-    if (key !== 'title' && !TREE_CVS_MODES.includes(key)) errors.push(`${path}: unknown mode "${key}".`);
-  }
-  for (const mode of TREE_CVS_MODES) {
-    const settings = cvsCheck[mode];
-    // The content editor writes null for a mode left empty: that means "none".
-    if (settings == null) continue;
-    const modePath = `${path}.${mode}`;
-    if (!isNonEmptyString(settings?.intro)) errors.push(`${modePath}: missing intro.`);
-    if (!isNonEmptyString(settings?.otherStatus)) errors.push(`${modePath}: missing otherStatus.`);
-    // The content editor writes an empty text for a field left empty: that means "none".
-    if (settings?.noMatch !== undefined && typeof settings.noMatch !== 'string') errors.push(`${modePath}: noMatch must be text.`);
-    if (!Array.isArray(settings?.statuses)) {
-      errors.push(`${modePath}: expected a statuses array.`);
-      continue;
-    }
-    const seen = new Set();
-    settings.statuses.forEach((entry, index) => {
-      const entryPath = `${modePath}.statuses[${index}]`;
-      if (!Array.isArray(entry?.labels) || !entry.labels.length || !entry.labels.every(isNonEmptyString)) {
-        errors.push(`${entryPath}: expected a non-empty list of CVS status labels.`);
-      } else {
-        for (const label of entry.labels) {
-          const key = normalizeCvsStatus(label);
-          if (seen.has(key)) errors.push(`${entryPath}: status "${label}" is listed twice.`);
-          seen.add(key);
-        }
-      }
-      if (!isNonEmptyString(entry?.text)) errors.push(`${entryPath}: missing text.`);
-      if (entry?.tone !== undefined && entry.tone !== '' && !TREE_CVS_TONES.includes(entry.tone)) {
-        errors.push(`${entryPath}: unsupported tone "${entry.tone}".`);
-      }
-    });
-  }
 }
 
 // HTML that would render differently from what was intended (an unclosed <strong>, say). The
@@ -629,10 +585,6 @@ export function validateProjectData({
         if (!ALLOWED_OUTCOMES.has(node.outcome)) {
           errors.push(`${nodePath}: unsupported outcome "${node?.outcome ?? ''}".`);
         }
-        // An empty cvsCheck means the result has no live CVS check.
-        if (node.cvsCheck !== undefined && node.cvsCheck !== '' && !tree.cvsCheck?.[node.cvsCheck]) {
-          errors.push(`${nodePath}: cvsCheck "${node.cvsCheck}" has no texts in the tree's cvsCheck.`);
-        }
       } else {
         errors.push(`${nodePath}: unsupported node type "${node?.type ?? ''}".`);
       }
@@ -641,9 +593,6 @@ export function validateProjectData({
     // A step no answer leads to is never shown; it is usually left over from an edit.
     const unreached = inspectTree(tree).unreached.map((node) => node.id);
     if (unreached.length) warnings.push(`${treePath} (${tree.id}): not reached from "start": ${unreached.join(', ')}.`);
-
-    // null: the tree has no live CVS check texts.
-    if (tree.cvsCheck != null) validateTreeCvsCheck(tree.cvsCheck, `${treePath} cvsCheck`, errors);
 
     // Lists, as the content editor writes them: the chapters (at least one) and the sections
     // (possibly none) the tree is listed with.

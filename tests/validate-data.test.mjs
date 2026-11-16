@@ -128,31 +128,6 @@ test('reports a broken tree target with its location', () => {
   assert.ok(result.errors.some((error) => error.includes('target node "missing-node" does not exist')));
 });
 
-test('checks a tree’s CVS check texts and the results that use them', () => {
-  const fixture = makeValidFixture();
-  const tree = fixture.treeData.trees[0];
-  tree.nodes[1].cvsCheck = 'required';
-  assert.ok(validateProjectData(fixture).errors.some((error) => error.includes('cvsCheck "required" has no texts')));
-
-  tree.cvsCheck = {
-    title: 'Check the Event in CVS',
-    required: {
-      intro: 'Find the Event.',
-      otherStatus: 'Unknown status {status}.',
-      statuses: [
-        { labels: ['Compliant'], text: 'Met.', tone: 'positive' },
-        { labels: ['Under Review', 'compliant'], text: 'Wait.', tone: 'bright' },
-      ],
-    },
-    guess: {},
-  };
-  const errors = validateProjectData(fixture).errors;
-  assert.ok(errors.some((error) => error.includes('unknown mode "guess"')));
-  assert.ok(errors.some((error) => error.includes('status "compliant" is listed twice')));
-  assert.ok(errors.some((error) => error.includes('unsupported tone "bright"')));
-  assert.ok(!errors.some((error) => error.includes('has no texts')));
-});
-
 test('reports quiz questions without exactly one correct option', () => {
   const fixture = makeValidFixture();
   fixture.quizData[0].options[1].isCorrect = true;
@@ -318,16 +293,7 @@ test('requires related chapters and sections as lists, as the content editor wri
 test('reads the content editor’s empty fields as “not set”', () => {
   const fixture = makeValidFixture();
   fixture.treeData.trees[0].relatedSection = [];
-  fixture.treeData.trees[0].cvsCheck = null;
-  Object.assign(fixture.treeData.trees[0].nodes[1], { reference: '', cvsCheck: '' });
+  Object.assign(fixture.treeData.trees[0].nodes[1], { reference: '' });
   Object.assign(fixture.treeData.trees[0].nodes[0], { helpText: '' });
   assert.deepEqual(validateProjectData(fixture).errors, []);
-
-  // A CVS check mode left empty is null; a result that uses it is still caught.
-  const statuses = [{ labels: ['Compliant'], tone: '', text: 'Met.' }];
-  fixture.treeData.trees[0].cvsCheck = { title: 'Check', required: { intro: 'Find it.', statuses, otherStatus: '{status}', noMatch: '' }, national: null };
-  fixture.treeData.trees[0].nodes[1].cvsCheck = 'required';
-  assert.deepEqual(validateProjectData(fixture).errors, []);
-  fixture.treeData.trees[0].nodes[1].cvsCheck = 'national';
-  assert.ok(validateProjectData(fixture).errors.some((error) => error.includes('cvsCheck "national" has no texts')));
 });

@@ -82,16 +82,12 @@ const ResultReference = ({ reference, onOpenReference }) => {
   );
 };
 
-// A decision tree's answer: its outcome, its text, anything shown under the text (such as what
-// the Event's CVS status means) and the provision it cites.
-export const TreeResultCard = ({ outcome, text, reference, onOpenReference, cardRef, children }) => {
+// A decision tree's answer: its outcome, its text and the provision it cites.
+export const TreeResultCard = ({ outcome, text, reference, onOpenReference }) => {
   const style = OUTCOME_STYLES[outcome] || OUTCOME_STYLES['conditional'];
 
   return (
-    <div
-      ref={cardRef}
-      className={`rounded-2xl border-2 ${style.border} ${style.bg} p-8 mb-6 scroll-mt-4 transition-colors duration-300 motion-reduce:transition-none`}
-    >
+    <div className={`rounded-2xl border-2 ${style.border} ${style.bg} p-8 mb-6`}>
       <div className="flex items-center gap-3 mb-4">
         <span className="text-2xl">{style.icon}</span>
         <span className={`text-sm font-bold uppercase tracking-wider ${style.text}`}>
@@ -101,8 +97,6 @@ export const TreeResultCard = ({ outcome, text, reference, onOpenReference, card
       <p className={`text-lg font-semibold leading-relaxed mb-4 ${style.text}`}>
         {text}
       </p>
-
-      {children && <div className={style.text}>{children}</div>}
 
       {reference && (
         <ResultReference reference={reference} onOpenReference={onOpenReference} />

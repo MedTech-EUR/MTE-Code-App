@@ -70,24 +70,6 @@ export function fieldsOf(path, data) {
       add(`${base}/relatedSection`, at('relatedSection'), group, 'Related sections', 'list', tree.relatedSection);
       add(`${base}/category`, at('category'), group, 'Category', 'text', tree.category);
       add(`${base}/description`, at('description'), group, 'Description', 'text', tree.description);
-      if (tree.cvsCheck) {
-        add(`${base}/cvsCheck.title`, at('cvsCheck', 'title'), group, 'Live CVS check · Heading', 'text', tree.cvsCheck.title);
-        for (const mode of ['required', 'national']) {
-          const texts = tree.cvsCheck[mode];
-          if (!texts) continue;
-          const name = mode === 'required' ? 'Positive decision required' : 'National Event';
-          for (const field of ['intro', 'otherStatus', 'noMatch']) {
-            add(`${base}/cvsCheck.${mode}.${field}`, at('cvsCheck', mode, field), group, `Live CVS check · ${name} · ${{ intro: 'Introduction', otherStatus: 'Any other status', noMatch: 'Event not found' }[field]}`, 'text', texts[field]);
-          }
-          (texts.statuses ?? []).forEach((status, k) => {
-            const label = `Live CVS check · ${name} · Status text ${k + 1}`;
-            const unit = `${base}/cvsCheck.${mode}.statuses.${k}`;
-            add(`${unit}.labels`, at('cvsCheck', mode, 'statuses', k, 'labels'), group, `${label} · CVS statuses`, 'list', status.labels, unit);
-            add(`${unit}.tone`, at('cvsCheck', mode, 'statuses', k, 'tone'), group, `${label} · Colour`, 'text', status.tone, unit);
-            add(`${unit}.text`, at('cvsCheck', mode, 'statuses', k, 'text'), group, `${label} · Text`, 'text', status.text, unit);
-          });
-        }
-      }
       (tree.nodes ?? []).forEach((node, n) => {
         const stepKey = `${base}/step:${node.id}`;
         const stepGroup = `${group} › ${node.type === 'result' ? 'Result' : 'Question'} “${node.id}”`;
@@ -104,7 +86,6 @@ export function fieldsOf(path, data) {
         } else {
           add(`${stepKey}/outcome`, nodeAt('outcome'), stepGroup, 'Outcome', 'text', OUTCOME_LABELS[node.outcome] ? `${OUTCOME_LABELS[node.outcome]} (${node.outcome})` : node.outcome);
           add(`${stepKey}/reference`, nodeAt('reference'), stepGroup, 'Code reference', 'text', node.reference);
-          add(`${stepKey}/cvsCheck`, nodeAt('cvsCheck'), stepGroup, 'Live CVS check', 'text', node.cvsCheck);
         }
       });
     });

@@ -33,24 +33,15 @@ test('trees spell out what the editor writes, in its order', () => {
     }],
   };
   const [tree] = canonicalTrees(data).trees;
-  assert.deepEqual(Object.keys(tree), ['id', 'title', 'relatedChapter', 'relatedSection', 'category', 'description', 'cvsCheck', 'nodes']);
+  assert.deepEqual(Object.keys(tree), ['id', 'title', 'relatedChapter', 'relatedSection', 'category', 'description', 'nodes']);
   assert.deepEqual(tree.relatedChapter, ['ch1']);
   assert.deepEqual(tree.relatedSection, []);
-  assert.equal(tree.cvsCheck, null);
   assert.deepEqual(tree.nodes[0], { type: 'question', id: 'start', text: 'Q?', helpText: '', options: [{ label: 'Yes', next: 'r' }] });
   assert.deepEqual(Object.keys(tree.nodes[0].options[0]), ['label', 'next']);
-  assert.deepEqual(tree.nodes[1], { type: 'result', id: 'r', text: 'OK', outcome: 'compliant', reference: '', cvsCheck: '' });
-  assert.deepEqual(Object.keys(tree.nodes[1]), ['type', 'id', 'text', 'outcome', 'reference', 'cvsCheck']);
+  assert.deepEqual(tree.nodes[1], { type: 'result', id: 'r', text: 'OK', outcome: 'compliant', reference: '' });
+  assert.deepEqual(Object.keys(tree.nodes[1]), ['type', 'id', 'text', 'outcome', 'reference']);
   // Formatting is stable: formatting the result again changes nothing.
   assert.equal(formatEditorFile('src/data/treeData.json', JSON.parse(formatEditorFile('src/data/treeData.json', data))), formatEditorFile('src/data/treeData.json', data));
-});
-
-test('CVS check texts get the editor’s empty fields', () => {
-  const [tree] = canonicalTrees({ trees: [{ id: 'dt-x', cvsCheck: { national: { statuses: [{ text: 'T', labels: 'Compliant' }], intro: 'I', otherStatus: 'O' }, title: 'Check' }, nodes: [] }] }).trees;
-  // A mode without texts is null, as the editor writes an optional group left empty.
-  assert.deepEqual(Object.keys(tree.cvsCheck), ['title', 'required', 'national']);
-  assert.equal(tree.cvsCheck.required, null);
-  assert.deepEqual(tree.cvsCheck.national, { intro: 'I', statuses: [{ labels: ['Compliant'], tone: '', text: 'T' }], otherStatus: 'O', noMatch: '' });
 });
 
 test('only the files the editor writes are formatted', () => {

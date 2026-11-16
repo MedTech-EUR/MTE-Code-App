@@ -16,11 +16,16 @@ export const HubPage = ({ onSelectSection }) => (
     />
 
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-6">
-      {SECTIONS.filter(s => s.available).map((section) => (
-        <button
+      {SECTIONS.filter(s => s.available).map((section) => {
+        // A card with `href` opens another site in a new tab; the others open a section of the app.
+        const Card = section.href ? 'a' : 'button';
+        const cardProps = section.href
+          ? { href: section.href, target: '_blank', rel: 'noopener noreferrer' }
+          : { type: 'button', onClick: () => onSelectSection(section.id) };
+        return (
+        <Card
           key={section.id}
-          type="button"
-          onClick={() => onSelectSection(section.id)}
+          {...cardProps}
           style={{ '--accent': section.color, '--accent-text': section.textColor || section.color }}
           className="group flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-7 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 active:scale-[0.99]"
         >
@@ -48,13 +53,15 @@ export const HubPage = ({ onSelectSection }) => (
           <span className="flex items-center text-xs font-bold uppercase tracking-wider text-[var(--accent-text)]">
             Open
             <AppIcon
-              name="ChevronRight"
+              name={section.href ? 'ExternalLink' : 'ChevronRight'}
               size={14}
               className="ml-1 transition-transform group-hover:translate-x-1"
             />
+            {section.href && <span className="sr-only"> (opens another site in a new tab)</span>}
           </span>
-        </button>
-      ))}
+        </Card>
+        );
+      })}
     </div>
   </div>
 );

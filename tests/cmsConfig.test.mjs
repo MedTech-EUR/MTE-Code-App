@@ -9,7 +9,6 @@ import YAML from 'yaml';
 import { CODE_CHAPTER_IDS } from '../src/data/codeOrder.js';
 import { CHAPTER_FILES, EDITOR_FIELD_ORDER } from '../public/admin/lib/cms-format.js';
 import { OUTCOME_LABELS } from '../public/admin/lib/trees.js';
-import { TREE_CVS_MODES, TREE_CVS_TONES } from '../src/utils/treeCvs.js';
 import { ALLOWED_OUTCOMES } from '../scripts/validate-data.mjs';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
@@ -73,10 +72,6 @@ test('decision tree fields are in the order the editor writes them', () => {
   assert.deepEqual(['type', ...names(type('question').fields)], EDITOR_FIELD_ORDER.question);
   assert.deepEqual(['type', ...names(type('result').fields)], EDITOR_FIELD_ORDER.result);
   assert.deepEqual(names(field(type('question').fields, 'options').fields), EDITOR_FIELD_ORDER.option);
-  const cvs = field(trees.fields, 'cvsCheck');
-  const mode = field(cvs.fields, 'required');
-  assert.deepEqual(names(mode.fields), EDITOR_FIELD_ORDER.cvsMode);
-  assert.deepEqual(names(field(mode.fields, 'statuses').fields), EDITOR_FIELD_ORDER.cvsStatus);
 });
 
 test('the choices offered match what the app accepts', () => {
@@ -85,9 +80,6 @@ test('the choices offered match what the app accepts', () => {
   const result = field(trees.fields, 'nodes').types.find((t) => t.name === 'result');
   assert.deepEqual(new Set(optionValues(field(result.fields, 'outcome'))), ALLOWED_OUTCOMES);
   assert.deepEqual(new Set(Object.keys(OUTCOME_LABELS)), ALLOWED_OUTCOMES);
-  assert.deepEqual(optionValues(field(result.fields, 'cvsCheck')), [...TREE_CVS_MODES]);
-  const statuses = field(field(field(trees.fields, 'cvsCheck').fields, 'required').fields, 'statuses');
-  assert.deepEqual(optionValues(field(statuses.fields, 'tone')), [...TREE_CVS_TONES]);
   // The categories the Decision Trees page lists (src/components/TreeLandingPage.jsx).
   const landing = read('src/components/TreeLandingPage.jsx');
   const block = landing.slice(landing.indexOf('const CATEGORY_CONFIG = {'), landing.indexOf('};', landing.indexOf('const CATEGORY_CONFIG = {')));

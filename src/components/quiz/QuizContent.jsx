@@ -79,7 +79,7 @@ export const QuizContent = ({ onExit }) => {
   };
 
   return (
-    <div className="flex-1 h-full overflow-y-auto bg-gray-50/50">
+    <div className="flex-1 h-full overflow-y-auto bg-slate-50/60 custom-scrollbar">
       {phase === 'config' && (
         <QuizConfig onStart={handleStartQuiz} />
       )}

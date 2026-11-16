@@ -37,7 +37,7 @@ export const InstallPrompt = ({ show, onClose }) => {
         </ol>
         <button
           onClick={onClose}
-          className="w-full py-2 bg-pink-600 text-white rounded-lg font-bold hover:bg-pink-700 transition-colors"
+          className="w-full py-2 bg-[#7654A1] text-white rounded-lg font-bold hover:bg-[#634488] transition-colors"
         >
           Got it
         </button>

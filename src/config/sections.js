@@ -6,6 +6,10 @@ export const CVS_CHECK_TREE_ID = 'dt-annex1-cvs-scope';
 /**
  * Home Hub metadata registry.
  * Navigable sections also require App and route-controller wiring.
+ *
+ * Accents stay within the brand palette: teal for the reading sections, amber for the decision
+ * trees, purple for the tools. `color` fills icons and borders; `textColor` is given where that
+ * fill is below the 4.5:1 AA contrast minimum for text on white.
  */
 export const SECTIONS = [
   {
@@ -24,7 +28,7 @@ export const SECTIONS = [
     subtitle: 'Disclosure guidance and transparency resources',
     description: 'Read the Disclosure Guidelines and access MedTech Europe transparency resources.',
     icon: 'Eye',
-    color: '#000000',
+    color: '#00727D', // a deeper shade of the brand teal, so it reads apart from The Code
     available: true,
   },
   {
@@ -33,7 +37,8 @@ export const SECTIONS = [
     subtitle: 'Interactive compliance decision guides',
     description: 'Step through interactive decision trees to assess compliance scenarios based on the Code.',
     icon: 'GitBranch',
-    color: '#e67e22',
+    color: '#D97706', // amber: decision trees
+    textColor: '#B45309', // the amber fill is too light for small text
     available: true,
   },
   {
@@ -44,7 +49,8 @@ export const SECTIONS = [
     subtitle: 'Annex I and the Event’s CVS status',
     description: 'Check in a few questions whether support for a Third Party Organised Educational Event needs a CVS decision under Annex I, and look up the Event’s current status in CVS.',
     icon: 'CVSBadge',
-    color: '#7654A1',
+    color: '#D97706', // a decision tree, so it shares their amber
+    textColor: '#B45309',
     available: true,
   },
   {
@@ -53,7 +59,7 @@ export const SECTIONS = [
     subtitle: 'Test your understanding of the Code',
     description: 'Assess your compliance knowledge with interactive multiple-choice questions.',
     icon: 'BookOpen',
-    color: '#ec4899', // A nice pink/rose color that stands out
+    color: '#7654A1', // brand purple
     available: true,
   },
   {
@@ -62,7 +68,7 @@ export const SECTIONS = [
     subtitle: 'Check TPPT Meeting Agendas',
     description: 'Support tool to help companies determine if an event qualifies as a Third Party Procedural Training meeting.',
     icon: 'Calculator',
-    color: '#634488', // Standard Brand Purple
+    color: '#634488', // the deeper brand purple
     available: true,
   },
   // Future sections:

@@ -31,7 +31,7 @@ export const TreeContent = ({ activeId, setActiveId, scrollRef, onOpenReference,
   // Landing page
   if (!activeId || activeId === 'home' || activeId === 'trees-home') {
     return (
-      <main ref={ref} className="flex-1 overflow-y-auto bg-white custom-scrollbar h-full">
+      <main ref={ref} className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
         <TreeLandingPage onSelectTree={handleSelectTree} onOpenTool={onOpenTool} />
       </main>
     );
@@ -40,7 +40,7 @@ export const TreeContent = ({ activeId, setActiveId, scrollRef, onOpenReference,
   // Visualization mode
   if (showVisualization) {
     return (
-      <main ref={ref} className="flex-1 overflow-y-auto bg-white custom-scrollbar h-full">
+      <main ref={ref} className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
         <TreeVisualization
           treeId={activeId}
           onClose={() => setShowVisualization(false)}
@@ -51,17 +51,10 @@ export const TreeContent = ({ activeId, setActiveId, scrollRef, onOpenReference,
 
   // Interactive tree
   return (
-    <main ref={ref} className="flex-1 overflow-y-auto bg-white custom-scrollbar h-full">
-      <div className="max-w-3xl xl:max-w-[69rem] 3xl:max-w-[80rem] mx-auto px-4 pt-4 pb-2">
-        <button
-          onClick={handleBackToLanding}
-          className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors mb-2"
-        >
-          ← All Decision Trees
-        </button>
-      </div>
+    <main ref={ref} className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
       <DecisionTree
         treeId={activeId}
+        onBack={handleBackToLanding}
         onShowVisualization={() => setShowVisualization(true)}
         onOpenReference={onOpenReference}
       />

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AppIcon } from './AppIcons';
+import { PageBackLink, PageHeader } from './PageHeader';
 import { ContextPanel } from './ContextPanel';
 import { ResizeHandle } from './ResizeHandle';
 import CvsEventLookup from './CvsEventLookup';
@@ -305,27 +306,25 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
-        className={`flex-1 min-w-0 h-full overflow-y-auto bg-slate-50 custom-scrollbar print:h-auto print:overflow-visible print:bg-white ${LINK_STYLES}`}
+        className={`flex-1 min-w-0 h-full overflow-y-auto bg-slate-50/60 custom-scrollbar print:h-auto print:overflow-visible print:bg-white ${LINK_STYLES}`}
       >
-        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8 print:p-0">
-          <div className="no-print mb-6 flex items-center justify-between gap-3">
-            <button type="button" onClick={onBack} className="flex items-center gap-1 text-sm text-slate-500 hover:text-[#7654A1]">
-              <AppIcon name="ChevronLeft" size={16} /> All Decision Trees
-            </button>
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8 sm:py-10 print:p-0">
+          <div className="no-print mb-5 flex items-center justify-between gap-3">
+            <PageBackLink onClick={onBack}>All Decision Trees</PageBackLink>
             {Boolean(answers.activity) && (
               <button type="button" onClick={reset} className="text-sm font-semibold text-[#7654A1]">Start again</button>
             )}
           </div>
 
-          <div className="mb-7">
-            <p className="text-xs font-bold uppercase tracking-widest text-[#7654A1]">Event support · MedTech Europe Code, {data.codeVersion}</p>
-            <h1 ref={headingRef} tabIndex={-1} className="mt-2 text-3xl font-bold tracking-tight text-slate-800 outline-none sm:text-4xl">
-              Can we support this event?
-            </h1>
-            <p className="mt-3 text-slate-600">
-              Check whether a company may support an Event under the MedTech Europe Code.
-            </p>
-          </div>
+          <PageHeader
+            icon="ShieldCheck"
+            accent="purple"
+            eyebrow={`Event support · MedTech Europe Code, ${data.codeVersion}`}
+            title="Can we support this event?"
+            description="Check whether a company may support an Event under the MedTech Europe Code."
+            headingProps={{ ref: headingRef, tabIndex: -1 }}
+            className="mb-7"
+          />
 
           <nav aria-label="Steps" className="no-print mb-7 flex flex-wrap gap-2">
             {stages.map((id, index) => (

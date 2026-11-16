@@ -16,13 +16,13 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
   // Full class names only: Tailwind cannot generate classes built at runtime.
   if (percentage >= 90) {
     message = 'Excellent!';
-    color = 'text-green-600';
+    color = 'text-green-700';
     badgeColor = 'bg-green-100';
     icon = 'Award';
   } else if (percentage >= 70) {
     message = 'Great Job!';
-    color = 'text-blue-600';
-    badgeColor = 'bg-blue-100';
+    color = 'text-[#007A86]';
+    badgeColor = 'bg-[#0099A7]/10';
     icon = 'ThumbsUp';
   } else if (percentage >= 50) {
     message = 'Good Effort!';
@@ -31,7 +31,7 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
     icon = 'Star';
   } else {
     message = 'Keep Learning!';
-    color = 'text-red-600';
+    color = 'text-red-700';
     badgeColor = 'bg-red-100';
     icon = 'BookOpen';
   }
@@ -68,27 +68,27 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 sm:p-8 animate-fade-in pb-24 min-h-full flex flex-col">
+    <div className="max-w-2xl mx-auto px-4 sm:px-8 py-8 sm:py-10 animate-fade-in pb-24 min-h-full flex flex-col">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex-1 overflow-y-auto custom-scrollbar">
         
         {/* Score Header */}
-        <div className="p-8 sm:p-12 text-center border-b border-gray-100 bg-gray-50/50">
+        <div className="p-8 sm:p-12 text-center border-b border-gray-100">
           <div className="mb-6 flex justify-center">
             <div className={`w-20 h-20 rounded-full flex items-center justify-center ${badgeColor} ${color}`}>
               <AppIcon name={icon} size={40} />
             </div>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 whitespace-nowrap">
+          <h2 className="text-3xl sm:text-[2rem] font-bold tracking-tight text-gray-900 mb-2 whitespace-nowrap">
             {message}
           </h2>
-          <p className="text-xl text-gray-500 mb-8">
+          <p className="text-lg text-gray-600 mb-8">
             You scored <span className={`font-bold ${color}`}>{score}</span> out of {total}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="no-print flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={handleShare}
-              className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold rounded-xl flex items-center justify-center transition-colors shadow-sm"
+              className="px-6 py-3 bg-white border border-gray-300 hover:border-[#7654A1] hover:text-[#7654A1] text-gray-800 font-bold rounded-xl flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2"
             >
               {copied ? (
                 <><AppIcon name="Check" size={18} className="mr-2 text-green-600" /> Copied!</>
@@ -98,7 +98,7 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
             </button>
             <button
               onClick={onRestart}
-              className="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl flex items-center justify-center transition-colors shadow-sm"
+              className="px-6 py-3 bg-[#7654A1] hover:bg-[#634488] text-white font-bold rounded-xl flex items-center justify-center transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2"
             >
               <AppIcon name="RotateCcw" size={18} className="mr-2" /> Try Again
             </button>
@@ -155,7 +155,7 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
       <div className="mt-6 text-center">
         <button 
           onClick={onExit}
-          className="text-gray-500 hover:text-gray-900 font-medium transition-colors"
+          className="no-print px-1 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider text-[#007A86] hover:text-[#7654A1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1]/50"
         >
           Return to Hub Menu
         </button>

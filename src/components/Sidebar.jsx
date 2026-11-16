@@ -652,7 +652,7 @@ export const Sidebar = ({
                 }}
                 className={`w-[calc(100%-0.5rem)] group text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center gap-3 ml-2 ${
                   browsingTrees
-                    ? 'bg-amber-600 text-white shadow-md'
+                    ? 'bg-amber-700 text-white shadow-md'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >

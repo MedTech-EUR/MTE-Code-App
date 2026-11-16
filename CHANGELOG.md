@@ -9,6 +9,14 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### Shared page heading and page accents — 2026-11-16
+- `PageHeader.jsx`: one heading for every page outside the reader (optional back link, the section's icon tile beside the `h1`, optional eyebrow, one line of description, optional actions, a compact size), with the page accents in `PAGE_ACCENTS`: teal for the reading sections, amber for the decision trees, purple for the tools. It is a `<div>`, as the print styles hide every `<header>`. Used by `HubPage.jsx`, `LandingPage.jsx`, `TreeLandingPage.jsx`, `DecisionTree.jsx`, `quiz/*`, `TransparencyLandingPage.jsx`, `HistoricalDeclarationsContent.jsx`, `TPPTContent.tsx` and `EventSupportContent.jsx`.
+- `config/sections.js`: hub accents moved into the brand palette (Quiz `#ec4899` → `#7654A1`, Transparency `#000000` → `#00727D`, Decision Trees `#e67e22` and the CVS check `#7654A1` → amber `#D97706`, with `textColor` `#B45309` for small text). Tree categories lose their own colours; blue help and hint boxes become a teal tint.
+- Home Hub: the repeated logo lockup is print-only; cards take the accent on the icon tile, hover border and "Open" instead of a top bar; three columns from 1280px. Dead `.hub-card` CSS removed from `index.css`.
+- Quiz: chapter checkboxes are visually hidden native inputs with a custom box and a focus ring on the card; results actions are `.no-print`.
+- `Header.jsx`: outside the reader the logo shrinks so "Send a Suggestion" stays in view at 390px, and shows on phones. `Sidebar.jsx`: the active decision-tree item uses amber-700 so its white text meets AA. `InstallPrompt.jsx`: "Got it" purple instead of pink.
+- No change to the reader, routing, search or data.
+
 ### Interactive map of Annex III — 2026-11-16
 - `GeographicAreaMap.jsx`: an SVG map of the MedTech Europe Geographic Area in the published figure's frame (Mercator, 874 × 886). Selecting an area (on the map or in a `<select>` grouped by Annex III's two lists) animates a second SVG's `viewBox` so the area lifts off the dimmed map and fills the frame, and opens a card (`aria-live`) with the Annex III list it belongs to, its National Associations and links to their Codes on ethicalmedtech.eu. "Countries covered by Mecomed" is one area. Escape, "Whole map", the card's close button or a click beside the area go back; `prefers-reduced-motion` skips the animation. Loaded as its own chunk (about 280 kB, 85 kB gzipped), only on Annex III.
 - Reader embeds: a `<figure data-reader-embed="name">` in a section's text names an interactive version (`config/readerEmbeds.js`, `hooks/useReaderEmbed.js`). `FullTextSection.jsx` renders it above the text and hides the figure on screen only (`READER_EMBED_SHOWN`), so the figure still prints and shows if the chunk cannot load. Rendering it outside `.reader-content` keeps the reader's `!important` type rules off it.

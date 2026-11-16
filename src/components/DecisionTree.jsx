@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { AppIcon } from './AppIcons';
+import { PageHeader } from './PageHeader';
 import { TreeCvsCheck } from './TreeCvsCheck';
 import { TreeResultCard } from './TreeResultCard';
 import { TREE_DATA } from '../data/treeData';
 
-export const DecisionTree = ({ treeId, onShowVisualization, onOpenReference }) => {
+export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenReference }) => {
   const tree = TREE_DATA.find(t => t.id === treeId);
   const [currentNodeId, setCurrentNodeId] = useState('start');
   const [pathHistory, setPathHistory] = useState([]);
@@ -60,24 +61,26 @@ export const DecisionTree = ({ treeId, onShowVisualization, onOpenReference }) =
   return (
     // From 1280px the answers sit in a column beside the question, so the question stays in
     // the same place as you answer.
-    <div className="animate-fade-in py-10 px-4 max-w-3xl xl:max-w-[69rem] 3xl:max-w-[80rem] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] 3xl:grid-cols-[minmax(0,1fr)_22rem] xl:gap-12 xl:items-start">
+    <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-3xl xl:max-w-[72rem] 3xl:max-w-[80rem] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] 3xl:grid-cols-[minmax(0,1fr)_22rem] xl:gap-12 xl:items-start">
       <div className="min-w-0">
-        {/* Tree header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
-            <h1 className="text-2xl font-bold text-gray-900">{tree.title}</h1>
-            <div className="flex gap-2">
-              <button
-                onClick={onShowVisualization}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg hover:bg-amber-100 transition-colors"
-              >
-                <AppIcon name="GitBranch" size={14} />
-                View Full Tree
-              </button>
-            </div>
-          </div>
-          <p className="text-sm text-gray-500">{tree.description}</p>
-        </div>
+        <PageHeader
+          icon="GitBranch"
+          accent="amber"
+          size="md"
+          title={tree.title}
+          description={tree.description}
+          back={onBack ? { label: 'All Decision Trees', onClick: onBack } : undefined}
+          actions={(
+            <button
+              type="button"
+              onClick={onShowVisualization}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg hover:bg-amber-100 transition-colors"
+            >
+              <AppIcon name="GitBranch" size={14} />
+              View Full Tree
+            </button>
+          )}
+        />
 
         {/* Breadcrumb trail (narrower screens; wide screens list the answers beside the question) */}
         {pathHistory.length > 0 && (
@@ -95,9 +98,9 @@ export const DecisionTree = ({ treeId, onShowVisualization, onOpenReference }) =
         {/* Question node */}
         {currentNode.type === 'question' && (
           <div className="animate-fade-in">
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 mb-6">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8 mb-6">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">
+                <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">
                   Question {pathHistory.length + 1}
                 </span>
               </div>
@@ -106,9 +109,9 @@ export const DecisionTree = ({ treeId, onShowVisualization, onOpenReference }) =
               </p>
 
               {currentNode.helpText && (
-                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 flex items-start gap-3">
-                  <AppIcon name="Info" size={16} className="text-blue-500 shrink-0 mt-0.5" />
-                  <p className="text-xs text-blue-700 leading-relaxed">{currentNode.helpText}</p>
+                <div className="bg-[#0099A7]/5 border border-[#0099A7]/20 rounded-xl p-4 mb-6 flex items-start gap-3">
+                  <AppIcon name="Info" size={16} className="text-[#007A86] shrink-0 mt-0.5" />
+                  <p className="text-xs text-slate-700 leading-relaxed">{currentNode.helpText}</p>
                 </div>
               )}
 
@@ -117,10 +120,10 @@ export const DecisionTree = ({ treeId, onShowVisualization, onOpenReference }) =
                   <button
                     key={i}
                     onClick={() => handleOption(option.next, option.label)}
-                    className="w-full text-left px-5 py-4 rounded-xl border border-gray-200 bg-gray-50 hover:bg-amber-50 hover:border-amber-300 transition-all text-sm font-medium text-gray-800 flex items-center justify-between group active:scale-[0.98]"
+                    className="w-full text-left px-5 py-4 rounded-xl border border-gray-200 bg-white hover:bg-amber-50 hover:border-amber-400 transition-all text-sm font-medium text-gray-800 flex items-center justify-between gap-3 group active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                   >
                     <span>{option.label}</span>
-                    <AppIcon name="ChevronRight" size={16} className="text-gray-300 group-hover:text-amber-500 transition-colors" />
+                    <AppIcon name="ChevronRight" size={16} className="shrink-0 text-gray-400 group-hover:text-amber-600 transition-colors" />
                   </button>
                 ))}
               </div>
@@ -192,7 +195,7 @@ export const DecisionTree = ({ treeId, onShowVisualization, onOpenReference }) =
       </div>
 
       {/* Your answers (wide screens) */}
-      <aside aria-label="Your answers" className="hidden xl:block sticky top-6 pt-1 no-print">
+      <aside aria-label="Your answers" className="hidden xl:block sticky top-6 pt-12 no-print">
         <h2 className="text-[10px] font-bold text-amber-700 uppercase tracking-widest mb-3">Your answers</h2>
         {pathHistory.length === 0 ? (
           <p className="text-xs leading-relaxed text-gray-500">

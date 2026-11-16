@@ -658,7 +658,7 @@ export const Sidebar = ({
                 </span>
                 <span className="line-clamp-2 flex-1">Browse Decision Trees</span>
               </button>
-              {/* The CVS and e4ethics check is on ethicalmedtech.eu; it opens in a new tab. */}
+              {/* The CVS checker is on ethicalmedtech.eu; it opens in a new tab. */}
               <a
                 href={CVS_CHECK_URL}
                 target="_blank"
@@ -669,7 +669,7 @@ export const Sidebar = ({
                 <span className="shrink-0 text-gray-400">
                   <AppIcon name="CVSBadge" size={18} />
                 </span>
-                <span className="line-clamp-2 flex-1">CVS and e4ethics check</span>
+                <span className="line-clamp-2 flex-1">CVS checker</span>
                 <AppIcon name="ExternalLink" size={14} className="shrink-0 text-gray-400" />
                 <span className="sr-only">(opens ethicalmedtech.eu in a new tab)</span>
               </a>

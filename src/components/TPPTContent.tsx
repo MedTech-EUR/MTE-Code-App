@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { AppIcon } from './AppIcons';
+import { PageHeader } from './PageHeader';
 import {
   SESSION_TYPES,
   SESSION_TYPE_KEYWORDS,
@@ -515,28 +516,18 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
   };
 
   return (
-    <div className="flex-1 h-full overflow-y-auto bg-gray-50/50 custom-scrollbar pb-24">
+    <div className="flex-1 h-full overflow-y-auto bg-slate-50/60 custom-scrollbar pb-24">
       {/* Top Banner and Navigation. From 1440px the page is two columns: the agenda and sessions on
           the left, and the result on the right, where it stays in view while sessions are edited. */}
-      <div className="max-w-4xl min-[1440px]:max-w-[92rem] 3xl:max-w-[110rem] mx-auto px-4 sm:px-6 pt-6 pb-2 min-[1440px]:grid min-[1440px]:grid-cols-2 min-[1440px]:gap-x-8 min-[1440px]:items-start">
-        <button
-          onClick={onGoHome}
-          className="flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-[#634488] transition-colors mb-6 cursor-pointer min-[1440px]:col-span-2 min-[1440px]:justify-self-start"
-        >
-          ← Back to Home Hub
-        </button>
-
-        <div className="flex items-center gap-4 mb-8 min-[1440px]:col-span-2">
-          <div className="p-3.5 rounded-2xl bg-[#634488]/10 text-[#634488] border border-[#634488]/20 shadow-sm shrink-0">
-            <AppIcon name="Calculator" size={32} />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">TPPT Checker</h1>
-            <p className="text-sm text-gray-500 mt-1 font-light leading-relaxed">
-              Support tool to help companies determine if an event qualifies as a Third Party Procedural Training meeting
-            </p>
-          </div>
-        </div>
+      <div className="max-w-4xl min-[1440px]:max-w-[92rem] 3xl:max-w-[110rem] mx-auto px-4 sm:px-8 pt-8 sm:pt-10 pb-2 min-[1440px]:grid min-[1440px]:grid-cols-2 min-[1440px]:gap-x-8 min-[1440px]:items-start">
+        <PageHeader
+          icon="Calculator"
+          accent="purple"
+          title="TPPT Checker"
+          description="Support tool to help companies determine if an event qualifies as a Third Party Procedural Training meeting"
+          back={{ label: 'Back to Home Hub', onClick: onGoHome }}
+          className="mb-8 min-[1440px]:col-span-2"
+        />
 
         {/* Disclaimer */}
         <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200/60 p-5 rounded-2xl flex items-start gap-4 text-amber-800 shadow-sm mb-8 min-[1440px]:col-start-1">

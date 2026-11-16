@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AppIcon } from './AppIcons';
+import { PageHeader } from './PageHeader';
 
 const PAGE_SIZE = 50;
 
@@ -234,28 +235,14 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
 
   return (
     <main className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
-      <div className="animate-fade-in py-10 px-4 max-w-6xl 3xl:max-w-[96rem] mx-auto pb-24">
-        <button
-          type="button"
-          onClick={onNavigateTransparencyHome}
-          className="no-print inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#007A86] hover:text-[#7654A1] mb-6"
-        >
-          <AppIcon name="ChevronLeft" size={14} />
-          Transparency
-        </button>
-
-        <header className="mb-8">
-          <div className="inline-flex items-center gap-2 text-[#007A86] text-xs font-bold uppercase tracking-[0.18em] mb-4">
-            <AppIcon name="Search" size={18} />
-            Transparency
-          </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-4">
-            Historical Declarations
-          </h1>
-          <p className="max-w-2xl text-lg text-slate-600 leading-relaxed">
-            Search past transparency declarations by company, beneficiary, year, or country.
-          </p>
-        </header>
+      <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-[96rem] mx-auto pb-24">
+        <PageHeader
+          icon="Search"
+          accent="teal"
+          title="Historical Declarations"
+          description="Search past transparency declarations by company, beneficiary, year, or country."
+          back={{ label: 'Transparency', onClick: onNavigateTransparencyHome }}
+        />
 
         {/* Filters */}
         <section className="no-print bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">

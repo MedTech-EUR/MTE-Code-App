@@ -1,7 +1,7 @@
 import { CVS_CHECK_URL } from '../../moved-pages.js';
 
 /**
- * The CVS and e4ethics check, on ethicalmedtech.eu: the Home Hub card and the sidebar entry open
+ * The CVS checker, on ethicalmedtech.eu (the page there also covers e4ethics): the Home Hub card and the sidebar entry open
  * it in a new tab. It was a decision tree of this app until November 2026.
  */
 export { CVS_CHECK_URL };
@@ -48,9 +48,9 @@ export const SECTIONS = [
     // A card with `href` opens another site in a new tab instead of a section of this app.
     // The event support checker is listed with the decision trees.
     id: 'cvs-check',
-    title: 'CVS and e4ethics check',
+    title: 'CVS checker',
     subtitle: 'On ethicalmedtech.eu',
-    description: 'Check in a few questions whether support for a Third Party Organised Educational Event needs a CVS decision under Annex I, or whether the Event is in scope of e4ethics, and look up its current status.',
+    description: 'Check in a few questions whether support for a Third Party Organised Educational Event needs a CVS decision under Annex I, and look up the Event’s current status in CVS.',
     icon: 'CVSBadge',
     color: '#D97706', // kept amber: it was a decision tree here, and readers know it by this colour
     textColor: '#B45309',

@@ -18,10 +18,12 @@ const { parseAppLocation } = createRouteUtils(
   loadTransparencyData(projectRoot),
 );
 
-test('the CVS and e4ethics check card opens the check on ethicalmedtech.eu', () => {
+test('the CVS checker card opens the check on ethicalmedtech.eu, and its text is about CVS only', () => {
   const card = SECTIONS.find((section) => section.id === 'cvs-check');
   assert.ok(card?.available, 'the card is on the Home Hub');
   assert.equal(card.href, CVS_CHECK_URL);
+  assert.equal(card.title, 'CVS checker');
+  assert.ok(!/e4ethics/i.test(`${card.title} ${card.subtitle} ${card.description}`), 'this app is about the MedTech Europe Code, so the card does not mention e4ethics');
   assert.equal(new URL(CVS_CHECK_URL).origin, 'https://www.ethicalmedtech.eu');
   // Only this card leaves the app.
   assert.deepEqual(SECTIONS.filter((section) => section.href).map((section) => section.id), ['cvs-check']);

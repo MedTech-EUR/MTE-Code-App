@@ -1,7 +1,6 @@
 import React from 'react';
 import { Logo } from './Logo';
 import { AppIcon } from './AppIcons';
-import { PageHeader } from './PageHeader';
 import { SECTIONS } from '../config/sections';
 
 export const HubPage = ({ onSelectSection }) => (
@@ -9,11 +8,15 @@ export const HubPage = ({ onSelectSection }) => (
     {/* The header above already shows the logo; on paper, where the header is absent, it is printed here. */}
     <Logo size={null} className="hidden print:flex mb-6 h-16 aspect-[26/5]" />
 
-    <PageHeader
-      title="The MedTech Europe Code of Ethical Business Practice"
-      description="The Digital Home of the MedTech Europe Code of Ethical Business Practice"
-      className="mb-8 sm:mb-10"
-    />
+    {/* A <div>, not a <header>: the print styles hide every <header>. */}
+    <div className="mb-8 sm:mb-10 text-center">
+      <h1 className="text-3xl font-bold leading-9 tracking-tight text-gray-900 outline-none sm:text-[2rem] sm:leading-10">
+        The MedTech Europe Code of Ethical Business Practice
+      </h1>
+      <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-gray-600 sm:mt-2">
+        The Digital Home of the MedTech Europe Code of Ethical Business Practice
+      </p>
+    </div>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-6">
       {SECTIONS.filter(s => s.available).map((section) => {
@@ -27,7 +30,7 @@ export const HubPage = ({ onSelectSection }) => (
           key={section.id}
           {...cardProps}
           style={{ '--accent': section.color, '--accent-text': section.textColor || section.color }}
-          className="group flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-7 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 active:scale-[0.99]"
+          className="group flex h-full flex-col items-center rounded-2xl border border-gray-200 bg-white p-6 sm:p-7 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 active:scale-[0.99]"
         >
           <span
             aria-hidden="true"

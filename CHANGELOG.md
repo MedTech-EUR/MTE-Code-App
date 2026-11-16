@@ -9,6 +9,13 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### Home Hub redesign — 2026-11-16
+- `HubPage.jsx`: the six equal, centred cards are replaced by a left-aligned heading, a tile for each `featured` section (the first filled with its `textColor`, the others white) and one list with a row for each other section. The page fits one screen at 1366×768.
+- `config/sections.js`: `featured: true` on The Code and Transparency. `subtitle` is no longer shown on the Home Hub; a row that opens another site shows that site's name, read from `href`.
+- Each tile and row is an `<li>` whose heading holds the `<button>` or `<a>`; the control's `::after` covers the whole item, so headings are no longer inside buttons. The focus ring is drawn on the item (`has-[:focus-visible]`).
+- `public/home-backdrop.svg`: the MedTech Europe figure, traced from `logo.png`, turned 14° and drawn at 6% opacity. `App.jsx` sets it as the background image of the Home Hub's `<main>`, cropped by its top-right corner; it stays in place while the page scrolls and is not printed (`print:bg-none`).
+- Layout follows the page's own width with container queries (`@container`, `@xl`, `@2xl`) instead of the window's, since the sidebar beside it can be dragged. Print variants keep the filled tile readable without background colours.
+
 ### Conference Vetting System check moved to ethicalmedtech.eu — 2026-11-16
 - The decision tree `dt-annex1-cvs-scope` is removed from `treeData.json`. Its questions, results and status texts moved, unchanged, to the ethicalmedtech repository, where the check gained an e4ethics branch (https://www.ethicalmedtech.eu/cvs-e4ethics-check/). The Home Hub card (`sections.js`: a card with `href` renders as a link in `HubPage.jsx`) and the sidebar entry open it in a new tab.
 - `moved-pages.js` (project root) maps the tree's old addresses (`/trees/dt-annex1-cvs-scope`, with or without `www.` or a trailing slash, and the legacy `/#dt-annex1-cvs-scope`) to the new page: `server.js` answers them with one 301, and `src/main.jsx` redirects before rendering when the app is opened from its service-worker copy.

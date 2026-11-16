@@ -48,7 +48,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 | `ReaderActions.jsx` | The Bookmark, Cite/Link and Copy Text buttons of a reader section or Q&A, with the Cite/Link menu |
 | `Header.jsx` | Top bar with section-aware toolbar (Summary, Full Text, Q&A, Reader, Print) |
 | `Highlight.jsx` | Wraps matched words in highlight marks during search |
-| `HubPage.jsx` | Home landing page with section cards |
+| `HubPage.jsx` | Home landing page: a tile for each `featured` section (the documents to read) and a list of the others |
 | `InstallPrompt.jsx` | PWA install banner |
 | `LandingPage.jsx` | Code section landing page with chapter grid |
 | `Logo.jsx` | MedTech Europe SVG logo |

@@ -277,52 +277,6 @@ collections:
                   - { label: Research, value: research }
                   - { label: General, value: default }
               - { name: description, label: Description, widget: text }
-              - name: cvsCheck
-                label: Live CVS check texts
-                widget: object
-                required: false
-                collapsed: true
-                hint: >-
-                  Only for trees whose results look up the Event's status in CVS. Each status text appears under a
-                  result whose “Live CVS check” is set to that mode; “{status}” is replaced by the status found.
-                fields:
-                  - { name: title, label: Heading, widget: string }
-                  - name: required
-                    label: When a positive CVS decision is required
-                    widget: object
-                    required: false
-                    collapsed: true
-                    fields: &cvs_mode_fields
-                      - { name: intro, label: Introduction, widget: text }
-                      - name: statuses
-                        label: Status texts
-                        label_singular: status text
-                        widget: list
-                        collapsed: true
-                        summary: '{{fields.labels}}'
-                        fields:
-                          - name: labels
-                            label: CVS statuses
-                            label_singular: status
-                            widget: list
-                            field: { name: label, label: CVS status, widget: string }
-                            hint: The statuses exactly as CVS shows them.
-                          - name: tone
-                            label: Colour
-                            widget: select
-                            options: &cvs_tones
-                              - { label: Green (positive), value: positive }
-                              - { label: Yellow (caution), value: caution }
-                              - { label: Red (negative), value: negative }
-                          - { name: text, label: Text, widget: text }
-                      - { name: otherStatus, label: For any other status, widget: text }
-                      - { name: noMatch, label: When the Event is not found in CVS, widget: text, required: false }
-                  - name: national
-                    label: For a national Event found in CVS
-                    widget: object
-                    required: false
-                    collapsed: true
-                    fields: *cvs_mode_fields
               - name: nodes
                 label: Questions and results
                 label_singular: step
@@ -379,14 +333,6 @@ collections:
                         widget: string
                         required: false
                         hint: E.g. “Chapter 1, Section 2” or “Annex I”. It opens the provision it names.
-                      - name: cvsCheck
-                        label: Live CVS check
-                        widget: select
-                        required: false
-                        hint: Shows the Event's live CVS status under this result, with the tree's texts for that mode.
-                        options:
-                          - { label: A positive CVS decision is required, value: required }
-                          - { label: National Event found in CVS, value: national }
 
   # ─── Website pages ──────────────────────────────────────────────────────────
   - name: website

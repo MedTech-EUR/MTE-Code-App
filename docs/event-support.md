@@ -34,8 +34,8 @@ must not clash with question IDs, and the Annex I and Annex VI tables must be co
 For a content review, `docs/event-support-wording-and-logic.docx` holds all the checker’s wording,
 each text labelled with where it lives, and a plain-language account of when each question and
 message appears (rules version 2026-09-27.2, exported on 27 September 2026, after the review of the
-previous copy). Its Part 9 holds the Conference Vetting System check’s wording (`treeData.json`),
-which shares the checker’s national/international question and CVS search. It is a snapshot: carry
+previous copy). Its Part 9 holds the wording of the Conference Vetting System check as it was then; that check
+has since moved to ethicalmedtech.eu (see “Live CVS check” below). It is a snapshot: carry
 the reviewers’ approved changes into the JSON, or into the components for the screen texts it
 marks, as with the Code’s Word copy, and regenerate it when the wording changes.
 
@@ -178,15 +178,14 @@ Reading the site’s HTML is a stopgap until a CVS API is available: a change to
 the lookup (the parser fails visibly rather than guessing). Production traffic limits should still
 be agreed with IQVIA before relying on it in production.
 
-The decision tree “Conference Vetting System check” uses the same lookup under the results that
-depend on CVS (`src/components/TreeCvsCheck.jsx`). The answer card starts with the result’s
-outcome and changes with the status of the Event selected: Compliant (green) or Non-Compliant
-(red) with a final decision, Conditional (yellow) while one is pending or when no Event matches,
-and Conditional when a national Event turns out to be in CVS (`getTreeCvsOutcome` in
-`src/utils/treeCvs.js`). What the status means is added under the card’s text. The texts, keyed
-by the CVS 2.0 status labels, are the tree’s `cvsCheck` in `src/data/treeData.json`;
-`tests/annex1Tree.test.mjs` checks that the tree gives Annex I’s answer for every cell and has a
-text for every CVS 2.0 status, and `tests/treeCvs.test.mjs` the card’s colour for each status.
+The Conference Vetting System check, a decision tree of this app until November 2026, is now the
+“CVS and e4ethics check” on ethicalmedtech.eu (https://www.ethicalmedtech.eu/cvs-e4ethics-check/): its questions, results and
+status texts live in that site’s repository, with e4ethics added. It uses the same lookup from
+there: `/api/cvs/*` answers this app and the sites in `ALLOWED_ORIGINS` (`cvs-api.js`:
+ethicalmedtech.eu and its Cloudflare Pages previews), with the CORS headers their browsers need,
+and refuses any other site. A change to the lookup’s answers (`cvs-adapter.js`) therefore
+affects that page too: its script reads `results`, `mayBeLimited`, and each Event’s `emtId`,
+`name`, `from`, `to`, `city`, `country`, `status.raw` and `retrievedAt`.
 
 Run the Worker locally with `npm run dev:worker` and open `http://127.0.0.1:8787/event-support`
 (Vite alone, `npm run dev`, proxies `/api/cvs` to that Worker). For a narrow live check:

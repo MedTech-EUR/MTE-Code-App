@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { AppIcon } from './AppIcons';
 import { PageHeader } from './PageHeader';
-import { TreeCvsCheck } from './TreeCvsCheck';
 import { TreeResultCard } from './TreeResultCard';
 import { TREE_DATA } from '../data/treeData';
 
@@ -156,22 +155,12 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
         {/* Result node */}
         {currentNode.type === 'result' && (
           <div className="animate-fade-in">
-            {/* Where the answer depends on the Event's live CVS status, the card changes with it */}
-            {currentNode.cvsCheck ? (
-              <TreeCvsCheck
-                key={currentNode.id}
-                node={currentNode}
-                cvsCheck={tree.cvsCheck}
-                onOpenReference={onOpenReference}
-              />
-            ) : (
-              <TreeResultCard
-                outcome={currentNode.outcome}
-                text={currentNode.text}
-                reference={currentNode.reference}
-                onOpenReference={onOpenReference}
-              />
-            )}
+            <TreeResultCard
+              outcome={currentNode.outcome}
+              text={currentNode.text}
+              reference={currentNode.reference}
+              onOpenReference={onOpenReference}
+            />
 
             {/* Controls */}
             <div className="flex gap-3">

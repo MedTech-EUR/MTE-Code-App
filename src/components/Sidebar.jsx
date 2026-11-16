@@ -3,7 +3,7 @@ import { AppIcon } from './AppIcons';
 import { SearchResults } from './SearchResults';
 import { ResizeHandle } from './ResizeHandle';
 import { CODE_CHAPTERS, WEBSITE_CHAPTERS, updateSearchStatus } from '../data/codeData';
-import { CVS_CHECK_TREE_ID } from '../config/sections';
+import { CVS_CHECK_URL } from '../config/sections';
 import {
   TRANSPARENCY_DOCUMENTS,
 } from '../data/transparency/transparencyData';
@@ -122,7 +122,6 @@ export const Sidebar = ({
   onNavigateChapter,
   onNavigateCodeSection,
   onNavigateTrees,
-  onNavigateTree,
   onNavigateTransparency,
   onNavigateTransparencyDocument,
   onNavigateTransparencyUnit,
@@ -149,10 +148,8 @@ export const Sidebar = ({
   const searchScope = isTransparencySection ? 'transparency' : 'code';
   const isWebsitePage = activeSection === 'code'
     && WEBSITE_CHAPTERS.some((chapter) => chapter.id === activeId);
-  // The Conference Vetting System check is a decision tree with its own entry; the event support
-  // checker is listed with the trees.
-  const cvsCheckOpen = activeSection === 'trees' && activeId === CVS_CHECK_TREE_ID;
-  const browsingTrees = (activeSection === 'trees' && !cvsCheckOpen) || activeSection === 'event-support';
+  // The event support checker is listed with the trees.
+  const browsingTrees = activeSection === 'trees' || activeSection === 'event-support';
 
   // Track which groups are expanded
   const [expandedGroups, setExpandedGroups] = useState(() => (
@@ -661,24 +658,21 @@ export const Sidebar = ({
                 </span>
                 <span className="line-clamp-2 flex-1">Browse Decision Trees</span>
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onNavigateTree(CVS_CHECK_TREE_ID);
-                  setSidebarOpen(false);
-                }}
-                aria-current={cvsCheckOpen ? 'page' : undefined}
-                className={`w-[calc(100%-0.5rem)] group text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center gap-3 ml-2 ${
-                  cvsCheckOpen
-                    ? 'bg-[#7654A1] text-white shadow-md'
-                    : 'text-gray-600 hover:bg-gray-50'
-                }`}
+              {/* The CVS and e4ethics check is on ethicalmedtech.eu; it opens in a new tab. */}
+              <a
+                href={CVS_CHECK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setSidebarOpen(false)}
+                className="w-[calc(100%-0.5rem)] group text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center gap-3 ml-2 text-gray-600 hover:bg-gray-50"
               >
-                <span className={`shrink-0 ${cvsCheckOpen ? 'text-white' : 'text-gray-400'}`}>
+                <span className="shrink-0 text-gray-400">
                   <AppIcon name="CVSBadge" size={18} />
                 </span>
-                <span className="line-clamp-2 flex-1">Conference Vetting System check</span>
-              </button>
+                <span className="line-clamp-2 flex-1">CVS and e4ethics check</span>
+                <AppIcon name="ExternalLink" size={14} className="shrink-0 text-gray-400" />
+                <span className="sr-only">(opens ethicalmedtech.eu in a new tab)</span>
+              </a>
             </CollapsibleGroup>
 
             {/* Website section group: pages about the app itself, available from every section */}

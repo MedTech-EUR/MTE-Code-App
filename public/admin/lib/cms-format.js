@@ -74,25 +74,9 @@ export function canonicalChapter(chapter) {
   );
 }
 
-const CVS_MODE_KEYS = ['intro', 'statuses', 'otherStatus', 'noMatch'];
-const CVS_STATUS_KEYS = ['labels', 'tone', 'text'];
-
-function canonicalCvsCheck(cvsCheck) {
-  const result = ordered(cvsCheck, ['title', 'required', 'national'], { required: null, national: null });
-  for (const mode of ['required', 'national']) {
-    if (!result[mode]) continue;
-    result[mode] = ordered(
-      { ...result[mode], statuses: (result[mode].statuses ?? []).map((status) => ordered({ ...status, labels: asList(status.labels) }, CVS_STATUS_KEYS, { tone: '' })) },
-      CVS_MODE_KEYS,
-      { noMatch: '' },
-    );
-  }
-  return result;
-}
-
-const TREE_KEYS = ['id', 'title', 'relatedChapter', 'relatedSection', 'category', 'description', 'cvsCheck', 'nodes'];
+const TREE_KEYS = ['id', 'title', 'relatedChapter', 'relatedSection', 'category', 'description', 'nodes'];
 const QUESTION_KEYS = ['type', 'id', 'text', 'helpText', 'options'];
-const RESULT_KEYS = ['type', 'id', 'text', 'outcome', 'reference', 'cvsCheck'];
+const RESULT_KEYS = ['type', 'id', 'text', 'outcome', 'reference'];
 const OPTION_KEYS = ['label', 'next'];
 
 /** The editor's field order for each kind of object (config.yml lists the fields in this order). */
@@ -104,15 +88,13 @@ export const EDITOR_FIELD_ORDER = Object.freeze({
   question: QUESTION_KEYS,
   result: RESULT_KEYS,
   option: OPTION_KEYS,
-  cvsMode: CVS_MODE_KEYS,
-  cvsStatus: CVS_STATUS_KEYS,
 });
 
 function canonicalNode(node) {
   if (node.type === 'question') {
     return ordered({ ...node, options: (node.options ?? []).map((option) => ordered(option, OPTION_KEYS)) }, QUESTION_KEYS, { helpText: '' });
   }
-  if (node.type === 'result') return ordered(node, RESULT_KEYS, { reference: '', cvsCheck: '' });
+  if (node.type === 'result') return ordered(node, RESULT_KEYS, { reference: '' });
   return node;
 }
 
@@ -121,8 +103,8 @@ export function canonicalTrees(data) {
   return ordered(
     {
       ...data,
-      trees: (data.trees ?? []).map((tree) => {
-        const result = ordered(
+      trees: (data.trees ?? []).map((tree) =>
+        ordered(
           {
             ...tree,
             relatedChapter: asList(tree.relatedChapter),
@@ -130,11 +112,8 @@ export function canonicalTrees(data) {
             nodes: (tree.nodes ?? []).map(canonicalNode),
           },
           TREE_KEYS,
-          { cvsCheck: null },
-        );
-        if (result.cvsCheck) result.cvsCheck = canonicalCvsCheck(result.cvsCheck);
-        return result;
-      }),
+        ),
+      ),
     },
     ['trees'],
   );

@@ -24,7 +24,6 @@ import { TransparencyContent } from './components/TransparencyContent';
 import { SectionLoadError } from './components/SectionLoadError';
 import { getTransparencyUnit } from './data/transparency/transparencyData';
 import { getReaderMeasure } from './config/readerSettings';
-import { CVS_CHECK_TREE_ID } from './config/sections';
 import {
   describeReferenceTarget,
   findReferenceTarget,
@@ -320,7 +319,6 @@ const App = () => {
     setSidebarOpen(false);
     if (sectionId === 'code') navigateCodeHome();
     if (sectionId === 'trees') navigateTreesHome();
-    if (sectionId === 'cvs-check') navigateTree(CVS_CHECK_TREE_ID);
     if (sectionId === 'quiz') navigateQuiz();
     if (sectionId === 'tppt') navigateTppt();
     if (sectionId === 'event-support') navigateEventSupport();
@@ -407,7 +405,6 @@ const App = () => {
           onNavigateChapter={navigateChapter}
           onNavigateCodeSection={navigateCodeSection}
           onNavigateTrees={navigateTreesHome}
-          onNavigateTree={navigateTree}
           onNavigateTransparency={navigateTransparencyHome}
           onNavigateTransparencyDocument={navigateTransparencyDocument}
           onNavigateTransparencyUnit={navigateTransparencyUnit}

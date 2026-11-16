@@ -23,12 +23,10 @@ from 1280px and in `DefinitionPopup` below that, and the Code opens in a new tab
 checker's answers are kept. See [`docs/event-support.md`](../../docs/event-support.md).
 
 `DecisionTree.jsx` shows a tree from `src/data/treeData.json`; `TreeResultCard.jsx` is its
-answer card. A result that sets `cvsCheck` is shown by `TreeCvsCheck.jsx` instead: the card
-starts with the result's outcome and changes with the live CVS status of the Event found with
-the checker's search below it (`CvsEventLookup.jsx`), turning Compliant (green) or
-Non-Compliant (red) with a final decision; what the status means, in the tree's own `cvsCheck`
-texts, is added under the card's text. The Conference Vetting System check
-(`dt-annex1-cvs-scope`), which the Home Hub and the sidebar open, uses it.
+answer card. The Conference Vetting System check, once a tree here whose answer changed with the
+Event's live CVS status, is now the CVS and e4ethics check on ethicalmedtech.eu: `HubPage.jsx`
+and `Sidebar.jsx` link to it (`CVS_CHECK_URL`), and `CvsEventLookup.jsx` serves the event
+support checker only.
 
 `TreeLandingPage.jsx` also lists the tools in `TREE_PAGE_TOOLS` (`src/config/sections.js`),
 such as the event support checker, as cards among the trees; each opens its own section.

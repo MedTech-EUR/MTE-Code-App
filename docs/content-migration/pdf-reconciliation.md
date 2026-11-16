@@ -578,6 +578,21 @@ Audit and rendering notes:
   use.
 - No chapter ID, section ID, route or link target changed.
 
+Later change (16 November 2026): interactive map
+
+- On screen, the reader now shows an interactive redrawing of the map above the
+  section's text (`docs/geographic-area-map.md`). The exact bitmap described
+  above is unchanged and stays in the normative body: it is what prints, and
+  what shows where the interactive map cannot load.
+- The `<figure>` moved from between the EEA list and the footnote to the start
+  of the section, before `The MedTech Europe Geographic Area currently
+  includes`, and gained the attribute `data-reader-embed="geographic-area-map"`.
+  No wording changed: `npm run verify:code-docx` reports the same findings
+  before and after.
+- The redrawing was fitted over the bitmap and shades the same countries. Its
+  known differences from the bitmap are listed in `docs/geographic-area-map.md`,
+  "Differences from the published figure".
+
 ## Annex IV: Verification Of The Use Of Funds
 
 - File: `src/data/code/annex4.json`

@@ -1,0 +1,649 @@
+{
+  "note": "Copy of https://www.ethicalmedtech.eu/data/national-associations.json, refreshed with \"npm run sync:national-associations\". Do not edit: the list is edited on ethicalmedtech.eu.",
+  "countries": [
+    {
+      "country": "Austria",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#austria",
+      "associations": [
+        {
+          "name": "Austromed",
+          "website": "http://www.austromed.org/",
+          "codes": [
+            {
+              "label": "Code German version",
+              "url": "https://www.ethicalmedtech.eu/documents/austria-austromed-code-german-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Belgium",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#belgium",
+      "associations": [
+        {
+          "name": "BeMedTech",
+          "website": null,
+          "codes": [
+            {
+              "label": "Code French version",
+              "url": "https://www.ethicalmedtech.eu/documents/belgium-bemedtech-code-french-version.pdf"
+            },
+            {
+              "label": "Code Flemish version",
+              "url": "https://www.ethicalmedtech.eu/documents/belgium-bemedtech-code-flemish-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Cyprus",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#cyprus",
+      "associations": [
+        {
+          "name": "SAIEEK",
+          "website": "http://www.saieek.com/index.php/en/",
+          "codes": [
+            {
+              "label": "Code Greek version",
+              "url": "https://www.ethicalmedtech.eu/documents/cyprus-saieek-code-greek-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Czech Republic",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#czech-republic",
+      "associations": [
+        {
+          "name": "Czechmed",
+          "website": "http://www.czechmed.cz/",
+          "codes": [
+            {
+              "label": "Code Czech version",
+              "url": "https://www.ethicalmedtech.eu/documents/czech-republic-czechmed-code-czech-version.pdf"
+            },
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/czech-republic-czechmed-code-english-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "CzEDMA",
+          "website": "http://www.czedma.cz/",
+          "codes": [
+            {
+              "label": "Code Czech version",
+              "url": "https://www.ethicalmedtech.eu/documents/czech-republic-czedma-code-czech-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Denmark",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#denmark",
+      "associations": [
+        {
+          "name": "Medicoindustrien",
+          "website": "http://medicoindustrien.dk/",
+          "codes": [
+            {
+              "label": "Code English version with Danish Preamble",
+              "url": "https://www.ethicalmedtech.eu/documents/denmark-medicoindustrien-code-english-version-with-danish-preamble.pdf"
+            },
+            {
+              "label": "English Preamble",
+              "url": "https://www.ethicalmedtech.eu/documents/denmark-medicoindustrien-english-preamble.docx"
+            }
+          ]
+        },
+        {
+          "name": "Dialab",
+          "website": "https://www.dialab.at/en/home/",
+          "codes": [
+            {
+              "label": "Code Danish version",
+              "url": "https://www.ethicalmedtech.eu/documents/denmark-dialab-code-danish-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Finland",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#finland",
+      "associations": [
+        {
+          "name": "Sailab",
+          "website": "http://www.sailab.fi/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "http://www.sailab.fi/suositukset/code-of-business-practice.html"
+            },
+            {
+              "label": "Code Finnish version",
+              "url": "http://www.sailab.fi/suositukset/eettiset-ohjeet.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#france",
+      "associations": [
+        {
+          "name": "Snitem",
+          "website": "http://www.snitem.fr/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/france-snitem-code-english-version.pdf"
+            },
+            {
+              "label": "Code French version",
+              "url": "https://www.ethicalmedtech.eu/documents/france-snitem-code-french-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "Sidiv",
+          "website": "http://www.sidiv.fr/",
+          "codes": [
+            {
+              "label": "Code French version",
+              "url": "https://www.ethicalmedtech.eu/documents/france-sidiv-code-french-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Germany",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#germany",
+      "associations": [
+        {
+          "name": "BVMed",
+          "website": "https://www.bvmed.de/",
+          "codes": [
+            {
+              "label": "Code German version",
+              "url": "https://www.ethicalmedtech.eu/documents/germany-bvmed-code-german-version.pdf"
+            },
+            {
+              "label": "Compliance Standard",
+              "url": "https://www.ethicalmedtech.eu/documents/germany-bvmed-compliance-standard.pdf"
+            },
+            {
+              "label": "Compliance Standard German version",
+              "url": "https://www.ethicalmedtech.eu/documents/germany-bvmed-compliance-standard-german-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "Spectaris",
+          "website": "http://www.spectaris.de/",
+          "codes": [
+            {
+              "label": "Code German version",
+              "url": "https://www.ethicalmedtech.eu/documents/germany-spectaris-code-german-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "VDGH",
+          "website": "https://www.vdgh.de/",
+          "codes": [
+            {
+              "label": "Code German version",
+              "url": "https://www.ethicalmedtech.eu/documents/germany-vdgh-code-german-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Greece",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#greece",
+      "associations": [
+        {
+          "name": "SEIV",
+          "website": "http://www.seiv.gr/",
+          "codes": [
+            {
+              "label": "Code Greek version",
+              "url": "https://www.ethicalmedtech.eu/documents/greece-seiv-code-greek-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Hungary",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#hungary",
+      "associations": [
+        {
+          "name": "AMDM",
+          "website": "http://www.amdm.hu/hu",
+          "codes": [
+            {
+              "label": "Code Hungarian version",
+              "url": "https://www.ethicalmedtech.eu/documents/hungary-amdm-code-hungarian-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "HIVDA",
+          "website": null,
+          "codes": [
+            {
+              "label": "Code Hungarian version",
+              "url": "https://www.ethicalmedtech.eu/documents/hungary-hivda-code-hungarian-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "ETOSZ",
+          "website": "http://www.etosz.hu/index_en.html",
+          "codes": [
+            {
+              "label": "Code Hungarian version",
+              "url": "https://www.ethicalmedtech.eu/documents/hungary-etosz-code-hungarian-version.pdf"
+            },
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/hungary-etosz-code-english-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Ireland",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#ireland",
+      "associations": [
+        {
+          "name": "Irish Medtech Association",
+          "website": "http://www.irishmedtechassoc.ie/Sectors/IMDA/IMDA.nsf/vPages/Home",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/ireland-irish-medtech-association-code-english-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "Health Tech Ireland",
+          "website": "https://www.healthtechireland.ie/",
+          "codes": [
+            {
+              "label": "Code of Ethical Business Practice",
+              "url": "https://www.healthtechireland.ie/code-of-ethical-business-practice/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Italy",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#italy",
+      "associations": [
+        {
+          "name": "Confindustria Dispositivi Medici",
+          "website": "https://www.assobiomedica.it/it/index.html",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/italy-confindustria-dispositivi-medici-code-english-version.pdf"
+            },
+            {
+              "label": "Code Italian version",
+              "url": "https://www.ethicalmedtech.eu/documents/italy-confindustria-dispositivi-medici-code-italian-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Middle East & North Africa",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#middle-east-north-africa",
+      "associations": [
+        {
+          "name": "Mecomed",
+          "website": "http://www.google.com/",
+          "codes": [
+            {
+              "label": "Code English version January 2021",
+              "url": "https://www.ethicalmedtech.eu/documents/middle-east-and-north-africa-mecomed-code-english-version-january-2021.pdf"
+            },
+            {
+              "label": "Guidance on Virtual and Hybrid Events January 2021",
+              "url": "https://www.ethicalmedtech.eu/documents/middle-east-and-north-africa-mecomed-guidance-on-virtual-and-hybrid-events-january-2021.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Netherlands",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#netherlands",
+      "associations": [
+        {
+          "name": "FMed / Nefemed / Diagned",
+          "website": "http://www.nefemed.nl/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/netherlands-fmed-nefemed-diagned-code-english-version.pdf"
+            },
+            {
+              "label": "Code Dutch version",
+              "url": "https://www.ethicalmedtech.eu/documents/netherlands-fmed-nefemed-diagned-code-dutch-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Norway",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#norway",
+      "associations": [
+        {
+          "name": "Melanor",
+          "website": "https://www.melanor.no/nb/",
+          "codes": [
+            {
+              "label": "Code Norwegian version",
+              "url": "https://www.ethicalmedtech.eu/documents/norway-melanor-code-norwegian-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Poland",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#poland",
+      "associations": [
+        {
+          "name": "Polmed",
+          "website": "http://polmed.org.pl/",
+          "codes": [
+            {
+              "label": "Code Polish version",
+              "url": "https://www.ethicalmedtech.eu/documents/poland-polmed-code-polish-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "MedTech Polska",
+          "website": "https://ipddl.pl/",
+          "codes": [
+            {
+              "label": "Code Polish version",
+              "url": "https://www.ethicalmedtech.eu/documents/poland-medtech-polska-code-polish-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Portugal",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#portugal",
+      "associations": [
+        {
+          "name": "Apormed",
+          "website": "http://www.apormed.pt/",
+          "codes": [
+            {
+              "label": "Code Portuguese version",
+              "url": "https://www.ethicalmedtech.eu/documents/portugal-apormed-code-portuguese-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "Apifarma",
+          "website": "http://www.apifarma.pt/Paginas/Home.aspx",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/portugal-apifarma-code-english-version.pdf"
+            },
+            {
+              "label": "Code Portuguese version",
+              "url": "https://www.ethicalmedtech.eu/documents/portugal-apifarma-code-portuguese-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Romania",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#romania",
+      "associations": [
+        {
+          "name": "AFPM",
+          "website": "http://www.afpm.ro/",
+          "codes": [
+            {
+              "label": "Code Romanian version",
+              "url": "https://www.ethicalmedtech.eu/documents/romania-afpm-code-romanian-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Russia",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#russia",
+      "associations": [
+        {
+          "name": "IMEDA",
+          "website": "http://www.imeda.ru/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/russia-imeda-code-english-version.pdf"
+            },
+            {
+              "label": "Code Russian version",
+              "url": "https://www.ethicalmedtech.eu/documents/russia-imeda-code-russian-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Slovakia",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#slovakia",
+      "associations": [
+        {
+          "name": "SK-Med",
+          "website": "http://skmed.sk/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/slovakia-sk-med-code-english-version.pdf"
+            },
+            {
+              "label": "Code Slovakian version",
+              "url": "https://www.ethicalmedtech.eu/documents/slovakia-sk-med-code-slovakian-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "SEDMA",
+          "website": null,
+          "codes": [
+            {
+              "label": "Code Slovakian version",
+              "url": "https://www.ethicalmedtech.eu/documents/slovakia-sedma-code-slovakian-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Slovenia",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#slovenia",
+      "associations": [
+        {
+          "name": "SLO-MED",
+          "website": "http://www.slo-med.si/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/slovenia-slo-med-code-english-version.pdf"
+            },
+            {
+              "label": "Code Slovenian version",
+              "url": "https://www.ethicalmedtech.eu/documents/slovenia-slo-med-code-slovenian-version.pdf"
+            },
+            {
+              "label": "MedTech Europe Code Slovenian version",
+              "url": "https://www.ethicalmedtech.eu/documents/slovenia-slo-med-medtech-europe-code-slovenian-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "SIEDMA",
+          "website": "http://www.siedma.si/",
+          "codes": [
+            {
+              "label": "Code Slovenian version",
+              "url": "https://www.ethicalmedtech.eu/documents/slovenia-siedma-code-slovenian-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Spain",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#spain",
+      "associations": [
+        {
+          "name": "Fenin",
+          "website": "http://www.fenin.es/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/spain-fenin-code-english-version.pdf"
+            },
+            {
+              "label": "Code Spanish version",
+              "url": "https://www.ethicalmedtech.eu/documents/spain-fenin-code-spanish-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Sweden",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#sweden",
+      "associations": [
+        {
+          "name": "Swedish MedTech",
+          "website": "http://www.swedishmedtech.se/",
+          "codes": [
+            {
+              "label": "Code Swedish version",
+              "url": "https://www.ethicalmedtech.eu/documents/sweden-swedish-medtech-code-swedish-version.pdf"
+            },
+            {
+              "label": "Specification Collaboration rules Swedish version",
+              "url": "https://www.ethicalmedtech.eu/documents/sweden-swedish-medtech-specification-collaboration-rules-swedish-version.pdf"
+            },
+            {
+              "label": "Business Code Swedish version",
+              "url": "https://www.ethicalmedtech.eu/documents/sweden-swedish-medtech-business-code-swedish-version.pdf"
+            },
+            {
+              "label": "Old Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/sweden-swedish-medtech-old-code-english-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "Swedish Lab Tech",
+          "website": "http://swedishlabtech.se/",
+          "codes": [
+            {
+              "label": "Code Swedish version",
+              "url": "https://www.ethicalmedtech.eu/documents/sweden-swedish-lab-tech-code-swedish-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Switzerland",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#switzerland",
+      "associations": [
+        {
+          "name": "SWISS MEDTECH",
+          "website": "https://swiss-medtech.ch/",
+          "codes": [
+            {
+              "label": "Code French version",
+              "url": "https://www.ethicalmedtech.eu/documents/switzerland-swiss-medtech-code-french-version.pdf"
+            },
+            {
+              "label": "Code German version",
+              "url": "https://www.ethicalmedtech.eu/documents/switzerland-swiss-medtech-code-german-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "Turkey",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#turkey",
+      "associations": [
+        {
+          "name": "Arted",
+          "website": "http://www.arted.org.tr/",
+          "codes": [
+            {
+              "label": "Code Turkish version",
+              "url": "https://www.ethicalmedtech.eu/documents/turkey-arted-code-turkish-version.pdf"
+            },
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/turkey-arted-code-english-version.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "country": "United Kingdom",
+      "url": "https://www.ethicalmedtech.eu/resources/medtech-codes/#united-kingdom",
+      "associations": [
+        {
+          "name": "ABHI",
+          "website": "http://www.abhi.org.uk/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/united-kingdom-abhi-code-english-version.pdf"
+            }
+          ]
+        },
+        {
+          "name": "BIVDA",
+          "website": "https://www.bivda.co.uk/",
+          "codes": [
+            {
+              "label": "Code English version",
+              "url": "https://www.ethicalmedtech.eu/documents/united-kingdom-bivda-code-english-version.pdf"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

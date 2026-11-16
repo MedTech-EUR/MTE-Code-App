@@ -1,11 +1,22 @@
 import React from 'react';
-import { CODE_CHAPTERS } from '../data/codeData';
-import { AppIcon } from './AppIcons';
+import { CODE_CHAPTERS, CODE_PARTS } from '../data/codeData';
+import { summarizeHtml } from '../utils/pageMeta';
 import { Logo } from './Logo';
+import { MenuGroup, MenuList, MenuRow } from './MenuList';
 import { PageHeader } from './PageHeader';
 
+// Three chapters share one row; a longer part runs down two columns; a single chapter gets the
+// full width, with its summary beside its title.
+const columnsFor = (count) => (count === 1 ? 1 : count === 3 ? 3 : 2);
+
+// A row shows how its chapter's summary opens: its first paragraph or list item, as plain text.
+const summaryLead = (summary) => {
+    const lead = String(summary || '').match(/^[\s\S]*?<\/(?:p|li)>/i)?.[0] || summary;
+    return summarizeHtml(lead, 200);
+};
+
 export const LandingPage = ({ onSelectChapter }) => (
-    <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 2xl:max-w-7xl 3xl:max-w-[110rem] mx-auto pb-24">
+    <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-7xl mx-auto pb-24">
         {/* The header above already shows the logo; on paper, where the header is absent, it is printed here. */}
         <Logo size={null} className="hidden print:flex mb-6 h-16 aspect-[26/5]" />
         <PageHeader
@@ -13,23 +24,32 @@ export const LandingPage = ({ onSelectChapter }) => (
             accent="teal"
             title="The MedTech Europe Code of Ethical Business Practice"
             description="Code text: September 2024."
+            className="mb-0"
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-6">
-            {CODE_CHAPTERS.map((item) => (
-                <button 
-                    key={item.id}
-                    onClick={() => onSelectChapter(item.id)}
-                    className="chapter-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm text-left transition-all flex flex-col h-full active:scale-95 group"
-                >
-                    <div className="p-3 bg-[#0099A7]/10 rounded-xl w-fit mb-4 text-[#007A86] group-hover:bg-[#0099A7] group-hover:text-white transition-colors">
-                        <AppIcon name={item.icon} size={28} />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                    <div className="mt-6 flex items-center text-xs font-bold text-[#7654A1] uppercase tracking-wider">
-                        View Chapter <AppIcon name="ChevronRight" size={14} className="ml-1 transition-transform group-hover:translate-x-1" />
-                    </div>
-                </button>
-            ))}
-        </div>
+        {CODE_PARTS.map((part) => {
+            const chapters = CODE_CHAPTERS.filter((chapter) => chapter.part === part.id);
+            if (chapters.length === 0) return null;
+            const columns = columnsFor(chapters.length);
+
+            return (
+                <MenuGroup key={part.id} title={part.label}>
+                    <MenuList columns={columns}>
+                        {chapters.map((chapter) => (
+                            <MenuRow
+                                key={chapter.id}
+                                headingLevel="h3"
+                                icon={chapter.icon}
+                                title={chapter.title}
+                                description={summaryLead(chapter.summary)}
+                                split={columns === 1}
+                                titleWidth="19rem"
+                                clamp
+                                onClick={() => onSelectChapter(chapter.id)}
+                            />
+                        ))}
+                    </MenuList>
+                </MenuGroup>
+            );
+        })}
     </div>
 );

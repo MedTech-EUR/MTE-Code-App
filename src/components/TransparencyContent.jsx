@@ -27,20 +27,32 @@ const DISCLOSURE_RESOURCE_LINKS = Object.freeze({
   }),
 });
 
-// Landing-page card for the Historical Declarations registry. It renders
-// through the same document-card grid as real publications but isn't a
-// real TRANSPARENCY_DOCUMENTS entry — it has no units/sections and is
-// handled as a special case below rather than by the generic document
-// reader.
+// Landing-page tile for the Historical Declarations registry. It is listed with the real
+// publications but isn't a TRANSPARENCY_DOCUMENTS entry: it has no units/sections and is
+// handled as a special case below rather than by the generic document reader. `search` puts
+// its search box on the tile.
 const HISTORICAL_DECLARATIONS_CARD = Object.freeze({
   id: HISTORICAL_DECLARATIONS_DOCUMENT_ID,
   title: 'Historical Declarations',
   description: 'Search past transparency declarations by company, beneficiary, year, or country.',
   icon: 'Search',
+  search: Object.freeze({
+    label: 'Search past declarations by company or beneficiary name',
+    placeholder: 'Company or beneficiary',
+  }),
 });
 
+// The Disclosure Guidelines' tile also offers the published PDF and the Annex I template.
 const TRANSPARENCY_LANDING_CARDS = Object.freeze([
-  ...TRANSPARENCY_DOCUMENTS,
+  ...TRANSPARENCY_DOCUMENTS.map((document) => (
+    document.id === DISCLOSURE_GUIDELINES_DOCUMENT.id
+      ? {
+        ...document,
+        sourcePdfUrl: disclosureGuidelinesPdfUrl,
+        downloads: [{ label: 'Annex I template (CSV)', url: declarationTemplateUrl, filename: 'declaration-csv-template.csv' }],
+      }
+      : document
+  )),
   HISTORICAL_DECLARATIONS_CARD,
 ]);
 
@@ -51,6 +63,7 @@ export const TransparencyContent = ({
   onNavigateTransparencyHome,
   onNavigateDocument,
   onNavigateUnit,
+  onSearchHistoricalDeclarations,
   showFullText,
   showQA,
   searchHighlight,
@@ -67,6 +80,8 @@ export const TransparencyContent = ({
       <TransparencyLandingPage
         documents={TRANSPARENCY_LANDING_CARDS}
         onOpenDocument={onNavigateDocument}
+        onOpenUnit={onNavigateUnit}
+        onSearchDocument={(documentId, query) => onSearchHistoricalDeclarations?.(query)}
       />
     );
   }
@@ -88,6 +103,8 @@ export const TransparencyContent = ({
       <TransparencyLandingPage
         documents={TRANSPARENCY_LANDING_CARDS}
         onOpenDocument={onNavigateDocument}
+        onOpenUnit={onNavigateUnit}
+        onSearchDocument={(documentId, query) => onSearchHistoricalDeclarations?.(query)}
       />
     );
   }

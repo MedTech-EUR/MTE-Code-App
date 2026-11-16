@@ -1,20 +1,24 @@
 import React from 'react';
 import { AppIcon } from './AppIcons';
+import { MenuList, MenuRow } from './MenuList';
 import { PageHeader } from './PageHeader';
 import { TREE_DATA } from '../data/treeData';
 import { TREE_PAGE_TOOLS } from '../config/sections';
 import { filterDecisionTrees } from '../utils/treeSearchUtils';
 
-// Every tree card takes the Decision Trees amber; a category is told apart by its heading.
+// Each tree's row names its category; the rows are listed category by category, in this order.
+// tests/cmsConfig.test.mjs reads these keys to keep the editor's category choices in step.
 const CATEGORY_CONFIG = {
-  scope:      { label: 'Scope & Applicability', icon: 'Compass' },
-  events:     { label: 'Events',                icon: 'Globe' },
-  grants:     { label: 'Grants and Donations',  icon: 'Star' },
-  consulting: { label: 'Consulting Agreements', icon: 'FileText' },
-  items:      { label: 'Educational & Promotional Items', icon: 'Gift' },
-  research:   { label: 'Research',              icon: 'Search' },
-  default:    { label: 'General',               icon: 'GitBranch' },
+  scope:      { label: 'Scope & Applicability' },
+  events:     { label: 'Events' },
+  grants:     { label: 'Grants and Donations' },
+  consulting: { label: 'Consulting Agreements' },
+  items:      { label: 'Educational & Promotional Items' },
+  research:   { label: 'Research' },
+  default:    { label: 'General' },
 };
+const CATEGORY_ORDER = Object.keys(CATEGORY_CONFIG);
+const categoryOf = (tree) => (CATEGORY_CONFIG[tree.category] ? tree.category : 'default');
 
 // The trees, then the tools listed with them (which open their own sections).
 const TREE_PAGE_ITEMS = [...TREE_DATA, ...TREE_PAGE_TOOLS];
@@ -28,16 +32,13 @@ export const TreeLandingPage = ({ onSelectTree, onOpenTool }) => {
     [filterText],
   );
 
-  // Group filtered trees by category
-  const grouped = filteredTrees.reduce((acc, tree) => {
-    const cat = tree.category || 'default';
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(tree);
-    return acc;
-  }, {});
+  // Category by category; within one, in the order the trees are kept in.
+  const orderedTrees = [...filteredTrees].sort(
+    (a, b) => CATEGORY_ORDER.indexOf(categoryOf(a)) - CATEGORY_ORDER.indexOf(categoryOf(b)),
+  );
 
   return (
-    <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-5xl xl:max-w-6xl 3xl:max-w-[96rem] mx-auto pb-24">
+    <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-5xl xl:max-w-6xl mx-auto pb-24">
       <PageHeader
         icon="GitBranch"
         accent="amber"
@@ -71,54 +72,23 @@ export const TreeLandingPage = ({ onSelectTree, onOpenTool }) => {
         </div>
       </PageHeader>
 
-      {Object.keys(CATEGORY_CONFIG).map((category) => {
-        const trees = grouped[category];
-        if (!trees || trees.length === 0) return null;
-        
-        const config = CATEGORY_CONFIG[category];
-        return (
-          <section key={category} className="mb-9">
-            <div className="flex items-center gap-2 mb-3">
-              <AppIcon name={config.icon} size={15} className="text-amber-600" />
-              <h2 className="text-xs font-bold text-gray-600 uppercase tracking-wider">
-                {config.label}
-              </h2>
-              <span aria-hidden="true" className="ml-2 h-px flex-1 bg-gray-200" />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-4">
-              {trees.map((tree) => (
-                <button
-                  key={tree.id}
-                  type="button"
-                  onClick={() => (TOOL_ITEMS.has(tree) ? onOpenTool?.(tree.id) : onSelectTree(tree.id))}
-                  className="group flex items-start gap-4 rounded-xl border border-gray-200 bg-white p-5 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 active:scale-[0.99]"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/15 transition-colors duration-200 group-hover:bg-amber-600 group-hover:text-white"
-                  >
-                    <AppIcon name="GitBranch" size={20} />
-                  </span>
-
-                  <span className="flex-1 min-w-0">
-                    <span className="block font-bold text-gray-900 mb-1 text-sm">
-                      {tree.title}
-                    </span>
-                    <span className="text-xs text-gray-600 leading-relaxed line-clamp-2">
-                      {tree.description}
-                    </span>
-                    <span className="mt-3 flex items-center text-xs font-bold uppercase tracking-wider text-amber-700">
-                      Start
-                      <AppIcon name="ChevronRight" size={12} className="ml-1 transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </span>
-                </button>
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      {orderedTrees.length > 0 && (
+        <MenuList>
+          {orderedTrees.map((tree) => (
+            <MenuRow
+              key={tree.id}
+              accent="amber"
+              icon="GitBranch"
+              title={tree.title}
+              note={CATEGORY_CONFIG[categoryOf(tree)].label}
+              description={tree.description}
+              split
+              titleWidth="19rem"
+              onClick={() => (TOOL_ITEMS.has(tree) ? onOpenTool?.(tree.id) : onSelectTree(tree.id))}
+            />
+          ))}
+        </MenuList>
+      )}
 
       {filteredTrees.length === 0 && (
         <div className="text-center py-16 text-gray-500">

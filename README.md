@@ -50,9 +50,10 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 | `Highlight.jsx` | Wraps matched words in highlight marks during search |
 | `HubPage.jsx` | Home landing page: a tile for each `featured` section (the documents to read) and a list of the others |
 | `InstallPrompt.jsx` | PWA install banner |
-| `LandingPage.jsx` | Code section landing page with chapter grid |
+| `LandingPage.jsx` | Code section landing page: the chapters listed under the Code's parts |
 | `Logo.jsx` | MedTech Europe SVG logo |
 | `MainContent.jsx` | Main content area for the Code section |
+| `MenuList.jsx` | The menus' shared tiles and lists of rows (`MenuTile`, `MenuList`, `MenuRow`, `MenuGroup`) |
 | `quiz/QuizContent.jsx` | Main state controller for the Knowledge Quiz feature |
 | `quiz/QuizConfig.jsx` | Setup screen for selecting quiz chapters and question count |
 | `quiz/QuizResults.jsx` | Displays quiz score, review of incorrect answers, and share link |
@@ -67,10 +68,10 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
 | `CvsEventLookup.jsx` | Search for an Event in CVS and show its live status, through the Worker's `/api/cvs` endpoints |
 | `TPPTContent.tsx` | TPPT Checker UI: agenda ingestion (PDF/Word/text), session card editor, compliance threshold visualization, and PDF report export. Lazy-loaded via `React.lazy()`. Parser logic lives in `src/utils/tpptParser.js` |
 | `TransparencyContent.jsx` | Transparency landing/document controller and local Annex I resource wiring |
-| `TransparencyLandingPage.jsx` | Transparency publication cards and document-unit overview |
+| `TransparencyLandingPage.jsx` | Transparency page (publication and tool tiles, each publication's chapters and files) and the document-unit overview |
 | `CsvTemplatePreview.jsx` | Non-normative preview and local download control for the Annex I CSV template |
 | `TreeContent.jsx` | Router for the Decision Trees section (landing / interactive / visualization) |
-| `TreeLandingPage.jsx` | Grid of decision tree cards grouped by category |
+| `TreeLandingPage.jsx` | List of the decision trees, category by category, with a filter |
 | `TreeVisualization.jsx` | Full flowchart visualization of a decision tree |
 
 ### Utility Modules Reference
@@ -700,7 +701,7 @@ User opens app
      ├── Click "The Code" ──► Code Section
      │      │
      │      ├── Sidebar (collapsible chapter groups)
-     │      ├── LandingPage (chapter cards grid)
+     │      ├── LandingPage (chapters by part)
      │      ├── MainContent (Summary + Full Text + Q&A)
      │      │     └── FullTextSection (legal text + glossary links + tree callouts)
      │      │            └── "Related Decision Tree" callout  ──► Decision Tree
@@ -708,7 +709,7 @@ User opens app
      │
      ├── Click "Transparency" ──► Transparency Section
      │      │
-     │      ├── TransparencyLandingPage (standalone publication cards)
+     │      ├── TransparencyLandingPage (publication tiles and contents)
      │      └── Disclosure Guidelines
      │             ├── Document overview (Preamble, Chapters 1–3, Annexes I–III)
      │             ├── DocumentReader + FullTextSection
@@ -716,7 +717,7 @@ User opens app
      │
      └── Click "Decision Trees" ──► Trees Section
      │      │
-     │      ├── TreeLandingPage (tree cards by category)
+     │      ├── TreeLandingPage (tree list by category)
      │      ├── DecisionTree (interactive step-by-step)
      │      └── TreeVisualization (full flowchart)
      │

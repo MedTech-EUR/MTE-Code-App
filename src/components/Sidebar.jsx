@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { AppIcon } from './AppIcons';
 import { SearchResults } from './SearchResults';
 import { ResizeHandle } from './ResizeHandle';
-import { CODE_CHAPTERS, WEBSITE_CHAPTERS, updateSearchStatus } from '../data/codeData';
+import { CODE_CHAPTERS, CODE_PARTS as CODE_PART_LIST, WEBSITE_CHAPTERS, updateSearchStatus } from '../data/codeData';
 import { CVS_CHECK_URL } from '../config/sections';
 import {
   TRANSPARENCY_DOCUMENTS,
@@ -91,13 +91,8 @@ const getDefaultExpandedGroups = ({
   return groups;
 };
 
-// Code chapter parts config
-const CODE_PARTS = [
-  { id: 'intro', groupKey: 'code-intro', label: 'Introductory Chapters' },
-  { id: 'part1', groupKey: 'code-part1', label: 'Part 1: The Code' },
-  { id: 'part2', groupKey: 'code-part2', label: 'Part 2: Complaint Handling' },
-  { id: 'part3', groupKey: 'code-part3', label: 'Part 3: Annexes & Glossary' },
-];
+// The Code's parts, each with the key of its collapsible group.
+const CODE_PARTS = CODE_PART_LIST.map((part) => ({ ...part, groupKey: `code-${part.id}` }));
 
 const CODE_TYPE_CHIPS = [
   { key: 'provision', label: 'Provisions' },

@@ -309,8 +309,3 @@ body {
 .animate-slide-in-right {
   animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-
-.chapter-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--color-teal);
-}

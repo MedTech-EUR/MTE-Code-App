@@ -62,6 +62,14 @@ export const WEBSITE_PART_ID = 'website';
 export const CODE_CHAPTERS = FULL_CODE_DATA.filter((chapter) => chapter.part !== WEBSITE_PART_ID);
 export const WEBSITE_CHAPTERS = FULL_CODE_DATA.filter((chapter) => chapter.part === WEBSITE_PART_ID);
 
+// The parts the Code's chapters are listed under, in the sidebar and on the Code's own page.
+export const CODE_PARTS = Object.freeze([
+  { id: 'intro', label: 'Introductory Chapters' },
+  { id: 'part1', label: 'Part 1: The Code' },
+  { id: 'part2', label: 'Part 2: Complaint Handling' },
+  { id: 'part3', label: 'Part 3: Annexes & Glossary' },
+]);
+
 export const updateSearchStatus = (message) => {
   const statusEl = document.getElementById('search-status');
   if (statusEl) {

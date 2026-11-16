@@ -9,6 +9,14 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### The new menu style on the Code, Transparency and Decision Trees pages — 2026-11-16
+- `MenuList.jsx` (new): the tiles and rows of the Home Hub, extracted as `MenuTile`, `MenuTiles`, `MenuList`, `MenuRow` and `MenuGroup`, with the accents in `MENU_ACCENTS`. A list runs in one, two (down the first column, then the second) or three columns by its own width (`@container`); an odd two-column list gets an empty closing cell. `HubPage.jsx` now uses it.
+- `LandingPage.jsx`: the chapter cards become rows under the Code's four parts. `CODE_PARTS` moves from `Sidebar.jsx` to `data/codeData.js` so both use one list. A row shows the first paragraph or list item of the chapter's summary (`summarizeHtml`), and a chapter's number as a figure.
+- `TransparencyLandingPage.jsx`: a tile per publication and tool, then each publication's units as rows with their section and Q&A counts, its PDF and its files (`sourcePdfUrl`, `downloads`, set in `TransparencyContent.jsx`). A tile with `search` carries a search form; `useAppRouting` gains `navigateHistoricalDeclarations(query)`, which opens `/transparency/historical-declarations#search?q=…`. The document overview lists its units the same way.
+- `TreeLandingPage.jsx`: one list, category by category, each row naming its category; the category headings and the card grid are gone.
+- `index.css`: dead `.chapter-card` rule removed.
+- `scope.json`: the first mention of the MedTech Europe Geographic Area in section 1 is a reference link to Annex III, written into the text with the markup `linkCrossReferences()` produces (`class="cross-reference"`, `data-reference="code:annex3"`), so it opens in the side panel like the others. `validate-data.mjs` now fails on a written `data-reference` that names no target.
+
 ### Home Hub redesign — 2026-11-16
 - `HubPage.jsx`: the six equal, centred cards are replaced by a left-aligned heading, a tile for each `featured` section (the first filled with its `textColor`, the others white) and one list with a row for each other section. The page fits one screen at 1366×768.
 - `config/sections.js`: `featured: true` on The Code and Transparency. `subtitle` is no longer shown on the Home Hub; a row that opens another site shows that site's name, read from `href`.

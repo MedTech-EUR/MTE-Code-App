@@ -215,6 +215,11 @@ function validateCrossReferences({ chapters, transparencyDocuments, trees }, err
         errors.push(`${path}: "${reference.text}" does not match anything (${reference.note}).`);
       }
     }
+    // A reference link written into the text itself must name a target that exists.
+    for (const [, key] of html.matchAll(/data-reference="([^"]*)"/g)) {
+      if (index.targets.has(key)) linked += 1;
+      else errors.push(`${path}: the link to "${key}" does not match anything.`);
+    }
   };
   const checkUnit = (unit, context, unitPath) => {
     unit.sections.forEach((section, sectionIndex) => {

@@ -8,6 +8,7 @@ import {
   buildCodeHomePath,
   buildCodeSectionPath,
   buildEventSupportPath,
+  buildHistoricalDeclarationsPath,
   buildHomePath,
   buildQuizPath,
   buildTpptPath,
@@ -121,6 +122,11 @@ export const useAppRouting = ({
   const navigateTransparencyDocument = useCallback((documentId) => {
     navigateTo(buildTransparencyDocumentPath(documentId));
   }, [navigateTo]);
+  // Opens Historical Declarations with a search already made (or empty, without one).
+  const navigateHistoricalDeclarations = useCallback((query = '') => {
+    const search = query ? `#search?${new URLSearchParams({ q: query })}` : '';
+    navigateTo(buildHistoricalDeclarationsPath(search));
+  }, [navigateTo]);
   const navigateTransparencyUnit = useCallback((documentId, unitId) => {
     navigateTo(buildTransparencyUnitPath(documentId, unitId));
   }, [navigateTo]);
@@ -140,6 +146,7 @@ export const useAppRouting = ({
     navigateEventSupport,
     navigateTransparencyHome,
     navigateTransparencyDocument,
+    navigateHistoricalDeclarations,
     navigateTransparencyUnit,
     navigateTransparencySection,
   };

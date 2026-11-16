@@ -111,6 +111,7 @@ const App = () => {
     navigateEventSupport,
     navigateTransparencyHome,
     navigateTransparencyDocument,
+    navigateHistoricalDeclarations,
     navigateTransparencyUnit,
     navigateTransparencySection,
   } = useAppRouting({
@@ -467,6 +468,7 @@ const App = () => {
             onNavigateTransparencyHome={navigateTransparencyHome}
             onNavigateDocument={navigateTransparencyDocument}
             onNavigateUnit={navigateTransparencyUnit}
+            onSearchHistoricalDeclarations={navigateHistoricalDeclarations}
             showFullText
             showQA={showQA}
             searchHighlight={searchHighlight}

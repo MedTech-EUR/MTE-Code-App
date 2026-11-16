@@ -69,7 +69,7 @@ export const Header = ({
   return (
     <>
       <header className="h-20 flex-none border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 md:px-8 bg-white/95 backdrop-blur-sm z-30 shadow-sm relative">
-        <div className="flex items-center gap-1 sm:gap-3 z-10">
+        <div className="flex min-w-0 items-center gap-1 sm:gap-3 z-10">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
@@ -81,9 +81,10 @@ export const Header = ({
 
           <button
             onClick={onGoHome}
-            className={`hover:opacity-80 transition-opacity items-center gap-2 ${activeSection !== null ? 'hidden md:flex' : 'flex'}`}
+            className={`min-w-0 hover:opacity-80 transition-opacity items-center gap-2 ${readerMode ? 'hidden md:flex' : 'flex'}`}
           >
-            <Logo size={60} className="shrink-0" />
+            {/* On a phone the logo shrinks to the room left beside the buttons. */}
+            <Logo size={60} className={readerMode ? 'shrink-0' : 'min-w-0'} />
           </button>
         </div>
 
@@ -241,7 +242,7 @@ export const Header = ({
 
         {/* Other sections header button */}
         {!readerMode && (
-          <div className="flex items-center gap-2 z-10 no-print">
+          <div className="flex shrink-0 items-center gap-2 pl-2 z-10 no-print">
             <button
               type="button"
               onClick={() => setSuggestionModalOpen(true)}

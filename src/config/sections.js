@@ -13,6 +13,10 @@ export { CVS_CHECK_URL };
  * Accents stay within the brand palette: teal for the reading sections, amber for the decision
  * trees, purple for the tools. `color` fills icons and borders; `textColor` is given where that
  * fill is below the 4.5:1 AA contrast minimum for text on white.
+ *
+ * On the Home Hub the `featured` sections (the documents to read) are the large tiles at the top,
+ * the first of them filled with its `textColor`; the others are listed in rows below. `subtitle`
+ * is not shown there.
  */
 export const SECTIONS = [
   {
@@ -23,6 +27,7 @@ export const SECTIONS = [
     icon: 'FileText',
     color: '#0099A7',
     textColor: '#007A86', // brand teal is too light for small text
+    featured: true,
     available: true,
   },
   {
@@ -32,6 +37,7 @@ export const SECTIONS = [
     description: 'Read the Disclosure Guidelines and access MedTech Europe transparency resources.',
     icon: 'Eye',
     color: '#00727D', // a deeper shade of the brand teal, so it reads apart from The Code
+    featured: true,
     available: true,
   },
   {

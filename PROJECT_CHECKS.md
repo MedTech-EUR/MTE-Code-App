@@ -232,6 +232,7 @@ also confirm its emitted asset appears in `dist/sw.js`.
 - After editing files in `src/data`, run `npm run validate:data` (and `npm run format:data` after editing Code chapters or decision trees by hand).
 - After changing the content editor (`public/admin/`), run `npm test`: `tests/cmsConfig.test.mjs` checks its configuration against the data.
 - After editing `src/data/search/phrasebook.json`, run `npm run validate:data`.
+- After a change to the country lists of Annex III, follow `docs/geographic-area-map.md`, "When Annex III changes": `npm run validate:data` says what the map is missing.
 - After editing Disclosure Guidelines data or sources, also run `npm run verify:disclosure-guidelines`.
 - After changing TPPT, the event support checker or other tested logic, run `npm test`. The checker's wording is in `src/data/eventSupportRules.json`, so `npm run validate:data` also checks it, including every “Chapter N, Section N”, “Annex N” and “Q&A N” it cites.
 - Before a release or deployment, run `npm run check`.

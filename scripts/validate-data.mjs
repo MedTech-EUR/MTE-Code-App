@@ -17,6 +17,7 @@ import { loadTransparencyData } from './lib/transparency-content.mjs';
 import { checkHtml } from '../public/admin/lib/html-tools.js';
 import { inspectTree } from '../public/admin/lib/trees.js';
 import { findUnformatted } from './format-cms-data.mjs';
+import { checkGeographicArea, GEOGRAPHIC_AREA_EMBED } from '../src/utils/geographicArea.js';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIR, '..');
@@ -929,6 +930,18 @@ export function validateCurrentProject() {
     eventSupportRules: readJson('src/data/eventSupportRules.json'),
   });
   if (phrasebook.error) result.errors.push(phrasebook.error);
+  // The map of Annex III must show the areas its text lists.
+  const mapSection = codeData.chapters
+    .flatMap((chapter) => chapter.sections || [])
+    .find((section) => String(section.legalText || '').includes(`data-reader-embed="${GEOGRAPHIC_AREA_EMBED}"`));
+  const geographicArea = checkGeographicArea({
+    legalText: mapSection ? mapSection.legalText : null,
+    areas: readJson('src/data/geographicArea/areas.json'),
+    map: readJson('src/data/geographicArea/map.json'),
+    associations: readJson('src/data/geographicArea/nationalAssociations.json'),
+  });
+  result.errors.push(...geographicArea.errors);
+  result.warnings.push(...geographicArea.notes);
   // Files in the content editor's layout change only where an edit was made when it saves them.
   for (const { path } of findUnformatted(PROJECT_ROOT)) {
     result.errors.push(`${path}: not in the content editor's layout. Run \`npm run format:data\`.`);

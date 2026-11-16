@@ -11,3 +11,4 @@ scratch/agenda_analysis_report.md
 *.dump
 d1/historical-declarations/seed.sql
 d1/historical-declarations/seed.sql.validation.json
+.cache/

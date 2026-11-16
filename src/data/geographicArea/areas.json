@@ -1,0 +1,156 @@
+{
+  "lists": [
+    {
+      "heading": "Countries with National Associations",
+      "areas": [
+        {
+          "id": "AT",
+          "name": "Austria"
+        },
+        {
+          "id": "LV",
+          "name": "Latvia"
+        },
+        {
+          "id": "BE",
+          "name": "Belgium"
+        },
+        {
+          "id": "LT",
+          "name": "Lithuania"
+        },
+        {
+          "id": "BG",
+          "name": "Bulgaria"
+        },
+        {
+          "id": "NL",
+          "name": "The Netherlands"
+        },
+        {
+          "id": "HR",
+          "name": "Croatia"
+        },
+        {
+          "id": "NO",
+          "name": "Norway"
+        },
+        {
+          "id": "CY",
+          "name": "Cyprus"
+        },
+        {
+          "id": "PL",
+          "name": "Poland"
+        },
+        {
+          "id": "CZ",
+          "name": "Czech Republic"
+        },
+        {
+          "id": "PT",
+          "name": "Portugal"
+        },
+        {
+          "id": "DK",
+          "name": "Denmark"
+        },
+        {
+          "id": "RO",
+          "name": "Romania"
+        },
+        {
+          "id": "EE",
+          "name": "Estonia"
+        },
+        {
+          "id": "SK",
+          "name": "Slovakia"
+        },
+        {
+          "id": "FI",
+          "name": "Finland"
+        },
+        {
+          "id": "SI",
+          "name": "Slovenia"
+        },
+        {
+          "id": "FR",
+          "name": "France"
+        },
+        {
+          "id": "ES",
+          "name": "Spain"
+        },
+        {
+          "id": "DE",
+          "name": "Germany"
+        },
+        {
+          "id": "SE",
+          "name": "Sweden"
+        },
+        {
+          "id": "EL",
+          "name": "Greece"
+        },
+        {
+          "id": "CH",
+          "name": "Switzerland"
+        },
+        {
+          "id": "HU",
+          "name": "Hungary"
+        },
+        {
+          "id": "TR",
+          "name": "Turkey"
+        },
+        {
+          "id": "IE",
+          "name": "Ireland"
+        },
+        {
+          "id": "UK",
+          "name": "The United Kingdom"
+        },
+        {
+          "id": "IL",
+          "name": "Israel"
+        },
+        {
+          "id": "MECOMED",
+          "name": "Countries covered by Mecomed*",
+          "association": "Mecomed",
+          "note": "*Countries covered by Mecomed, the Middle East Medical Devices and Diagnostics association, are not currently under the scope of the Disclosure Guidelines."
+        },
+        {
+          "id": "IT",
+          "name": "Italy"
+        }
+      ]
+    },
+    {
+      "heading": "Countries party to the European Economic Area agreement without a MedTech Europe National Association",
+      "areas": [
+        {
+          "id": "IS",
+          "name": "Iceland"
+        },
+        {
+          "id": "LI",
+          "name": "Liechtenstein"
+        },
+        {
+          "id": "LU",
+          "name": "Luxembourg"
+        },
+        {
+          "id": "MT",
+          "name": "Malta"
+        }
+      ]
+    }
+  ]
+}

@@ -10,6 +10,8 @@ import { buildCodeSectionPath } from '../utils/routeUtils';
 import { resolveResourceLinks } from '../utils/resourceUtils';
 import { linkCrossReferences } from '../utils/crossReferences';
 import { createLinkedTextHandlers } from '../utils/linkedTextEvents';
+import { useReaderEmbed } from '../hooks/useReaderEmbed';
+import { READER_EMBED_SHOWN } from '../config/readerEmbeds';
 import {
     buildQaTitle,
     CITATION_COPIED_MESSAGES,
@@ -118,6 +120,8 @@ export const FullTextSection = ({
             }),
         };
     }, [section.legalText, section.qas, resourceLinks, query, glossaryMap, id, referenceContext]);
+
+    const ReaderEmbed = useReaderEmbed(section.legalText);
 
     const [copyFeedback, setCopyFeedback] = useState(null);
     const copyFeedbackTimerRef = useRef(null);
@@ -267,7 +271,10 @@ export const FullTextSection = ({
                     className="shrink-0 sm:ml-auto sm:justify-end"
                 />
             </div>
-            <div className="prose prose-slate max-w-none text-gray-800 leading-relaxed reader-content" dangerouslySetInnerHTML={legalTextMarkup} />
+            {/* An interactive figure (such as the map of Annex III) shows above the text, in place of
+                the figure in the text, which still prints. */}
+            {ReaderEmbed && <ReaderEmbed />}
+            <div className={`prose prose-slate max-w-none text-gray-800 leading-relaxed reader-content ${ReaderEmbed ? READER_EMBED_SHOWN : ''}`} dangerouslySetInnerHTML={legalTextMarkup} />
             {supplement}
             {onNavigateTree && relatedTrees.length > 0 && (
                 <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 print:hidden">

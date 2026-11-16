@@ -1,71 +1,58 @@
 import React from 'react';
 import { Logo } from './Logo';
 import { AppIcon } from './AppIcons';
+import { PageHeader } from './PageHeader';
 import { SECTIONS } from '../config/sections';
 
 export const HubPage = ({ onSelectSection }) => (
-  <div className="animate-fade-in py-10 lg:py-8 px-4 max-w-5xl xl:max-w-6xl 3xl:max-w-[110rem] mx-auto overflow-y-auto h-full custom-scrollbar pb-24">
-    {/* A smaller heading on laptops and desktops keeps the section cards on the first screen. */}
-    <div className="text-center mb-16 lg:mb-8">
-      <div className="scale-90 sm:scale-100 origin-center flex justify-center">
-        <Logo size={null} className="mx-auto mb-8 lg:mb-5 h-36 lg:h-24 aspect-[26/5] max-w-full" centerImage={true} />
-      </div>
-      <h1 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-        The MedTech Europe Code of Ethical Business Practice
-      </h1>
-      <p className="text-xl text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">
-        The Digital Home of the MedTech Europe Code of Ethical Business Practice
-      </p>
-    </div>
+  <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-5xl xl:max-w-6xl 3xl:max-w-[96rem] mx-auto pb-24">
+    {/* The header above already shows the logo; on paper, where the header is absent, it is printed here. */}
+    <Logo size={null} className="hidden print:flex mb-6 h-16 aspect-[26/5]" />
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-5 gap-8 xl:gap-6 max-w-3xl xl:max-w-none mx-auto">
+    <PageHeader
+      title="The MedTech Europe Code of Ethical Business Practice"
+      description="The Digital Home of the MedTech Europe Code of Ethical Business Practice"
+      className="mb-8 sm:mb-10"
+    />
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-6">
       {SECTIONS.filter(s => s.available).map((section) => (
         <button
           key={section.id}
+          type="button"
           onClick={() => onSelectSection(section.id)}
-          className="hub-card group bg-white p-8 xl:p-7 rounded-2xl border border-gray-200 shadow-sm text-left transition-all flex flex-col h-full active:scale-[0.97] relative overflow-hidden"
+          style={{ '--accent': section.color, '--accent-text': section.textColor || section.color }}
+          className="group flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 sm:p-7 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 active:scale-[0.99]"
         >
-          {/* Accent bar */}
-          <div
-            className="absolute top-0 left-0 right-0 h-1 transition-all duration-300 group-hover:h-1.5"
-            style={{ backgroundColor: section.color }}
-          />
-
-          <div
-            className="p-4 rounded-xl w-fit mb-5 transition-colors duration-300"
-            style={{
-              backgroundColor: `${section.color}12`,
-              color: section.color,
-            }}
+          <span
+            aria-hidden="true"
+            className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[color-mix(in_srgb,var(--accent)_10%,white)] text-[var(--accent-text)] ring-1 ring-inset ring-[color-mix(in_srgb,var(--accent)_18%,white)] transition-colors duration-200 group-hover:bg-[var(--accent)] group-hover:text-white group-hover:ring-[var(--accent)]"
           >
-            <AppIcon name={section.icon} size={36} />
-          </div>
+            <AppIcon name={section.icon} size={24} />
+          </span>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">
+          <h2 className="text-xl font-bold tracking-tight text-gray-900">
             {section.title}
           </h2>
 
           {section.subtitle && (
-            <p className="text-xs font-semibold text-gray-400 mb-4 leading-normal uppercase tracking-wider">
+            <p className="mt-1 text-[11px] font-semibold uppercase leading-normal tracking-wider text-gray-500">
               {section.subtitle}
             </p>
           )}
 
-          <p className="text-sm text-gray-500 font-light leading-relaxed mb-6 flex-1">
+          <p className="mt-3 mb-6 flex-1 text-sm leading-relaxed text-gray-600">
             {section.description}
           </p>
 
-          <div
-            className="flex items-center text-xs font-bold uppercase tracking-wider transition-colors duration-300"
-            style={{ color: section.textColor || section.color }}
-          >
+          <span className="flex items-center text-xs font-bold uppercase tracking-wider text-[var(--accent-text)]">
             Open
             <AppIcon
               name="ChevronRight"
               size={14}
               className="ml-1 transition-transform group-hover:translate-x-1"
             />
-          </div>
+          </span>
         </button>
       ))}
     </div>

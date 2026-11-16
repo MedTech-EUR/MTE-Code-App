@@ -314,8 +314,3 @@ body {
   transform: translateY(-4px);
   border-color: var(--color-teal);
 }
-
-.hub-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-}

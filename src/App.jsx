@@ -5,7 +5,7 @@ import { DefinitionPopup } from './components/DefinitionPopup';
 import { extractGlossaryMap, generateSectionId } from './utils/textUtils';
 import { useDebounce } from './hooks/useDebounce';
 import { useSearch } from './hooks/useSearch';
-import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { openSearchBox, useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { usePWAInstall } from './hooks/usePWAInstall';
 import { useAppRouting } from './hooks/useAppRouting';
 import { useBookmarks } from './hooks/useBookmarks';
@@ -438,10 +438,11 @@ const App = () => {
         {activeSection === null ? (
           <main
             ref={scrollRef}
-            className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full bg-[url(/home-backdrop.svg)] bg-no-repeat bg-size-[auto_34rem] bg-position-[right_-5rem_top_-3rem] lg:bg-size-[auto_58rem] lg:bg-position-[right_-9rem_top_-6rem] print:bg-none"
+            className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full"
           >
             <HubPage
               onSelectSection={handleSectionSelect}
+              onOpenSearch={() => openSearchBox(setSidebarOpen)}
               recentHistory={history}
               bookmarks={bookmarks}
               onOpenRecentPage={(page) => {

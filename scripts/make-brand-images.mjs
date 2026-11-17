@@ -7,7 +7,7 @@
  *   public/share-image.png    1200×630, the logo (public/logo.png) on white.
  *     The preview image when a page is shared on LinkedIn, Teams, etc. (og:image).
  *
- * public/favicon.svg is the figure from public/home-backdrop.svg, upright and in full colour,
+ * public/favicon.svg is the MedTech Europe figure, traced from logo.png, upright and in full colour,
  * in a square frame. Run this again only if the logo changes. It needs Playwright, which is
  * not a project dependency:
  *

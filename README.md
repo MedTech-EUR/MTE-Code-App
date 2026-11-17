@@ -600,7 +600,7 @@ The Inter typeface is bundled with the app from the `@fontsource-variable/inter`
 The main MedTech Europe logo (seen in the Header and on the Home Hub) is controlled by a single file:
 👉 **`src/components/Logo.jsx`**
 
-The same file has `CompactLogo`, the figure and "The Code App" that a phone's reader header shows instead. The tab icon is `public/favicon.svg` (the figure from `public/home-backdrop.svg`, upright and in full colour). `node scripts/make-brand-images.mjs` makes its PNG copy (`favicon-32x32.png`) and the 1200×630 image shown when a page is shared (`share-image.png`) from `favicon.svg` and `logo.png`; run it again only if the logo changes.
+The same file has `CompactLogo`, the figure and "The Code App" that a phone's reader header shows instead. The tab icon is `public/favicon.svg` (the MedTech Europe figure, upright and in full colour); the Home page's welcome card uses it as a faint watermark. `node scripts/make-brand-images.mjs` makes its PNG copy (`favicon-32x32.png`) and the 1200×630 image shown when a page is shared (`share-image.png`) from `favicon.svg` and `logo.png`; run it again only if the logo changes.
 
 ### Other Icons
 The icons used in the sidebar and throughout the app are stored in:

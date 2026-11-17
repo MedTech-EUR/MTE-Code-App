@@ -89,7 +89,6 @@ See `PROJECT_CHECKS.md` for detailed instructions and troubleshooting.
 
 ## Found While Rebalancing the Layout — 2026-09-25
 
-- `index.html` does not link `public/favicon.svg`, so browsers request `/favicon.ico`, get a 404 and show a default tab icon. Fix: add `<link rel="icon" href="/favicon.svg" type="image/svg+xml">` once the SVG is confirmed as the intended icon.
 - Chapter 1 cites "section 3 of Chapter 2" twice (Guests and Reasonable Hospitality), but Chapter 2 has two numbered sections. The links fall back to Chapter 2, and `npm run validate:data` prints them as notes. Check the wording against the published PDF before changing any Code text.
 - The Disclosure Guidelines' Chapter 3 numbers its sections 1, 2, 3, 4, 6, 5, 6 and cites "Section 3.3 Time of Publication", which matches no section title (the time-of-disclosure section is numbered 2). The linker leaves it unlinked. The data is pinned to the source by `npm run verify:disclosure-guidelines`, so confirm against the PDF before treating it as an error.
 - Layout widths were measured with a throwaway Playwright script (15 screens at 10 window sizes from 390px to 3440px: characters per line, empty space on each side, cut-off sidebar labels, clipped toolbar buttons). Repeat that kind of check when changing layout widths or breakpoints, including with both panes dragged to their narrowest and widest; the reading area must keep at least 30rem and no size may scroll sideways.
@@ -121,3 +120,10 @@ See `PROJECT_CHECKS.md` for detailed instructions and troubleshooting.
 - The live site answers `http://medtecheurope-code.org/` with the page instead of redirecting to https, so Google can see two copies of every page. Fix in Cloudflare (SSL/TLS, Edge Certificates, "Always Use HTTPS"), not in `server.js`: `wrangler dev` hands the Worker the site's own address over plain http, so a Worker redirect loops locally.
 - The app's sidebar and cards navigate with buttons rather than links, so the only links search engines can follow are in each page's file (`scripts/lib/prerender.mjs`) and the sitemap. Making the sidebar's entries real `<a href>` links (still handled by the app on click) would let the rendered app link its pages too.
 - The Disclosure Guidelines' own description ("Read the October 2025 Disclosure Guidelines.") and the opening of their Annex I ("Please find the Declaration csv Template downloadable at this link.") become those pages' search descriptions. A fuller `description` in `transparency/disclosure-guidelines/document.json` would read better in search results.
+
+## Found During the November UX Polish — 2026-11-17
+
+- Resolved on 2026-11-17: the missing tab icon. `public/favicon.svg` turned out to be Vite's default logo, so it was replaced by the MedTech Europe figure rather than linked as it was.
+- The installed app's name under its home-screen icon is still "TheCodeApp" (`short_name` in `vite.config.ts`), while the app is now called "The Code App" everywhere else. Changing it renames the icon on devices where the app is installed; decide with the product owner.
+- The Glossary's A–Z bar scrolls to the first term under a letter; the term sits below the reader's `scroll-mt-24`, so on short definitions the one before it shows above. Harmless; revisit if the Glossary gets a sticky header.
+

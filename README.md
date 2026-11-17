@@ -180,7 +180,7 @@ This app precaches the core reader and application assets via `vite-plugin-pwa` 
 - The installation logic relies on the `usePWAInstall.js` hook, which intercepts the browser's `beforeinstallprompt` and shows a custom install button. iOS requires manual installation via Safari's "Add to Home Screen" share action, which the UI explicitly handles.
 
 ### ⭐ Bookmarks & History
-Users can save specific Code or Transparency sections to a personalized **Bookmarks** group in the sidebar (via `useBookmarks.js`). The app also tracks the last 5 visited Code chapters or Transparency document units under **Recently Viewed** (via `useRecentHistory.js`). Stored identifiers are namespaced by publication so similarly named sections cannot collide. Both are saved silently to `window.localStorage` so they persist without user accounts.
+Users can save specific Code or Transparency sections to a personalized **Bookmarks** group in the sidebar (via `useBookmarks.js`). The app also tracks the last 5 visited Code chapters or Transparency document units under **Recently Viewed** (via `useRecentHistory.js`). Stored identifiers are namespaced by publication so similarly named sections cannot collide. Both are saved silently to `window.localStorage` so they persist without user accounts. The Home Hub lists the last three pages under **Continue reading** and the first three bookmarks under **Your bookmarks** (`utils/returnVisit.js`), only when something is saved.
 
 ### 🗂️ Collapsible Sidebar Navigation
 The sidebar uses a hierarchical, fully collapsible group structure:
@@ -599,6 +599,8 @@ The Inter typeface is bundled with the app from the `@fontsource-variable/inter`
 ### The Main Logo
 The main MedTech Europe logo (seen in the Header and on the Home Hub) is controlled by a single file:
 👉 **`src/components/Logo.jsx`**
+
+The same file has `CompactLogo`, the figure and "The Code App" that a phone's reader header shows instead. The tab icon is `public/favicon.svg` (the figure from `public/home-backdrop.svg`, upright and in full colour). `node scripts/make-brand-images.mjs` makes its PNG copy (`favicon-32x32.png`) and the 1200×630 image shown when a page is shared (`share-image.png`) from `favicon.svg` and `logo.png`; run it again only if the logo changes.
 
 ### Other Icons
 The icons used in the sidebar and throughout the app are stored in:

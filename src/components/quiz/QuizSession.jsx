@@ -63,7 +63,7 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
         </div>
         <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
           <div 
-            className="bg-[#7654A1] h-1.5 rounded-full transition-all duration-500"
+            className="bg-[#7654A1] h-1.5 rounded-full transition-all duration-700 ease-out-soft"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
@@ -71,15 +71,16 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
 
       {/* Question Card */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex-1 flex flex-col">
-        <div className="p-6 sm:p-8 border-b border-gray-100 flex-1">
+        {/* Keyed by the question, so each one rises in as it comes up. */}
+        <div key={currentIndex} className="p-6 sm:p-8 border-b border-gray-100 flex-1 animate-rise-in">
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 leading-snug sm:leading-snug mb-7">
             {currentQuestion.question}
           </h2>
 
-          <div className="space-y-3">
+          <div className="stagger space-y-3">
             {currentQuestion.options.map(opt => {
               const isSelected = selectedOption === opt.id;
-              let optionClasses = "relative flex items-start p-4 rounded-xl border-2 transition-all cursor-pointer text-left w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 ";
+              let optionClasses = "relative flex items-start p-4 rounded-xl border-2 transition-all duration-300 ease-out-soft cursor-pointer text-left w-full enabled:active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 ";
               
               if (hasSubmitted) {
                 if (opt.isCorrect) {
@@ -110,12 +111,12 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
                     </span>
                   </div>
                   {hasSubmitted && opt.isCorrect && (
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-600">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-600 animate-badge-in">
                       <AppIcon name="CheckCircle" size={24} />
                     </div>
                   )}
                   {hasSubmitted && isSelected && !opt.isCorrect && (
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-red-600">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-red-600 animate-badge-in">
                       <AppIcon name="XCircle" size={24} />
                     </div>
                   )}
@@ -127,7 +128,7 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
           {!hasSubmitted && currentQuestion.hint && (
             <div className="mt-8">
               {showHint ? (
-                <div className="animate-fade-in bg-[#0099A7]/5 border border-[#0099A7]/20 rounded-xl p-4 flex items-start text-slate-700">
+                <div className="animate-rise-in bg-[#0099A7]/5 border border-[#0099A7]/20 rounded-xl p-4 flex items-start text-slate-700">
                   <AppIcon name="Info" size={20} className="mr-3 mt-0.5 flex-none text-[#007A86]" />
                   <p className="text-sm font-medium">{currentQuestion.hint}</p>
                 </div>
@@ -143,7 +144,7 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
           )}
 
           {hasSubmitted && (
-            <div className={`mt-8 p-6 rounded-xl animate-fade-in border ${
+            <div className={`mt-8 p-6 rounded-xl animate-rise-in border ${
               currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect 
                 ? 'bg-green-50 border-green-200 text-green-900' 
                 : 'bg-red-50 border-red-200 text-red-900'
@@ -165,17 +166,17 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
             <button
               onClick={handleSubmit}
               disabled={!selectedOption}
-              className="w-full py-3.5 bg-[#7654A1] hover:bg-[#634488] disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 flex items-center justify-center transition-colors shadow-sm"
+              className="w-full py-3.5 bg-[#7654A1] hover:bg-[#634488] disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 flex items-center justify-center transition shadow-sm enabled:active:scale-[0.99]"
             >
               Submit Answer
             </button>
           ) : (
             <button
               onClick={handleNext}
-              className="w-full py-3.5 bg-[#7654A1] hover:bg-[#634488] text-white font-bold rounded-xl text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 flex items-center justify-center transition-colors shadow-sm"
+              className="group animate-rise-in w-full py-3.5 bg-[#7654A1] hover:bg-[#634488] text-white font-bold rounded-xl text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 flex items-center justify-center transition shadow-sm enabled:active:scale-[0.99]"
             >
               {currentIndex < questions.length - 1 ? 'Next Question' : 'View Results'}
-              <AppIcon name="ArrowRight" size={18} className="ml-2" />
+              <AppIcon name="ArrowRight" size={18} className="ml-2 animate-slide-in-right" />
             </button>
           )}
         </div>

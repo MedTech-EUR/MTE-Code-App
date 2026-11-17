@@ -415,7 +415,7 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
             aria-modal="true"
             aria-labelledby="declaration-modal-title"
             tabIndex={-1}
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto outline-none"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto outline-none animate-scale-in"
           >
             <div className="flex justify-between items-center p-6 border-b border-slate-100">
               <h2 id="declaration-modal-title" className="text-xl font-bold text-slate-900">

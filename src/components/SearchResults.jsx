@@ -283,7 +283,8 @@ export const SearchResults = ({
         </div>
       ) : (
         filteredResults.length > 0 && (
-          <ul aria-label="Search results" className="space-y-2">
+          // Keyed by the query, so each new set of results cascades in.
+          <ul key={response.query} aria-label="Search results" className="stagger space-y-2">
             {filteredResults.map((hit, index) => (
               <ResultRow
                 key={hit.id}
@@ -304,7 +305,7 @@ export const SearchResults = ({
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-0.5">
             {APP_RESULTS_HEADING[scope] || APP_RESULTS_HEADING.code}
           </p>
-          <ul aria-label="App content results" className="space-y-2 opacity-70">
+          <ul key={response.query} aria-label="App content results" className="stagger space-y-2 opacity-70">
             {appResults.map((hit, index) => (
               <ResultRow
                 key={hit.id}

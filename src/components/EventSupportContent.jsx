@@ -33,8 +33,8 @@ const CVS_INTROS = {
 const CVS_INTRO_NATIONAL = 'You expect a national Event. Check whether it has been submitted to CVS anyway: a CVS record suggests that the organiser or another Member Company expects Delegates from more than one country.';
 const CVS_INTRO_NOT_NEEDED = 'This support does not need a CVS decision on your answers. If the Event is in CVS, check its status anyway: your answer says what it means.';
 
-const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-[#7654A1] px-5 py-3 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-40';
-const secondary = 'inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 hover:border-[#7654A1]';
+const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-[#7654A1] px-5 py-3 text-sm font-semibold text-white shadow-sm transition enabled:hover:bg-[#634488] enabled:hover:shadow-md enabled:active:scale-[0.98] disabled:opacity-40';
+const secondary = 'inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 transition enabled:hover:border-[#7654A1] enabled:hover:text-[#634488] enabled:active:scale-[0.98] disabled:opacity-40';
 // Code references in the checker's text ("Chapter 4, Section 3") look like the reader's.
 const LINK_STYLES = '[&_a.cross-reference]:text-[#007A86] [&_a.cross-reference]:underline [&_a.cross-reference]:underline-offset-2 [&_a.cross-reference]:decoration-[#0099A7]/50 [&_a.cross-reference:hover]:text-[#7654A1] print:[&_a.cross-reference]:text-inherit print:[&_a.cross-reference]:no-underline';
 
@@ -66,7 +66,7 @@ function Question({ question, answers, onChange, glossaryMap }) {
             return (
               <label
                 key={value}
-                className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 text-sm ${selected ? 'border-[#7654A1] bg-purple-50 text-[#634488]' : 'border-slate-200 bg-white text-slate-700 hover:border-purple-300'}`}
+                className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 text-sm transition-colors ${selected ? 'border-[#7654A1] bg-purple-50 text-[#634488]' : 'border-slate-200 bg-white text-slate-700 hover:border-purple-300'}`}
               >
                 <input
                   type={multi ? 'checkbox' : 'radio'}
@@ -96,7 +96,7 @@ function ConditionList({ conditions, answers, onChange, glossaryMap }) {
           <legend className="mb-3 text-sm leading-relaxed text-slate-700" dangerouslySetInnerHTML={markup[index]} />
           <div className="flex flex-wrap gap-3">
             {condition.options.map(([value, label]) => (
-              <label key={value} className={`flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs ${answers[condition.id] === value ? 'bg-purple-50 text-[#634488] ring-1 ring-[#7654A1]' : 'bg-slate-50 text-slate-700'}`}>
+              <label key={value} className={`flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs transition ${answers[condition.id] === value ? 'bg-purple-50 text-[#634488] ring-1 ring-[#7654A1]' : 'bg-slate-50 text-slate-700'}`}>
                 <input type="radio" name={condition.id} checked={answers[condition.id] === value} onChange={() => onChange(condition.id, value)} className="accent-[#7654A1]" />
                 {label}
               </label>
@@ -308,7 +308,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
         onKeyUp={handleKeyUp}
         className={`flex-1 min-w-0 h-full overflow-y-auto bg-slate-50/60 custom-scrollbar print:h-auto print:overflow-visible print:bg-white ${LINK_STYLES}`}
       >
-        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8 sm:py-10 print:p-0">
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8 sm:py-10 print:p-0 animate-page-in">
           <div className="no-print mb-5 flex items-center justify-between gap-3">
             <PageBackLink onClick={onBack}>All Decision Trees</PageBackLink>
             {Boolean(answers.activity) && (
@@ -331,7 +331,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
               <span
                 key={id}
                 aria-current={stage === id ? 'step' : undefined}
-                className={`rounded-full px-3 py-2 text-xs font-semibold ${stage === id ? 'bg-[#7654A1] text-white' : 'bg-white text-slate-500'}`}
+                className={`rounded-full px-3 py-2 text-xs font-semibold transition-colors duration-300 ${stage === id ? 'bg-[#7654A1] text-white' : 'bg-white text-slate-500'}`}
               >
                 {index + 1}. {STAGE_LABELS[id]}
               </span>
@@ -339,20 +339,20 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
           </nav>
 
           {stage === 'activity' && (
-            <div className="no-print space-y-8">
+            <div className="no-print space-y-8 animate-rise-in">
               <p className="text-sm text-slate-600">
                 Choose one type of interaction. If the company plans several, check each one separately: the facts about the Event are kept when you switch.
               </p>
               {data.activityGroups.map((group) => (
                 <section key={group.id}>
                   <h2 className="mb-4 text-lg font-semibold text-slate-800">{group.label}</h2>
-                  <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="stagger grid gap-3 sm:grid-cols-2">
                     {data.activities.filter((item) => item.group === group.id).map((item) => (
                       <button
                         key={item.id}
                         type="button"
                         onClick={() => choose(item.id)}
-                        className="group flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-[#7654A1] hover:shadow-md"
+                        className="group flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition duration-300 ease-out-soft hover:-translate-y-0.5 hover:border-[#7654A1] hover:shadow-md active:translate-y-0 active:scale-[0.99]"
                       >
                         <span className="mt-1 rounded-lg bg-purple-50 p-2 text-[#7654A1]">
                           <AppIcon name={item.id.startsWith('grant') ? 'Gift' : group.id === 'event' ? 'Compass' : 'FileText'} size={20} />
@@ -369,8 +369,9 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
             </div>
           )}
 
+          {/* Keyed by the question, so each one rises in as it is reached. */}
           {stage === 'details' && question && (
-            <div className="no-print rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div key={questionIndex} className="no-print rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 animate-rise-in">
               <p className="mb-5 text-xs font-semibold text-[#7654A1]">
                 {activity?.label} · Question {Math.min(questionIndex + 1, eventQuestions.length)}
               </p>
@@ -385,7 +386,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
           )}
 
           {stage === 'cvs' && (
-            <div className="no-print">
+            <div className="no-print animate-rise-in">
               <h2 className="text-xl font-semibold text-slate-800">Find the Event in CVS</h2>
               <p className="mt-3 text-sm leading-relaxed text-slate-600">{cvsIntro}</p>
               <CvsEventLookup lookup={lookup} />
@@ -400,7 +401,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
           )}
 
           {stage === 'conditions' && (
-            <div className="no-print rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div className="no-print rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 animate-rise-in">
               {identityNotice && (
                 <p role="status" className="mb-5 rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
                   You selected a different Event in CVS. Confirm the conditions again.
@@ -467,7 +468,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
                 <div className="no-print mt-7">
                   <button type="button" aria-expanded={overview} onClick={() => setOverview(!overview)} className={primary}>
                     {overview ? 'Hide other ways to support this Event' : 'What else could the company provide?'}
-                    <AppIcon name={overview ? 'ChevronUp' : 'ChevronDown'} size={16} />
+                    <AppIcon name="ChevronDown" size={16} className={`transition-transform duration-300 ease-out-soft ${overview ? 'rotate-180' : ''}`} />
                   </button>
                 </div>
               )}

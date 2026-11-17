@@ -302,6 +302,7 @@ body {
    animate-scale-in, -up   a dialog opening.
    animate-slide-up        a bottom sheet on phones; a dialog from sm.
    animate-toast-in        a short confirmation at the edge of the window.
+   animate-badge-in        a small mark (a tick, a cross) arriving with a little spring.
    animate-slide-in-right  the reader toolbar arriving in the header.
    stagger                 on a list: its items rise in one after another.
    skeleton                a loading placeholder with a soft sheen.
@@ -339,6 +340,11 @@ body {
   from { opacity: 0; transform: translateY(0.75rem) scale(0.96); }
 }
 
+/* A small mark (a tick, a cross) arriving with a little spring. */
+@keyframes badge-in {
+  from { opacity: 0; transform: scale(0.4); }
+}
+
 @keyframes slide-in-right {
   from { opacity: 0; transform: translateX(1rem); }
 }
@@ -352,29 +358,51 @@ body {
   to { opacity: 0; }
 }
 
+/* Written out in longhands, so an [animation-delay:…] utility on the element still applies. */
+.animate-page-in,
+.animate-rise-in,
+.animate-fade-in,
+.animate-pop-in,
+.animate-scale-in,
+.animate-scale-up,
+.animate-slide-up,
+.animate-toast-in,
+.animate-badge-in,
+.animate-slide-in-right,
+.stagger > * {
+  animation-timing-function: var(--ease-out-soft);
+  animation-fill-mode: backwards;
+}
+
 .animate-page-in {
-  animation: page-in 0.5s var(--ease-out-soft) backwards;
+  animation-name: page-in;
+  animation-duration: 0.5s;
 }
 
 .animate-rise-in {
-  animation: rise-in 0.36s var(--ease-out-soft) backwards;
+  animation-name: rise-in;
+  animation-duration: 0.36s;
 }
 
 .animate-fade-in {
-  animation: fade-in 0.3s var(--ease-out-soft) backwards;
+  animation-name: fade-in;
+  animation-duration: 0.3s;
 }
 
 .animate-pop-in {
-  animation: pop-in 0.2s var(--ease-out-soft) backwards;
+  animation-name: pop-in;
+  animation-duration: 0.2s;
 }
 
 .animate-scale-in,
 .animate-scale-up {
-  animation: dialog-in 0.32s var(--ease-out-soft) backwards;
+  animation-name: dialog-in;
+  animation-duration: 0.32s;
 }
 
 .animate-slide-up {
-  animation: sheet-up 0.4s var(--ease-out-soft) backwards;
+  animation-name: sheet-up;
+  animation-duration: 0.4s;
 }
 
 @media (min-width: 40rem) {
@@ -385,16 +413,26 @@ body {
 }
 
 .animate-toast-in {
-  animation: toast-in 0.34s var(--ease-spring) backwards;
+  animation-name: toast-in;
+  animation-duration: 0.34s;
+  animation-timing-function: var(--ease-spring);
+}
+
+.animate-badge-in {
+  animation-name: badge-in;
+  animation-duration: 0.45s;
+  animation-timing-function: var(--ease-spring);
 }
 
 .animate-slide-in-right {
-  animation: slide-in-right 0.42s var(--ease-out-soft) backwards;
+  animation-name: slide-in-right;
+  animation-duration: 0.42s;
 }
 
 /* A list whose items arrive one after another: 40ms apart, the tenth and later together. */
 .stagger > * {
-  animation: rise-in 0.44s var(--ease-out-soft) backwards;
+  animation-name: rise-in;
+  animation-duration: 0.44s;
 }
 
 .stagger > :nth-child(2) { animation-delay: 40ms; }
@@ -411,7 +449,10 @@ body {
 .skeleton {
   background: linear-gradient(90deg, #eef0f4 0%, #eef0f4 35%, #f8f9fb 50%, #eef0f4 65%, #eef0f4 100%);
   background-size: 200% 100%;
-  animation: sheen 1.6s ease-in-out infinite;
+  animation-name: sheen;
+  animation-duration: 1.6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
 
 /* Page changes (utils/viewTransition.js). The header, the sidebar and the reader's side panel

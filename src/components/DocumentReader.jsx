@@ -243,9 +243,9 @@ export const DocumentReader = ({
                   {previousItem ? (
                     <button
                       onClick={() => onItemChange(previousItem.id)}
-                      className="flex items-center gap-3 text-left w-full sm:w-1/2 p-4 rounded-xl border border-gray-200 hover:border-[#7654A1] hover:bg-purple-50 transition-all group"
+                      className="flex items-center gap-3 text-left w-full sm:w-1/2 p-4 rounded-xl border border-gray-200 hover:border-[#7654A1] hover:bg-purple-50 hover:shadow-sm active:scale-[0.99] transition-all group"
                     >
-                      <span className="shrink-0 text-gray-400 group-hover:text-[#7654A1]">
+                      <span className="shrink-0 text-gray-400 transition duration-300 ease-out-soft group-hover:-translate-x-0.5 group-hover:text-[#7654A1]">
                         <AppIcon name="ChevronLeft" size={24} />
                       </span>
                       <span>
@@ -262,7 +262,7 @@ export const DocumentReader = ({
                   {nextItem ? (
                     <button
                       onClick={() => onItemChange(nextItem.id)}
-                      className="flex items-center justify-end gap-3 text-right w-full sm:w-1/2 p-4 rounded-xl border border-gray-200 hover:border-[#7654A1] hover:bg-purple-50 transition-all group"
+                      className="flex items-center justify-end gap-3 text-right w-full sm:w-1/2 p-4 rounded-xl border border-gray-200 hover:border-[#7654A1] hover:bg-purple-50 hover:shadow-sm active:scale-[0.99] transition-all group"
                     >
                       <span>
                         <span className="block text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-1">
@@ -272,7 +272,7 @@ export const DocumentReader = ({
                           {nextItem.title}
                         </span>
                       </span>
-                      <span className="shrink-0 text-gray-400 group-hover:text-[#7654A1]">
+                      <span className="shrink-0 text-gray-400 transition duration-300 ease-out-soft group-hover:translate-x-0.5 group-hover:text-[#7654A1]">
                         <AppIcon name="ChevronRight" size={24} />
                       </span>
                     </button>

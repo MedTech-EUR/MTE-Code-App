@@ -101,7 +101,7 @@ export const QuizConfig = ({ onStart }) => {
                   />
                   <span
                     aria-hidden="true"
-                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-gray-400 bg-white text-transparent transition-colors peer-checked:border-[#7654A1] peer-checked:bg-[#7654A1] peer-checked:text-white print:border-gray-700 print:peer-checked:text-black"
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-gray-400 bg-white text-transparent transition-colors *:scale-50 *:transition-transform *:duration-300 *:ease-spring peer-checked:border-[#7654A1] peer-checked:bg-[#7654A1] peer-checked:text-white peer-checked:*:scale-100 print:border-gray-700 print:peer-checked:text-black"
                   >
                     <AppIcon name="Check" size={14} className="stroke-3" />
                   </span>
@@ -144,10 +144,10 @@ export const QuizConfig = ({ onStart }) => {
           <button
             onClick={handleStart}
             disabled={selectedChapters.length === 0 || selectedQuestionCount === 0}
-            className="w-full no-print py-3.5 bg-[#7654A1] hover:bg-[#634488] disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 flex items-center justify-center transition-colors shadow-sm"
+            className="w-full no-print py-3.5 bg-[#7654A1] hover:bg-[#634488] disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 flex items-center justify-center transition shadow-sm enabled:active:scale-[0.99] group"
           >
             Start Quiz
-            <AppIcon name="ArrowRight" size={18} className="ml-2" />
+            <AppIcon name="ArrowRight" size={18} className="ml-2 transition-transform duration-300 ease-out-soft group-enabled:group-hover:translate-x-1" />
           </button>
         </div>
       </div>

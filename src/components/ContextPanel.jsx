@@ -74,7 +74,7 @@ const Disclosure = ({ title, detail, open, onToggle, headingLevel: Heading = 'h4
           <AppIcon
             name="ChevronRight"
             size={14}
-            className={`mt-0.5 shrink-0 text-gray-400 transition-transform ${open ? 'rotate-90' : ''}`}
+            className={`mt-0.5 shrink-0 text-gray-400 transition-transform duration-300 ease-out-soft ${open ? 'rotate-90' : ''}`}
           />
           <span className="min-w-0">
             <span className="block text-[13px] font-semibold leading-snug text-gray-800 break-words">
@@ -220,7 +220,7 @@ export const ContextPanel = ({ item, onClose, onOpenTarget, resourceLinks = EMPT
   return (
     <section
       aria-labelledby="context-panel-title"
-      className="rounded-xl border border-gray-200 bg-white no-print animate-fade-in"
+      className="rounded-xl border border-gray-200 bg-white shadow-sm no-print animate-rise-in"
       onKeyDown={(event) => {
         if (event.key !== 'Escape') return;
         event.preventDefault();

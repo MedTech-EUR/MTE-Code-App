@@ -303,7 +303,7 @@ export const FullTextSection = ({
                     role={copyFeedback.kind === 'error' ? 'alert' : 'status'}
                     aria-live={copyFeedback.kind === 'error' ? 'assertive' : 'polite'}
                     aria-atomic="true"
-                    className={`fixed bottom-6 right-6 text-white text-xs font-medium px-4 py-2.5 rounded-xl shadow-2xl z-50 flex items-center gap-2 animate-fade-in border print:hidden ${
+                    className={`fixed bottom-6 right-6 text-white text-xs font-medium px-4 py-2.5 rounded-xl shadow-2xl z-50 flex items-center gap-2 animate-toast-in border print:hidden ${
                         copyFeedback.kind === 'error'
                             ? 'bg-red-700 border-red-600'
                             : 'bg-slate-900 border-slate-700/50'

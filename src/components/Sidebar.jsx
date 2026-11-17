@@ -46,14 +46,14 @@ const CollapsibleGroup = ({
             </span>
           )}
           <AppIcon
-            name={expanded ? 'ChevronUp' : 'ChevronDown'}
+            name="ChevronDown"
             size={12}
-            className="text-gray-400 group-hover:text-gray-600 transition-colors"
+            className={`text-gray-400 group-hover:text-gray-600 transition duration-300 ease-out-soft ${expanded ? 'rotate-180' : ''}`}
           />
         </span>
       </button>
       {expanded && (
-        <div id={panelId} className="animate-fade-in">
+        <div id={panelId} className="animate-rise-in">
           {children}
         </div>
       )}

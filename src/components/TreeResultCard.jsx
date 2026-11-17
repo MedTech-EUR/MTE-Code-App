@@ -51,10 +51,10 @@ const ResultReference = ({ reference, onOpenReference }) => {
             className="inline-flex items-center gap-1 text-left text-sm font-medium text-gray-800 underline decoration-dotted underline-offset-4 hover:text-gray-950"
           >
             {reference}
-            <AppIcon name={open ? 'ChevronUp' : 'ChevronDown'} size={14} className="shrink-0" />
+            <AppIcon name="ChevronDown" size={14} className={`shrink-0 transition-transform duration-300 ease-out-soft ${open ? 'rotate-180' : ''}`} />
           </button>
           {open && (
-            <div id={panelId} className="mt-3 pt-3 border-t border-gray-200/80 animate-fade-in">
+            <div id={panelId} className="mt-3 pt-3 border-t border-gray-200/80 animate-rise-in">
               <p className="text-xs font-semibold text-gray-500 mb-2">
                 {[preview.location, preview.title].filter(Boolean).join(' › ')}
               </p>

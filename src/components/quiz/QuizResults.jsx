@@ -74,7 +74,7 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
         {/* Score Header */}
         <div className="p-8 sm:p-12 text-center border-b border-gray-100">
           <div className="mb-6 flex justify-center">
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center ${badgeColor} ${color}`}>
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center animate-badge-in [animation-delay:150ms] ${badgeColor} ${color}`}>
               <AppIcon name={icon} size={40} />
             </div>
           </div>
@@ -88,7 +88,7 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
           <div className="no-print flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={handleShare}
-              className="px-6 py-3 bg-white border border-gray-300 hover:border-[#7654A1] hover:text-[#7654A1] text-gray-800 font-bold rounded-xl flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2"
+              className="px-6 py-3 bg-white border border-gray-300 hover:border-[#7654A1] hover:text-[#7654A1] text-gray-800 font-bold rounded-xl flex items-center justify-center transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2"
             >
               {copied ? (
                 <><AppIcon name="Check" size={18} className="mr-2 text-green-600" /> Copied!</>
@@ -98,7 +98,7 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
             </button>
             <button
               onClick={onRestart}
-              className="px-6 py-3 bg-[#7654A1] hover:bg-[#634488] text-white font-bold rounded-xl flex items-center justify-center transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2"
+              className="px-6 py-3 bg-[#7654A1] hover:bg-[#634488] text-white font-bold rounded-xl flex items-center justify-center transition shadow-sm active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2"
             >
               <AppIcon name="RotateCcw" size={18} className="mr-2" /> Try Again
             </button>
@@ -113,7 +113,7 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
               Areas for Review ({incorrectQuestions.length})
             </h3>
             
-            <div className="space-y-6">
+            <div className="stagger space-y-6">
               {incorrectQuestions.map((item, idx) => (
                 <div key={idx} className="bg-red-50 border border-red-100 rounded-xl p-5">
                   <div className="flex items-start mb-3">

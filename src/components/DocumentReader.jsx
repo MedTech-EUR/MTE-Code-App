@@ -160,7 +160,7 @@ export const DocumentReader = ({
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-                <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+                <h1 className="text-[1.75rem] leading-9 sm:text-3xl font-bold text-gray-900 tracking-tight text-balance">
                   <Highlight
                     text={formatContentTitle(activeContent)}
                     query={searchHighlight}
@@ -190,7 +190,7 @@ export const DocumentReader = ({
               {showSummary && hasSummary && (
                 <div className="animate-rise-in mb-10">
                   <div className="p-8 bg-purple-50 rounded-2xl border border-purple-100 shadow-sm">
-                    <h2 className="text-3xl font-extrabold text-gray-900 mb-4">Summary</h2>
+                    <h2 className="text-xl font-semibold tracking-tight text-gray-900 mb-3">Summary</h2>
                     <div
                       className="text-lg text-gray-700 font-light reader-content summary-content"
                       dangerouslySetInnerHTML={summaryMarkup}

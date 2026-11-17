@@ -60,10 +60,10 @@ export const PageHeader = ({
             <span
               aria-hidden="true"
               className={`flex shrink-0 items-center justify-center rounded-xl ring-1 ring-inset ${tone.tile} ${
-                compact ? 'h-10 w-10' : 'h-12 w-12'
+                compact ? 'h-11 w-11' : 'h-12 w-12'
               }`}
             >
-              <AppIcon name={icon} size={compact ? 20 : 24} />
+              <AppIcon name={icon} size={compact ? 22 : 24} />
             </span>
           )}
           <div className={`min-w-0 ${icon ? 'self-center sm:self-start' : ''}`}>
@@ -73,7 +73,7 @@ export const PageHeader = ({
             <h1
               {...headingProps}
               className={`font-bold tracking-tight text-gray-900 outline-none ${
-                compact ? 'text-2xl leading-8' : 'text-3xl leading-9 sm:text-[2rem] sm:leading-10'
+                compact ? 'text-[1.75rem] leading-9 sm:text-3xl' : 'text-3xl leading-9 sm:text-[2rem] sm:leading-10'
               } ${icon && !eyebrow ? 'sm:pt-1' : ''}`}
             >
               {title}

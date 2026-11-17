@@ -253,7 +253,7 @@ export const TreeVisualization = ({ treeId, highlightedPath = [], onClose }) => 
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">{tree.title}</h1>
+            <h1 className="text-[1.75rem] leading-9 sm:text-3xl font-bold tracking-tight text-gray-900 mb-1">{tree.title}</h1>
             <p className="text-sm text-gray-500">Full decision tree visualization</p>
           </div>
           <div className="flex items-center gap-2">

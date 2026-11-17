@@ -150,23 +150,6 @@ export const AdminHierarchy = ({ size, className }) => (
   </CustomSvgWrapper>
 );
 
-export const IntroI = ({ size, className }) => (
-  <CustomSvgWrapper size={size} className={className}>
-    <text
-      x="12"
-      y="16"
-      textAnchor="middle"
-      fontSize="14"
-      fontWeight="bold"
-      fontFamily="Inter, sans-serif"
-      fill="currentColor"
-      stroke="none"
-    >
-      I
-    </text>
-  </CustomSvgWrapper>
-);
-
 export const JusticeScale = ({ size, className }) => (
   <CustomSvgWrapper size={size} className={className}>
     <line x1="12" y1="3" x2="12" y2="20" />
@@ -224,7 +207,6 @@ const customIconMap = {
   CVSIcon,
   CVSBadge,
   AdminHierarchy,
-  IntroI,
   JusticeScale,
   ABC,
   Euro,

@@ -13,7 +13,18 @@ import { normalizeSearchQuery } from '../utils/searchResultUtils';
 import { describeSearchResponse, emitSearchEvent, isSearchDebugEnabled } from '../utils/searchEvents';
 
 /**
+ * The two kinds of heading in the menu. A section ("The Code", "Decision Trees") is the larger,
+ * darker one; a group inside it ("Introductory Chapters") is a step smaller and lighter; the
+ * entries under them are smaller again (text-sm). Full class names: Tailwind cannot build them.
+ */
+const GROUP_LEVELS = {
+  1: { label: 'text-base font-semibold text-[#3b3450]', icon: 'text-[#8a83a0]', iconSize: 16, chevron: 14 },
+  2: { label: 'text-[0.9375rem] font-semibold text-[#6e6a85]', icon: 'text-[#8a83a0]', iconSize: 14, chevron: 12 },
+};
+
+/**
  * CollapsibleGroup — a generic collapsible section with a header and children.
+ * `level` 1 is a section of the menu, 2 a group inside a section.
  */
 const CollapsibleGroup = ({
   label,
@@ -22,21 +33,23 @@ const CollapsibleGroup = ({
   expanded,
   onToggle,
   children,
+  level = 1,
   className = '',
 }) => {
   const panelId = React.useId();
+  const tier = GROUP_LEVELS[level] || GROUP_LEVELS[1];
 
   return (
     <div className={className}>
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex justify-between items-center px-4 mb-2 group"
+        className={`w-full flex justify-between items-center gap-2 rounded-lg px-4 group ${level === 1 ? 'py-1 mb-1.5' : 'py-0.5 mb-1'}`}
         aria-expanded={expanded}
         aria-controls={panelId}
       >
-        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
-          {icon && <AppIcon name={icon} size={12} />}
+        <span className={`flex items-center gap-2 text-left leading-snug ${tier.label}`}>
+          {icon && <AppIcon name={icon} size={tier.iconSize} className={`shrink-0 ${tier.icon}`} />}
           {label}
         </span>
         <span className="flex items-center gap-1.5">
@@ -47,7 +60,7 @@ const CollapsibleGroup = ({
           )}
           <AppIcon
             name="ChevronDown"
-            size={12}
+            size={tier.chevron}
             className={`text-gray-400 group-hover:text-gray-600 transition duration-300 ease-out-soft ${expanded ? 'rotate-180' : ''}`}
           />
         </span>
@@ -402,7 +415,7 @@ export const Sidebar = ({
 
       {/* Scrollable navigation area */}
       <nav
-        className="flex-1 overflow-y-auto custom-scrollbar px-3 py-4 space-y-4"
+        className="flex-1 overflow-y-auto custom-scrollbar px-3 py-4 space-y-4 [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-2 [&_button:focus-visible]:outline-[#7654A1]"
         style={{
           paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)',
         }}
@@ -492,9 +505,10 @@ export const Sidebar = ({
                   <CollapsibleGroup
                     key={part.id}
                     label={part.label}
+                    level={2}
                     expanded={expandedGroups.has(part.groupKey)}
                     onToggle={() => toggleGroup(part.groupKey)}
-                    className="ml-2"
+                    className="ml-2 not-first:mt-3"
                   >
                     <div className="space-y-1">
                       {items.map((item) => (
@@ -576,9 +590,10 @@ export const Sidebar = ({
                 <CollapsibleGroup
                   key={document.id}
                   label={document.title}
+                  level={2}
                   expanded={expandedGroups.has(`transparency-${document.id}`)}
                   onToggle={() => toggleGroup(`transparency-${document.id}`)}
-                  className="ml-2"
+                  className="ml-2 not-first:mt-3"
                 >
                   <div className="space-y-1">
                     <button
@@ -757,7 +772,7 @@ export const Sidebar = ({
                 alert("To install the app, look for the install icon in your browser's address bar or menu.");
               }
             }}
-            className="flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-[#7654A1] bg-[#7654A1]/10 border border-[#7654A1]/20 hover:bg-[#7654A1]/15 hover:border-[#7654A1]/30 transition-colors gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2"
+            className="flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-[#7654A1] bg-[#7654A1]/10 border border-[#7654A1]/20 hover:bg-[#7654A1]/15 hover:border-[#7654A1]/30 transition-colors gap-2"
           >
             <AppIcon name="Download" size={18} />
             Install The Code App

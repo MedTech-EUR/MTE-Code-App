@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AppIcon } from './AppIcons';
-import { Logo } from './Logo';
+import { CompactLogo, Logo } from './Logo';
 import { SuggestionModal } from './SuggestionModal';
 import {
   READER_FONT_SIZES,
@@ -86,16 +86,23 @@ export const Header = ({
             {/* On a phone the logo shrinks to the room left beside the buttons. */}
             <Logo size={60} className={readerMode ? 'shrink-0' : 'min-w-0'} />
           </button>
+          {/* A phone's reader header has room for the compact logo only, beside its two buttons. */}
+          {readerMode && (
+            <button onClick={onGoHome} className="flex md:hidden min-w-0 items-center hover:opacity-80 transition-opacity">
+              <CompactLogo />
+            </button>
+          )}
         </div>
 
         {/* Document reader toolbar */}
         {readerMode && (
-          <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex bg-slate-100 p-0.5 md:p-1.5 text-[10px] md:text-xs rounded-lg border border-slate-200 gap-0.5 md:gap-1.5 shrink-0 items-center h-8 md:h-auto animate-slide-in-right z-10 no-print">
+          // On a phone only the suggestion and "Aa Menu" buttons show; the menu holds the rest.
+          <div className="flex md:bg-slate-100 md:p-1.5 text-xs md:rounded-lg md:border md:border-slate-200 gap-1.5 shrink-0 items-center animate-slide-in-right z-10 no-print">
             
             <button
               type="button"
               onClick={() => setSuggestionModalOpen(true)}
-              className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 shadow-sm"
+              className="h-9 md:h-auto px-2.5 md:px-3 md:py-1.5 text-xs font-bold rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 shadow-sm"
               title="Send a Suggestion"
               aria-label="Send a suggestion"
               aria-haspopup="dialog"
@@ -104,13 +111,13 @@ export const Header = ({
               <span className="hidden lg:inline">Send a Suggestion</span>
             </button>
 
-            <div className="w-px h-4 bg-gray-300 mx-0.5"></div>
+            <div className="hidden md:block w-px h-4 bg-gray-300 mx-0.5"></div>
 
             {showSummaryControl && (
               <button
                 type="button"
                 onClick={() => setShowSummary(!showSummary)}
-                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full ${
+                className={`hidden md:flex px-3 py-1.5 text-xs font-bold rounded-lg transition-all active:scale-95 items-center gap-2 h-full ${
                   showSummary
                     ? 'bg-white text-[#7654A1] shadow-sm'
                     : 'text-gray-400 hover:text-gray-600'
@@ -127,7 +134,7 @@ export const Header = ({
               <button
                 type="button"
                 onClick={() => setShowFullText(!showFullText)}
-                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full ${
+                className={`hidden md:flex px-3 py-1.5 text-xs font-bold rounded-lg transition-all active:scale-95 items-center gap-2 h-full ${
                   showFullText
                     ? 'bg-white text-[#7654A1] shadow-sm'
                     : 'text-gray-400 hover:text-gray-600'
@@ -144,7 +151,7 @@ export const Header = ({
               <button
                 type="button"
                 onClick={() => setShowQA(!showQA)}
-                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full ${
+                className={`hidden md:flex px-3 py-1.5 text-xs font-bold rounded-lg transition-all active:scale-95 items-center gap-2 h-full ${
                   showQA
                     ? 'bg-white text-[#7654A1] shadow-sm'
                     : 'text-gray-400 hover:text-gray-600'
@@ -157,20 +164,20 @@ export const Header = ({
               </button>
             )}
 
-            <div className="w-px h-4 bg-gray-300 mx-0.5"></div>
+            <div className="hidden md:block w-px h-4 bg-gray-300 mx-0.5"></div>
 
             <div ref={readerMenuRef} className="relative">
               <button
                 ref={readerTriggerRef}
                 type="button"
                 onClick={() => setReaderOpen((v) => !v)}
-                className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full bg-white text-[#7654A1] shadow-sm hover:opacity-80"
+                className="h-9 md:h-auto px-2.5 md:px-3 md:py-1.5 text-[13px] md:text-xs font-bold rounded-lg transition-all active:scale-95 flex items-center gap-1.5 bg-white text-[#7654A1] border border-gray-200 md:border-transparent shadow-sm hover:opacity-80"
                 title="Reading settings"
-                aria-label="Reading settings"
                 aria-expanded={readerOpen}
                 aria-controls={readerOpen ? 'reader-settings-panel' : undefined}
               >
-                Aa
+                Aa<span className="md:hidden">Menu</span>
+                <span className="sr-only">: reading settings</span>
               </button>
 
               {readerOpen && (
@@ -178,8 +185,36 @@ export const Header = ({
                   id="reader-settings-panel"
                   role="group"
                   aria-label="Reading settings"
-                  className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-xl shadow-slate-900/10 p-3 animate-pop-in origin-top-right z-50"
+                  className="absolute right-0 mt-2 w-64 md:w-60 max-h-[calc(100dvh-6rem)] overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-xl shadow-slate-900/10 p-3 animate-pop-in origin-top-right z-50"
                 >
+                  {/* On a phone the toolbar has no room for these, so the menu holds them. */}
+                  <div className="md:hidden mb-3 border-b border-gray-100 pb-3">
+                    <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Show</div>
+                    {[
+                      showSummaryControl && { label: 'Summary', value: showSummary, onChange: setShowSummary },
+                      showFullTextControl && { label: 'Full text', value: showFullText, onChange: setShowFullText },
+                      showQAControl && { label: 'Q&As', value: showQA, onChange: setShowQA },
+                    ].filter(Boolean).map((toggle) => (
+                      <button
+                        key={toggle.label}
+                        type="button"
+                        role="switch"
+                        aria-checked={toggle.value}
+                        onClick={() => toggle.onChange(!toggle.value)}
+                        className="flex w-full items-center justify-between rounded-md py-1.5 text-sm font-semibold text-gray-700"
+                      >
+                        {toggle.label}
+                        <span
+                          aria-hidden="true"
+                          className={`relative h-[18px] w-8 shrink-0 rounded-full transition-colors ${toggle.value ? 'bg-[#7654A1]' : 'bg-gray-300'}`}
+                        >
+                          <span
+                            className={`absolute top-0.5 h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-[left] ${toggle.value ? 'left-[calc(100%-1rem)]' : 'left-0.5'}`}
+                          />
+                        </span>
+                      </button>
+                    ))}
+                  </div>
                   {[
                     { heading: 'Font size', options: READER_FONT_SIZES, value: readerSize, onChange: setReaderSize },
                     { heading: 'Line spacing', options: READER_LINE_HEIGHTS, value: readerLine, onChange: setReaderLine },
@@ -224,13 +259,24 @@ export const Header = ({
                       </div>
                     </div>
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReaderOpen(false);
+                      window.print();
+                    }}
+                    className="md:hidden mt-3 flex w-full items-center gap-2 border-t border-gray-100 pt-3 text-sm font-bold text-[#7654A1]"
+                  >
+                    <AppIcon name="Printer" size={16} />
+                    Print this page
+                  </button>
                 </div>
               )}
             </div>
 
             <button
               onClick={() => window.print()}
-              className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full bg-white text-[#7654A1] shadow-sm hover:opacity-80"
+              className="hidden md:flex px-3 py-1.5 text-xs font-bold rounded-lg transition-all active:scale-95 items-center gap-2 h-full bg-white text-[#7654A1] shadow-sm hover:opacity-80"
               title="Print Current View"
             >
               <AppIcon name="Printer" size={16} />

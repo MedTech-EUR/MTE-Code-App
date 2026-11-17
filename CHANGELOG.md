@@ -9,6 +9,10 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### Footer on the Home page only, and compact — 2026-11-17
+- `App.jsx` passes the footer to the Home Hub only; the `footer` prop and `WithFooter` wrapper are gone from `DocumentReader`, `MainContent`, `TransparencyContent`, `TransparencyLandingPage`, `HistoricalDeclarationsContent`, `TreeContent`, `QuizContent`, `EventSupportContent` and `TPPTContent` (whose `pb-24` moves back to its scrolling area).
+- `SiteFooter.jsx`: same content in a band less than half as tall (157px → 67px at 1366px, 261px → 113px on a 390px phone), in small print: links 10px, the publisher's details and "Last updated" 9px, logo `h-3.5`, `py-4`. On a wide footer (`@3xl` container) the links and "Last updated" share the first line and the publisher's details take the second; the details paragraph becomes grid cells with `@3xl:contents`, so the date is not duplicated. Narrower, the date follows the details in the same paragraph.
+
 ### Home and footer, after the UX polish — 2026-11-17
 - `HubPage.jsx`: the welcome card's search bar is a real `<input type="search">` in a `role="search"` form, bound to App's `searchTerm` (the sidebar's box shows the same text and results appear as one types). Submitting calls `openSearchBox()` (cursor now goes to the end of the text) and bumps `searchHandoff`; `Sidebar.jsx` remembers the search and plays `animate-glow` (new keyframe `glow` in `index.css`, a teal ring) around its box, keyed by the count.
 - `ReturnVisit` shows both groups once either has an entry; `EmptyListHint` (dashed, faint, text at 4.5:1) stands in for the empty one.

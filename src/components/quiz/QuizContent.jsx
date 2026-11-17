@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { WithFooter } from '../SiteFooter';
 import { QuizConfig } from './QuizConfig';
 import { QuizSession } from './QuizSession';
 import { QuizResults } from './QuizResults';
 import { FULL_QUIZ_DATA } from '../../data/quizData';
 import { buildQuizPath } from '../../utils/routeUtils';
 
-export const QuizContent = ({ onExit, footer }) => {
+export const QuizContent = ({ onExit }) => {
   const [phase, setPhase] = useState('config'); // 'config', 'session', 'results'
   const [config, setConfig] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -81,7 +80,6 @@ export const QuizContent = ({ onExit, footer }) => {
 
   return (
     <div className="flex-1 h-full overflow-y-auto bg-slate-50/60 custom-scrollbar">
-      <WithFooter footer={footer}>
       {phase === 'config' && (
         <QuizConfig onStart={handleStartQuiz} />
       )}
@@ -102,7 +100,6 @@ export const QuizContent = ({ onExit, footer }) => {
           onExit={onExit}
         />
       )}
-      </WithFooter>
     </div>
   );
 };

@@ -330,10 +330,6 @@ const App = () => {
     if (sectionId === 'transparency') navigateTransparencyHome();
   };
 
-  // The footer every page ends with (SiteFooter.jsx); each section puts it at the end of its
-  // scrolling area.
-  const siteFooter = <SiteFooter onOpenVersionHistory={() => navigateChapter('changelog')} />;
-
   const handleGoHome = () => {
     setSidebarOpen(false);
     navigateHome();
@@ -448,7 +444,8 @@ const App = () => {
             ref={scrollRef}
             className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full"
           >
-            <WithFooter footer={siteFooter}>
+            {/* The site footer is on the Home page only (SiteFooter.jsx). */}
+            <WithFooter footer={<SiteFooter onOpenVersionHistory={() => navigateChapter('changelog')} />}>
             <HubPage
               onSelectSection={handleSectionSelect}
               searchTerm={searchTerm}
@@ -494,7 +491,6 @@ const App = () => {
             referenceContext={referenceContext}
             onOpenReference={handleOpenReference}
             sidePane={sidePane}
-            footer={siteFooter}
           />
         ) : activeSection === 'transparency' ? (
           <TransparencyContent
@@ -515,12 +511,10 @@ const App = () => {
             referenceContext={referenceContext}
             onOpenReference={handleOpenReference}
             sidePane={sidePane}
-            footer={siteFooter}
           />
         ) : activeSection === 'quiz' ? (
           <QuizContent
             onExit={handleGoHome}
-            footer={siteFooter}
           />
         ) : activeSection === 'event-support' ? (
           <Suspense
@@ -534,7 +528,6 @@ const App = () => {
               onTermClick={handleTermClick}
               onOpenReference={handleOpenReference}
               sidePane={sidePane}
-              footer={siteFooter}
             />
           </Suspense>
         ) : activeSection === 'tppt' ? (
@@ -543,7 +536,6 @@ const App = () => {
           >
             <TPPTContent
               onGoHome={handleGoHome}
-              footer={siteFooter}
             />
           </Suspense>
         ) : (
@@ -553,7 +545,6 @@ const App = () => {
             onOpenTool={handleSectionSelect}
             scrollRef={scrollRef}
             onOpenReference={navigateToReference}
-            footer={siteFooter}
           />
         )}
       </div>

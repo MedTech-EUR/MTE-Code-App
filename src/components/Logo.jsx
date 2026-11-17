@@ -40,7 +40,7 @@ export const CompactLogo = ({ className = "" }) => (
     <span className="sr-only">MedTech Europe: </span>
     <span>
       <span className="text-gray-950">The</span>{' '}
-      <span className="text-[#2799a8]">Code</span>{' '}
+      <span className="text-[#007A86]">Code</span>{' '}
       <span className="text-[#611d9d]">App</span>
     </span>
   </span>

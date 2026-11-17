@@ -125,5 +125,6 @@ See `PROJECT_CHECKS.md` for detailed instructions and troubleshooting.
 
 - Resolved on 2026-11-17: the missing tab icon. `public/favicon.svg` turned out to be Vite's default logo, so it was replaced by the MedTech Europe figure rather than linked as it was.
 - The installed app's name under its home-screen icon is still "TheCodeApp" (`short_name` in `vite.config.ts`), while the app is now called "The Code App" everywhere else. Changing it renames the icon on devices where the app is installed; decide with the product owner.
+- The TPPT Checker's empty result panel ("Import the agenda, review the sessions and select Calculate Eligibility.", `TPPTContent.tsx`, `text-xs font-light` in grey) fails axe's colour-contrast check at 1440px. It predates this work (`cad49bfe`); darken the text (for example `text-gray-600`) the next time that file is changed.
 - The Glossary's A–Z bar scrolls to the first term under a letter; the term sits below the reader's `scroll-mt-24`, so on short definitions the one before it shows above. Harmless; revisit if the Glossary gets a sticky header.
 

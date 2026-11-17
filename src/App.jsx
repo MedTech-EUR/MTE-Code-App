@@ -440,7 +440,25 @@ const App = () => {
             ref={scrollRef}
             className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full bg-[url(/home-backdrop.svg)] bg-no-repeat bg-size-[auto_34rem] bg-position-[right_-5rem_top_-3rem] lg:bg-size-[auto_58rem] lg:bg-position-[right_-9rem_top_-6rem] print:bg-none"
           >
-            <HubPage onSelectSection={handleSectionSelect} />
+            <HubPage
+              onSelectSection={handleSectionSelect}
+              recentHistory={history}
+              bookmarks={bookmarks}
+              onOpenRecentPage={(page) => {
+                if (page.section === 'transparency' && page.documentId) {
+                  navigateTransparencyUnit(page.documentId, page.id);
+                } else {
+                  navigateChapter(page.id);
+                }
+              }}
+              onOpenBookmark={(bookmark) => {
+                if (bookmark.section === 'transparency' && bookmark.documentId) {
+                  navigateTransparencySection(bookmark.documentId, bookmark.chapterId, bookmark.id);
+                } else {
+                  navigateCodeSection(bookmark.chapterId, bookmark.id);
+                }
+              }}
+            />
           </main>
         ) : activeSection === 'code' ? (
           <MainContent

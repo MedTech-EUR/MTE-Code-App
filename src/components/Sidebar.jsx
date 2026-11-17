@@ -757,10 +757,10 @@ export const Sidebar = ({
                 alert("To install the app, look for the install icon in your browser's address bar or menu.");
               }
             }}
-            className="flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-white bg-[#7654A1] hover:bg-[#634488] transition-colors shadow-sm gap-2"
+            className="flex items-center justify-center w-full px-4 py-3 text-sm font-bold rounded-xl text-[#7654A1] bg-[#7654A1]/10 border border-[#7654A1]/20 hover:bg-[#7654A1]/15 hover:border-[#7654A1]/30 transition-colors gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2"
           >
             <AppIcon name="Download" size={18} />
-            Install TheCodeApp
+            Install The Code App
           </button>
         </div>
       </nav>

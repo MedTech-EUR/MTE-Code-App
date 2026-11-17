@@ -15,7 +15,7 @@ export const HubPage = ({ onSelectSection }) => {
   const others = sections.filter((section) => !section.featured);
 
   return (
-    <div className="animate-fade-in mx-auto max-w-5xl px-4 pt-8 pb-24 sm:px-8 sm:pt-12 3xl:max-w-6xl">
+    <div className="animate-page-in mx-auto max-w-5xl px-4 pt-8 pb-24 sm:px-8 sm:pt-12 3xl:max-w-6xl">
       {/* Widths follow the room the page has, not the window: the sidebar beside it can be dragged. */}
       <div className="@container">
         {/* The header above already shows the logo; on paper, where the header is absent, it is printed here. */}

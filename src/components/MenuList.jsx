@@ -71,10 +71,10 @@ export const MenuTile = ({
 }) => (
   <Element
     style={accentStyle(accent)}
-    className={`group relative flex flex-col justify-between gap-6 rounded-xl border p-6 transition-colors duration-150 has-[h2>:focus-visible,h3>:focus-visible]:ring-2 has-[h2>:focus-visible,h3>:focus-visible]:ring-[var(--accent)] has-[h2>:focus-visible,h3>:focus-visible]:ring-offset-2 @xl:min-h-[13rem] @xl:gap-8 @2xl:p-7 print:min-h-0 print:border-gray-300 print:bg-transparent print:text-gray-900 ${
+    className={`group relative flex flex-col justify-between gap-6 rounded-xl border p-6 transition-[background-color,border-color,box-shadow,translate,scale] duration-300 ease-out-soft hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] active:duration-100 has-[h2>:focus-visible,h3>:focus-visible]:ring-2 has-[h2>:focus-visible,h3>:focus-visible]:ring-[var(--accent)] has-[h2>:focus-visible,h3>:focus-visible]:ring-offset-2 @xl:min-h-[13rem] @xl:gap-8 @2xl:p-7 print:min-h-0 print:border-gray-300 print:bg-transparent print:text-gray-900 ${
       filled
-        ? 'border-transparent bg-[var(--accent-text)] text-white hover:bg-[color-mix(in_srgb,var(--accent-text)_88%,black)]'
-        : 'border-gray-200 bg-white text-gray-900 hover:border-[var(--accent)]'
+        ? 'border-transparent bg-[var(--accent-text)] text-white shadow-[0_1px_2px_rgb(15_23_42/0.08)] hover:bg-[color-mix(in_srgb,var(--accent-text)_90%,black)] hover:shadow-[0_18px_40px_-18px_color-mix(in_srgb,var(--accent-text)_70%,transparent)]'
+        : 'border-gray-200 bg-white text-gray-900 shadow-[0_1px_2px_rgb(15_23_42/0.04)] hover:border-[var(--accent)] hover:shadow-[0_18px_40px_-20px_rgb(15_23_42/0.22)]'
     } ${className}`}
   >
     <div className="flex items-start justify-between gap-4" aria-hidden={note ? undefined : 'true'}>
@@ -89,13 +89,19 @@ export const MenuTile = ({
         )}
         <span
           aria-hidden="true"
-          className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors duration-150 print:hidden ${
+          className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors duration-300 ease-out-soft print:hidden ${
             filled
               ? 'border-white/40 group-hover:border-white group-hover:bg-white group-hover:text-[var(--accent-text)]'
               : 'border-gray-300 text-gray-500 group-hover:border-[var(--accent-text)] group-hover:bg-[var(--accent-text)] group-hover:text-white'
           }`}
         >
-          <AppIcon name={href ? 'ExternalLink' : 'ArrowRight'} size={18} />
+          <AppIcon
+            name={href ? 'ExternalLink' : 'ArrowRight'}
+            size={18}
+            className={`transition-transform duration-300 ease-out-soft ${
+              href ? 'group-hover:-translate-y-px group-hover:translate-x-px' : 'group-hover:translate-x-0.5'
+            }`}
+          />
         </span>
       </span>
     </div>
@@ -115,9 +121,12 @@ export const MenuTile = ({
   </Element>
 );
 
-/** The grid a page's tiles sit in: side by side where there is room, the first one wider. */
+/**
+ * The grid a page's tiles sit in: side by side where there is room, the first one wider. The
+ * tiles rise in one after another as the page opens (`stagger`, index.css).
+ */
 export const MenuTiles = ({ children, className = '' }) => (
-  <ul className={`grid gap-4 @xl:grid-cols-5 ${className}`}>{children}</ul>
+  <ul className={`stagger grid gap-4 @xl:grid-cols-5 ${className}`}>{children}</ul>
 );
 
 // Two tiles share a row 3:2; one, or more than two, each take a full row.
@@ -142,10 +151,11 @@ export const MenuList = ({ columns = 1, className = '', children }) => {
 
   return (
     <div className={`@container overflow-hidden rounded-xl border border-gray-200 bg-white print:border-gray-300 ${className}`}>
-      {/* Each row draws its top and left line; the list is shifted so the outer ones are cut off. */}
+      {/* Each row draws its top and left line; the list is shifted so the outer ones are cut off.
+          The rows rise in one after another as the list appears (`stagger`, index.css). */}
       <ul
         style={{ '--menu-rows': Math.ceil(count / 2) }}
-        className={`-ml-px -mt-px grid ${LIST_COLUMNS[columns] || ''}`}
+        className={`stagger -ml-px -mt-px grid ${LIST_COLUMNS[columns] || ''}`}
       >
         {children}
         {/* An odd number of rows leaves the second column one short: an empty cell closes its lines. */}
@@ -178,7 +188,7 @@ export const MenuRow = ({
 }) => (
   <li
     style={{ ...accentStyle(accent), '--menu-title-width': titleWidth }}
-    className="group relative flex items-start gap-4 border-l border-t border-gray-200 px-5 py-4 transition-colors duration-150 hover:bg-gray-50 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--accent)] @2xl:px-6 @2xl:py-5 print:break-inside-avoid"
+    className="group relative flex items-start gap-4 border-l border-t border-gray-200 px-5 py-4 transition-colors duration-200 hover:bg-[color-mix(in_srgb,var(--accent)_5%,white)] active:bg-[color-mix(in_srgb,var(--accent)_9%,white)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--accent)] @2xl:px-6 @2xl:py-5 print:break-inside-avoid"
   >
     {isNumber(icon) ? (
       <span aria-hidden="true" className="w-[1.375rem] shrink-0 text-center text-lg font-semibold leading-6 tabular-nums text-[var(--accent-text)]">
@@ -205,8 +215,8 @@ export const MenuRow = ({
     <AppIcon
       name={href ? 'ExternalLink' : 'ArrowRight'}
       size={18}
-      className={`mt-0.5 shrink-0 text-gray-400 transition duration-150 group-hover:text-[var(--accent-text)] print:hidden ${
-        href ? '' : 'group-hover:translate-x-0.5'
+      className={`mt-0.5 shrink-0 text-gray-400 transition duration-300 ease-out-soft group-hover:text-[var(--accent-text)] print:hidden ${
+        href ? 'group-hover:-translate-y-px group-hover:translate-x-px' : 'group-hover:translate-x-1'
       }`}
     />
   </li>

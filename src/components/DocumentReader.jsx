@@ -143,7 +143,8 @@ export const DocumentReader = ({
         )}
 
         {activeId === homeId ? renderLanding() : (
-          <div className="px-4 md:px-10 pb-24 pt-4 md:pt-6 print:px-0">
+          // Keyed by the item, so each chapter or unit rises in as it opens.
+          <div key={activeId} className="animate-page-in px-4 md:px-10 pb-24 pt-4 md:pt-6 print:px-0">
             {/* The text stops at the chosen line length (--reader-measure in index.css) and is
                 centred in the space between the panes. */}
             <div className="mx-auto w-full max-w-[var(--reader-measure)] print:max-w-none">
@@ -187,7 +188,7 @@ export const DocumentReader = ({
               </div>
 
               {showSummary && hasSummary && (
-                <div className="animate-fade-in mb-10">
+                <div className="animate-rise-in mb-10">
                   <div className="p-8 bg-purple-50 rounded-2xl border border-purple-100 shadow-sm">
                     <h2 className="text-3xl font-extrabold text-gray-900 mb-4">Summary</h2>
                     <div
@@ -199,7 +200,7 @@ export const DocumentReader = ({
               )}
 
               {showFullText && (
-                <div className={`animate-fade-in ${showSummary && hasSummary ? 'border-t border-gray-100 pt-10' : ''}`}>
+                <div className={`animate-rise-in ${showSummary && hasSummary ? 'border-t border-gray-100 pt-10' : ''}`}>
                   {renderBeforeSections?.(activeContent)}
 
                   {activeContent?.sections?.map((section) => (
@@ -288,7 +289,7 @@ export const DocumentReader = ({
         <aside
           id="side-pane"
           aria-label="Side panel"
-          className="@container hidden xl:flex flex-col relative shrink-0 w-[var(--side-pane-size)] h-full border-l border-gray-200 bg-slate-50 no-print"
+          className="@container hidden xl:flex flex-col relative shrink-0 w-[var(--side-pane-size)] h-full border-l border-gray-200 bg-slate-50 no-print [view-transition-name:reader-side-pane]"
         >
           <ResizeHandle
             edge="left"

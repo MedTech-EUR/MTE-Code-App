@@ -99,7 +99,7 @@ export const TransparencyLandingPage = ({ documents, onOpenDocument, onOpenUnit,
 
   return (
     <main className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
-      <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-5xl xl:max-w-6xl mx-auto pb-24">
+      <div className="animate-page-in px-4 sm:px-8 py-8 sm:py-10 max-w-5xl xl:max-w-6xl mx-auto pb-24">
         <PageHeader
           icon="Eye"
           accent="teal"
@@ -157,7 +157,7 @@ export const TransparencyDocumentLandingPage = ({
   sourcePdfUrl,
   onBack,
 }) => (
-  <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-7xl mx-auto pb-24">
+  <div className="animate-page-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-7xl mx-auto pb-24">
     <PageHeader
       icon={document.icon || 'FileText'}
       accent="teal"

@@ -54,7 +54,7 @@ export const QuizConfig = ({ onStart }) => {
   }, [selectedQuestionCount, questionLimit]);
 
   return (
-    <div className="max-w-2xl lg:max-w-6xl 3xl:max-w-[96rem] mx-auto px-4 sm:px-8 py-8 sm:py-10 animate-fade-in pb-24">
+    <div className="max-w-2xl lg:max-w-6xl 3xl:max-w-[96rem] mx-auto px-4 sm:px-8 py-8 sm:py-10 animate-page-in pb-24">
       <PageHeader
         icon="BookOpen"
         accent="purple"

@@ -235,7 +235,7 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
 
   return (
     <main className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
-      <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-[96rem] mx-auto pb-24">
+      <div className="animate-page-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-[96rem] mx-auto pb-24">
         <PageHeader
           icon="Search"
           accent="teal"

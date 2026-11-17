@@ -3,6 +3,7 @@ import { getPageForUrl } from '../config/pages';
 import { parseAppLocation } from '../config/routes';
 import { setDocumentPageMeta } from '../utils/pageMeta';
 import { createRouteEffectScheduler } from '../utils/routeEffects';
+import { runViewTransition } from '../utils/viewTransition';
 import {
   buildChapterPath,
   buildCodeHomePath,
@@ -38,6 +39,10 @@ export const useAppRouting = ({
     routeEffectsRef.current = createRouteEffectScheduler();
   }
 
+  // The page on screen, so a change to another page can cross-fade (utils/viewTransition.js)
+  // while a link to another part of the same page just scrolls there.
+  const pageKeyRef = useRef(null);
+
   const applyRoute = useCallback((route) => {
     setActiveSection(route.activeSection);
     setActiveId(route.activeId);
@@ -69,6 +74,20 @@ export const useAppRouting = ({
     setShowSummary,
   ]);
 
+  // The first page is shown as it loads; later page changes cross-fade.
+  const applyRouteWithTransition = useCallback((route) => {
+    const pageKey = [route.activeSection, route.activeId, route.activeDocumentId ?? ''].join('|');
+    const isFirstPage = pageKeyRef.current === null;
+    const isNewPage = pageKeyRef.current !== pageKey;
+    pageKeyRef.current = pageKey;
+
+    if (isFirstPage || !isNewPage) {
+      applyRoute(route);
+      return;
+    }
+    runViewTransition(() => applyRoute(route));
+  }, [applyRoute]);
+
   const syncFromBrowser = useCallback(() => {
     const route = parseAppLocation(window.location.pathname, window.location.hash);
 
@@ -76,8 +95,8 @@ export const useAppRouting = ({
       window.history.replaceState(null, '', route.canonicalUrl);
     }
 
-    applyRoute(route);
-  }, [applyRoute]);
+    applyRouteWithTransition(route);
+  }, [applyRouteWithTransition]);
 
   useEffect(() => {
     syncFromBrowser();
@@ -100,8 +119,8 @@ export const useAppRouting = ({
       window.history[historyMethod](null, '', route.canonicalUrl);
     }
 
-    applyRoute(route);
-  }, [applyRoute]);
+    applyRouteWithTransition(route);
+  }, [applyRouteWithTransition]);
 
   const navigateHome = useCallback(() => navigateTo(buildHomePath()), [navigateTo]);
   const navigateCodeHome = useCallback(() => navigateTo(buildCodeHomePath()), [navigateTo]);

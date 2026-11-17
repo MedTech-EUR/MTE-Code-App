@@ -429,7 +429,7 @@ const App = () => {
 
         {sidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/30 z-30 lg:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/30 z-30 lg:hidden backdrop-blur-sm animate-fade-in"
             onClick={() => setSidebarOpen(false)}
           ></div>
         )}

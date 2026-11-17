@@ -16,7 +16,7 @@ const summaryLead = (summary) => {
 };
 
 export const LandingPage = ({ onSelectChapter }) => (
-    <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-7xl mx-auto pb-24">
+    <div className="animate-page-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-7xl mx-auto pb-24">
         {/* The header above already shows the logo; on paper, where the header is absent, it is printed here. */}
         <Logo size={null} className="hidden print:flex mb-6 h-16 aspect-[26/5]" />
         <PageHeader

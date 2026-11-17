@@ -47,7 +47,7 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
   const progressPercentage = ((currentIndex) / questions.length) * 100;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-8 py-8 sm:py-10 animate-fade-in pb-24 min-h-full flex flex-col">
+    <div className="max-w-3xl mx-auto px-4 sm:px-8 py-8 sm:py-10 animate-page-in pb-24 min-h-full flex flex-col">
       {/* Header & Progress */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">

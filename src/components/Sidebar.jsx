@@ -293,9 +293,9 @@ export const Sidebar = ({
       aria-label="Navigation"
       className={`
         w-80 lg:w-[var(--sidebar-size)] bg-white border-r border-gray-200 flex flex-col h-full shrink-0 shadow-sm z-40
-        fixed inset-y-0 left-0 transition-transform duration-300
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0 lg:sticky lg:top-0
+        fixed inset-y-0 left-0 transition-[translate,box-shadow] duration-[420ms] ease-out-soft
+        ${sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
+        lg:translate-x-0 lg:sticky lg:top-0 lg:shadow-sm lg:[view-transition-name:app-sidebar]
       `}
     >
       {/* Top section: close button + home + search. Below 1024px the sidebar is a slide-in

@@ -68,7 +68,7 @@ export const Header = ({
 
   return (
     <>
-      <header className="h-20 flex-none border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 md:px-8 bg-white/95 backdrop-blur-sm z-30 shadow-sm relative">
+      <header className="h-20 flex-none border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 md:px-8 bg-white/95 backdrop-blur-sm z-30 shadow-sm relative [view-transition-name:app-header]">
         <div className="flex min-w-0 items-center gap-1 sm:gap-3 z-10">
           <button
             type="button"

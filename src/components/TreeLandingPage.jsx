@@ -38,7 +38,7 @@ export const TreeLandingPage = ({ onSelectTree, onOpenTool }) => {
   );
 
   return (
-    <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-5xl xl:max-w-6xl mx-auto pb-24">
+    <div className="animate-page-in px-4 sm:px-8 py-8 sm:py-10 max-w-5xl xl:max-w-6xl mx-auto pb-24">
       <PageHeader
         icon="GitBranch"
         accent="amber"

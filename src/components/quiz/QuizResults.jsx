@@ -68,7 +68,7 @@ export const QuizResults = ({ results, onRestart, onExit, config }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-8 py-8 sm:py-10 animate-fade-in pb-24 min-h-full flex flex-col">
+    <div className="max-w-2xl mx-auto px-4 sm:px-8 py-8 sm:py-10 animate-page-in pb-24 min-h-full flex flex-col">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex-1 overflow-y-auto custom-scrollbar">
         
         {/* Score Header */}

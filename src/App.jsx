@@ -18,6 +18,7 @@ import { Sidebar } from './components/Sidebar';
 import { MainContent } from './components/MainContent';
 import { InstallPrompt } from './components/InstallPrompt';
 import { HubPage } from './components/HubPage';
+import { SiteFooter, WithFooter } from './components/SiteFooter';
 import { TreeContent } from './components/TreeContent';
 import { QuizContent } from './components/quiz/QuizContent';
 import { TransparencyContent } from './components/TransparencyContent';
@@ -75,6 +76,8 @@ const App = () => {
   const [showFullText, setShowFullText] = useState(true);
   const [showQA, setShowQA] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  // Counts hand-overs from the Home page's search field to the menu's search box (Sidebar).
+  const [searchHandoff, setSearchHandoff] = useState(0);
   const debouncedSearch = useDebounce(searchTerm, 300);
   const [readerOpen, setReaderOpen] = useState(false);
   const {
@@ -327,6 +330,10 @@ const App = () => {
     if (sectionId === 'transparency') navigateTransparencyHome();
   };
 
+  // The footer every page ends with (SiteFooter.jsx); each section puts it at the end of its
+  // scrolling area.
+  const siteFooter = <SiteFooter onOpenVersionHistory={() => navigateChapter('changelog')} />;
+
   const handleGoHome = () => {
     setSidebarOpen(false);
     navigateHome();
@@ -426,6 +433,7 @@ const App = () => {
           onPreviewResult={sidePanelEnabled ? handlePreviewSearchResult : undefined}
           canPreviewResult={canPreviewSearchResult}
           resize={paneWidths.sidebar}
+          searchHandoff={searchHandoff}
         />
 
         {sidebarOpen && (
@@ -440,9 +448,15 @@ const App = () => {
             ref={scrollRef}
             className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full"
           >
+            <WithFooter footer={siteFooter}>
             <HubPage
               onSelectSection={handleSectionSelect}
-              onOpenSearch={() => openSearchBox(setSidebarOpen)}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              onSearchSubmit={() => {
+                openSearchBox(setSidebarOpen);
+                setSearchHandoff((count) => count + 1);
+              }}
               recentHistory={history}
               bookmarks={bookmarks}
               onOpenRecentPage={(page) => {
@@ -460,6 +474,7 @@ const App = () => {
                 }
               }}
             />
+            </WithFooter>
           </main>
         ) : activeSection === 'code' ? (
           <MainContent
@@ -479,6 +494,7 @@ const App = () => {
             referenceContext={referenceContext}
             onOpenReference={handleOpenReference}
             sidePane={sidePane}
+            footer={siteFooter}
           />
         ) : activeSection === 'transparency' ? (
           <TransparencyContent
@@ -499,10 +515,12 @@ const App = () => {
             referenceContext={referenceContext}
             onOpenReference={handleOpenReference}
             sidePane={sidePane}
+            footer={siteFooter}
           />
         ) : activeSection === 'quiz' ? (
           <QuizContent
             onExit={handleGoHome}
+            footer={siteFooter}
           />
         ) : activeSection === 'event-support' ? (
           <Suspense
@@ -516,6 +534,7 @@ const App = () => {
               onTermClick={handleTermClick}
               onOpenReference={handleOpenReference}
               sidePane={sidePane}
+              footer={siteFooter}
             />
           </Suspense>
         ) : activeSection === 'tppt' ? (
@@ -524,6 +543,7 @@ const App = () => {
           >
             <TPPTContent
               onGoHome={handleGoHome}
+              footer={siteFooter}
             />
           </Suspense>
         ) : (
@@ -533,6 +553,7 @@ const App = () => {
             onOpenTool={handleSectionSelect}
             scrollRef={scrollRef}
             onOpenReference={navigateToReference}
+            footer={siteFooter}
           />
         )}
       </div>

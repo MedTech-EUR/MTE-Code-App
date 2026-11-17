@@ -182,9 +182,11 @@ This app precaches the core reader and application assets via `vite-plugin-pwa` 
 ### ⭐ Bookmarks & History
 Users can save specific Code or Transparency sections to a personalized **Bookmarks** group in the sidebar (via `useBookmarks.js`). The app also tracks the last 5 visited Code chapters or Transparency document units under **Recently Viewed** (via `useRecentHistory.js`). Stored identifiers are namespaced by publication so similarly named sections cannot collide. Both are saved silently to `window.localStorage` so they persist without user accounts. The Home Hub lists the last three pages under **Continue reading** and the first three bookmarks under **Your bookmarks** (`utils/returnVisit.js`), only when something is saved.
 
+The Home page's welcome card has a search field that shares its text with the sidebar's search box: results appear in the sidebar as you type, and Enter moves the cursor to the sidebar's box (opening the menu on phones) while the box glows for a moment (`animate-glow`). Every page ends with the site footer (`SiteFooter.jsx`): the publisher's details, links, and "Last updated", the date of the commit the build was made from (`VITE_LAST_UPDATED`, set in `vite.config.ts`).
+
 ### 🗂️ Collapsible Sidebar Navigation
 The sidebar uses a hierarchical, fully collapsible group structure:
-- **Home Hub:** Bookmarks and Recently Viewed are expanded by default.
+- **Bookmarks and Recently Viewed:** collapsed rows showing how many entries each holds, everywhere. The Home page lists them in full ("Your bookmarks", "Continue reading"); a faint placeholder stands in for whichever is still empty.
 - **Code section:** "The Code" parent group expands automatically, revealing sub-groups (Introductory Chapters, Part 1: The Code, Part 2: Complaint Handling, Part 3: Annexes & Glossary).
 - **Transparency section:** The "Transparency" group reveals each registered publication and its reader units.
 - **Decision Trees section:** The "Decision Trees" group expands, showing a "Browse Decision Trees" link.

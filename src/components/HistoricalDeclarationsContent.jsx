@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { WithFooter } from './SiteFooter';
 import { AppIcon } from './AppIcons';
 import { PageHeader } from './PageHeader';
 
@@ -72,7 +73,7 @@ function buildHash(filters, page, id) {
   return `#search${paramStr ? `?${paramStr}` : ''}`;
 }
 
-export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) => {
+export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome, footer }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [page, setPage] = useState(1);
@@ -235,6 +236,7 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
 
   return (
     <main className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
+      <WithFooter footer={footer}>
       <div className="animate-page-in px-4 sm:px-8 py-8 sm:py-10 max-w-6xl 3xl:max-w-[96rem] mx-auto pb-24">
         <PageHeader
           icon="Search"
@@ -401,6 +403,7 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
           </>
         )}
       </div>
+      </WithFooter>
 
       {isModalOpen && selectedDeclaration && (
         <div

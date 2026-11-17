@@ -74,6 +74,7 @@ export const TransparencyContent = ({
   referenceContext,
   onOpenReference,
   sidePane,
+  footer,
 }) => {
   if (!activeDocumentId) {
     return (
@@ -82,6 +83,7 @@ export const TransparencyContent = ({
         onOpenDocument={onNavigateDocument}
         onOpenUnit={onNavigateUnit}
         onSearchDocument={(documentId, query) => onSearchHistoricalDeclarations?.(query)}
+        footer={footer}
       />
     );
   }
@@ -90,6 +92,7 @@ export const TransparencyContent = ({
     return (
       <HistoricalDeclarationsContent
         onNavigateTransparencyHome={onNavigateTransparencyHome}
+        footer={footer}
       />
     );
   }
@@ -105,6 +108,7 @@ export const TransparencyContent = ({
         onOpenDocument={onNavigateDocument}
         onOpenUnit={onNavigateUnit}
         onSearchDocument={(documentId, query) => onSearchHistoricalDeclarations?.(query)}
+        footer={footer}
       />
     );
   }
@@ -180,6 +184,7 @@ export const TransparencyContent = ({
       referenceContext={referenceContext}
       onOpenReference={onOpenReference}
       sidePane={sidePane}
+      footer={footer}
     />
   );
 };

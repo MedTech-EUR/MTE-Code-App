@@ -1,4 +1,5 @@
 import React from 'react';
+import { WithFooter } from './SiteFooter';
 import DOMPurify from 'dompurify';
 import { AppIcon } from './AppIcons';
 import { Highlight } from './Highlight';
@@ -38,6 +39,8 @@ export const DocumentReader = ({
     Number.isNaN(Number(content?.icon)) ? '' : `Ch ${content?.icon} - `
   ),
   renderBeforeSections,
+  // The site footer, at the end of the reading area (SiteFooter.jsx).
+  footer,
   // Narrows the sections shown (the Glossary's filter box); all of them when absent.
   filterSection,
   buildSectionPath,
@@ -131,6 +134,7 @@ export const DocumentReader = ({
         onScroll={handleScroll}
         className={`flex-1 min-w-0 overflow-y-auto bg-white custom-scrollbar h-full print:h-auto print:overflow-visible relative ${readerClassName}`}
       >
+        <WithFooter footer={footer}>
         {activeId !== homeId && (
           <div
             className="sticky top-0 left-0 right-0 h-1 bg-gray-100/60 z-20 no-print pointer-events-none"
@@ -286,6 +290,7 @@ export const DocumentReader = ({
             </div>
           </div>
         )}
+        </WithFooter>
       </main>
 
       {showSidePane && (

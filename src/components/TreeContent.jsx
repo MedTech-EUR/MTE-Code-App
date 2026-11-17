@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { WithFooter } from './SiteFooter';
 import { TreeLandingPage } from './TreeLandingPage';
 import { DecisionTree } from './DecisionTree';
 import { TreeVisualization } from './TreeVisualization';
@@ -7,7 +8,7 @@ import { TreeVisualization } from './TreeVisualization';
  * TreeContent — main content area for the Decision Trees section.
  * Manages routing between the tree landing page, interactive tree, and visualization.
  */
-export const TreeContent = ({ activeId, setActiveId, scrollRef, onOpenReference, onOpenTool }) => {
+export const TreeContent = ({ activeId, setActiveId, scrollRef, onOpenReference, onOpenTool, footer }) => {
   const [showVisualization, setShowVisualization] = useState(false);
   const localRef = useRef(null);
   const ref = scrollRef || localRef;
@@ -32,7 +33,9 @@ export const TreeContent = ({ activeId, setActiveId, scrollRef, onOpenReference,
   if (!activeId || activeId === 'home' || activeId === 'trees-home') {
     return (
       <main ref={ref} className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
-        <TreeLandingPage onSelectTree={handleSelectTree} onOpenTool={onOpenTool} />
+        <WithFooter footer={footer}>
+          <TreeLandingPage onSelectTree={handleSelectTree} onOpenTool={onOpenTool} />
+        </WithFooter>
       </main>
     );
   }
@@ -41,10 +44,12 @@ export const TreeContent = ({ activeId, setActiveId, scrollRef, onOpenReference,
   if (showVisualization) {
     return (
       <main ref={ref} className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
-        <TreeVisualization
-          treeId={activeId}
-          onClose={() => setShowVisualization(false)}
-        />
+        <WithFooter footer={footer}>
+          <TreeVisualization
+            treeId={activeId}
+            onClose={() => setShowVisualization(false)}
+          />
+        </WithFooter>
       </main>
     );
   }
@@ -52,12 +57,14 @@ export const TreeContent = ({ activeId, setActiveId, scrollRef, onOpenReference,
   // Interactive tree
   return (
     <main ref={ref} className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
-      <DecisionTree
-        treeId={activeId}
-        onBack={handleBackToLanding}
-        onShowVisualization={() => setShowVisualization(true)}
-        onOpenReference={onOpenReference}
-      />
+      <WithFooter footer={footer}>
+        <DecisionTree
+          treeId={activeId}
+          onBack={handleBackToLanding}
+          onShowVisualization={() => setShowVisualization(true)}
+          onOpenReference={onOpenReference}
+        />
+      </WithFooter>
     </main>
   );
 };

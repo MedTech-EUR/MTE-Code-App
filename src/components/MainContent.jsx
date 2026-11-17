@@ -25,6 +25,7 @@ export const MainContent = ({
   referenceContext,
   onOpenReference,
   sidePane,
+  footer,
 }) => {
   // The Glossary has a filter box and an A–Z bar above its definitions.
   const isGlossary = activeContent?.id === 'glossary';
@@ -96,6 +97,7 @@ export const MainContent = ({
       referenceContext={referenceContext}
       onOpenReference={onOpenReference}
       sidePane={sidePane}
+      footer={footer}
     />
   );
 };

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { WithFooter } from './SiteFooter';
 import { AppIcon } from './AppIcons';
 import { PageBackLink, PageHeader } from './PageHeader';
 import { ContextPanel } from './ContextPanel';
@@ -135,7 +136,7 @@ function AnswerFacts({ questions, answers }) {
   );
 }
 
-export default function EventSupportContent({ onBack, scrollRef, glossaryMap, onTermClick, onOpenReference, sidePane }) {
+export default function EventSupportContent({ onBack, scrollRef, glossaryMap, onTermClick, onOpenReference, sidePane, footer }) {
   const [answers, setAnswers] = useState({});
   const [stage, setStage] = useState('activity');
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -313,6 +314,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
         onKeyUp={handleKeyUp}
         className={`flex-1 min-w-0 h-full overflow-y-auto bg-slate-50/60 custom-scrollbar print:h-auto print:overflow-visible print:bg-white ${LINK_STYLES}`}
       >
+        <WithFooter footer={footer}>
         <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8 sm:py-10 print:p-0 animate-page-in">
           <div className="no-print mb-5 flex items-center justify-between gap-3">
             <PageBackLink onClick={onBack}>All Decision Trees</PageBackLink>
@@ -515,6 +517,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
             </>
           )}
         </div>
+        </WithFooter>
       </main>
 
       {sidePane && (

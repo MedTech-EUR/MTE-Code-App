@@ -1,4 +1,5 @@
 import React, { useId, useState } from 'react';
+import { WithFooter } from './SiteFooter';
 import { AppIcon } from './AppIcons';
 import { MenuGroup, MenuList, MenuRow, MenuTile, MenuTiles, tileSpan } from './MenuList';
 import { PageHeader } from './PageHeader';
@@ -94,11 +95,12 @@ const TileSearch = ({ label, placeholder, onSearch }) => {
  * The Transparency page: a tile for each publication and tool (a tool that is a search gets its
  * search box on the tile), then each publication's chapters and annexes with its files.
  */
-export const TransparencyLandingPage = ({ documents, onOpenDocument, onOpenUnit, onSearchDocument }) => {
+export const TransparencyLandingPage = ({ documents, onOpenDocument, onOpenUnit, onSearchDocument, footer }) => {
   const publications = documents.filter((document) => document.units?.length > 0);
 
   return (
     <main className="flex-1 overflow-y-auto bg-slate-50/60 custom-scrollbar h-full">
+      <WithFooter footer={footer}>
       <div className="animate-page-in px-4 sm:px-8 py-8 sm:py-10 max-w-5xl xl:max-w-6xl mx-auto pb-24">
         <PageHeader
           icon="Eye"
@@ -146,6 +148,7 @@ export const TransparencyLandingPage = ({ documents, onOpenDocument, onOpenUnit,
           ))}
         </div>
       </div>
+      </WithFooter>
     </main>
   );
 };

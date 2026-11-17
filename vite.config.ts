@@ -1,5 +1,6 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
+import { execSync } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import {defineConfig} from 'vite';
@@ -8,8 +9,24 @@ import { adminFiles } from './scripts/lib/admin-files.mjs';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
+/**
+ * The date of the commit this build is made from (YYYY-MM-DD), shown as "Last updated" in the
+ * footer (SiteFooter.jsx). The site is built from main, so this is the last change to main.
+ * Empty when there is no Git history (the footer then leaves the line out).
+ */
+const lastCommitDate = (() => {
+  try {
+    return execSync('git log -1 --format=%cs', { cwd: projectRoot, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+  } catch {
+    return '';
+  }
+})();
+
 export default defineConfig(() => {
   return {
+    define: {
+      'import.meta.env.VITE_LAST_UPDATED': JSON.stringify(lastCommitDate),
+    },
     plugins: [
       react(), 
       tailwindcss(),

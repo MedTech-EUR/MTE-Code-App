@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { WithFooter } from './SiteFooter';
 import { AppIcon } from './AppIcons';
 import { PageHeader } from './PageHeader';
 import {
@@ -115,9 +116,11 @@ function renderHighlightedTitle(title: string, type: SessionType) {
 
 interface TPPTContentProps {
   onGoHome: () => void;
+  /** The site footer, at the end of the page (SiteFooter.jsx). */
+  footer?: React.ReactNode;
 }
 
-export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
+export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome, footer }) => {
   const [inputText, setInputText] = useState("");
   const [isExtracting, setIsExtracting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -516,7 +519,8 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
   };
 
   return (
-    <div className="flex-1 h-full overflow-y-auto bg-slate-50/60 custom-scrollbar pb-24">
+    <div className="flex-1 h-full overflow-y-auto bg-slate-50/60 custom-scrollbar">
+      <WithFooter footer={footer} contentClassName="pb-24">
       {/* Top Banner and Navigation. From 1440px the page is two columns: the agenda and sessions on
           the left, and the result on the right, where it stays in view while sessions are edited. */}
       <div className="max-w-4xl min-[1440px]:max-w-[92rem] 3xl:max-w-[110rem] mx-auto px-4 sm:px-8 pt-8 sm:pt-10 pb-2 min-[1440px]:grid min-[1440px]:grid-cols-2 min-[1440px]:gap-x-8 min-[1440px]:items-start">
@@ -1125,6 +1129,7 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
           </div>
         </div>
       )}
+      </WithFooter>
     </div>
   );
 };

@@ -74,18 +74,17 @@ const CollapsibleGroup = ({
   );
 };
 
+// Bookmarks and Recently Viewed start collapsed, as rows with their counts: the Home page
+// lists them in full ("Your bookmarks", "Continue reading").
 const getDefaultExpandedGroups = ({
   activeSection,
   activeDocumentId,
   isWebsitePage,
-  hasBookmarks,
-  hasRecentHistory,
 }) => {
   const groups = new Set();
 
   if (!activeSection) {
-    if (hasBookmarks) groups.add('bookmarks');
-    if (hasRecentHistory) groups.add('history');
+    // Home: nothing open; the Home page itself is the overview.
   } else if (isWebsitePage) {
     groups.add('section-website');
   } else if (activeSection === 'code') {
@@ -149,6 +148,9 @@ export const Sidebar = ({
   onPreviewResult,
   canPreviewResult,
   resize,
+  // Goes up by one each time the Home page's search bar hands its search over (Enter): the
+  // box glows for a moment, so the eye finds it, and the search joins the recent searches.
+  searchHandoff = 0,
 }) => {
   // True while the active *section* is Transparency, independent of whether a search is
   // active -- it decides both the search scope and which parts of the non-search tree show.
@@ -165,8 +167,6 @@ export const Sidebar = ({
       activeSection,
       activeDocumentId,
       isWebsitePage,
-      hasBookmarks: bookmarks.length > 0,
-      hasRecentHistory: recentHistory.length > 0,
     })
   ));
 
@@ -180,15 +180,11 @@ export const Sidebar = ({
       activeSection,
       activeDocumentId,
       isWebsitePage,
-      hasBookmarks: bookmarks.length > 0,
-      hasRecentHistory: recentHistory.length > 0,
     })
   ), [
     activeDocumentId,
     activeSection,
     isWebsitePage,
-    bookmarks.length,
-    recentHistory.length,
   ]);
 
   // Result-type chips (Provisions / Q&As / Definitions), local to the sidebar and on by default.
@@ -228,6 +224,11 @@ export const Sidebar = ({
   const rememberSearch = (term) => {
     setRecentSearches((previous) => addRecentSearch(previous, term));
   };
+
+  useEffect(() => {
+    if (searchHandoff > 0 && searchTerm.trim()) rememberSearch(searchTerm);
+    // Only when a search is handed over, not on every keystroke.
+  }, [searchHandoff]);
 
   // When activeSection changes, update default expansion
   useEffect(() => {
@@ -332,6 +333,14 @@ export const Sidebar = ({
 
         {/* Search bar */}
         <div className="relative mb-4">
+          {searchHandoff > 0 && (
+            // Keyed, so each hand-over plays the glow again.
+            <span
+              key={searchHandoff}
+              aria-hidden="true"
+              className="animate-glow pointer-events-none absolute -inset-1 rounded-[0.95rem]"
+            />
+          )}
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
             <AppIcon name="Search" size={16} />
           </div>
@@ -459,6 +468,7 @@ export const Sidebar = ({
               <CollapsibleGroup
                 label="Bookmarks"
                 icon="Star"
+                badge={bookmarks.length}
                 expanded={expandedGroups.has('bookmarks')}
                 onToggle={() => toggleGroup('bookmarks')}
               >
@@ -726,6 +736,7 @@ export const Sidebar = ({
               <CollapsibleGroup
                 label="Recently Viewed"
                 icon="Clock"
+                badge={recentHistory.length}
                 expanded={expandedGroups.has('history')}
                 onToggle={() => toggleGroup('history')}
                 className="mt-4"

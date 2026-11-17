@@ -304,6 +304,9 @@ body {
    animate-toast-in        a short confirmation at the edge of the window.
    animate-badge-in        a small mark (a tick, a cross) arriving with a little spring.
    animate-slide-in-right  the reader toolbar arriving in the header.
+   animate-glow            a teal ring that swells and fades twice, to draw the eye to
+                           something elsewhere on the screen (the menu's search box when the
+                           Home page's search bar hands a search over).
    stagger                 on a list: its items rise in one after another.
    skeleton                a loading placeholder with a soft sheen.
 
@@ -352,6 +355,12 @@ body {
 @keyframes sheen {
   from { background-position: 100% 0; }
   to { background-position: -100% 0; }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 0 0 rgb(0 153 167 / 0.55); border-color: rgb(0 153 167 / 0.9); }
+  70% { box-shadow: 0 0 0 0.75rem rgb(0 153 167 / 0); border-color: rgb(0 153 167 / 0.6); }
+  100% { box-shadow: 0 0 0 0 rgb(0 153 167 / 0); border-color: rgb(0 153 167 / 0); }
 }
 
 @keyframes view-fade-out {
@@ -427,6 +436,15 @@ body {
 .animate-slide-in-right {
   animation-name: slide-in-right;
   animation-duration: 0.42s;
+}
+
+.animate-glow {
+  border: 2px solid transparent;
+  animation-name: glow;
+  animation-duration: 0.9s;
+  animation-iteration-count: 2;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
 }
 
 /* A list whose items arrive one after another: 40ms apart, the tenth and later together. */

@@ -46,7 +46,10 @@ import {
   Compass,
   Gift,
   Award,
-  ThumbsUp
+  ThumbsUp,
+  MinusCircle,
+  ClipboardList,
+  Target
 } from 'lucide-react';
 
 export {
@@ -93,7 +96,10 @@ export {
   Compass,
   Gift,
   Award,
-  ThumbsUp
+  ThumbsUp,
+  MinusCircle,
+  ClipboardList,
+  Target
 };
 
 const CustomSvgWrapper = ({ size = 18, className = "", children }) => (
@@ -220,7 +226,7 @@ const lucideIconMap = {
   Calculator, Trash2, Plus, AlertCircle, Upload, Loader2, AlertTriangle,
   ArrowRight, BookOpen, Check, CheckCircle, Maximize2, Minimize2, Share2,
   XCircle, Lightbulb, Send, Copy, Link, ExternalLink, Compass, Gift, Award,
-  ThumbsUp
+  ThumbsUp, MinusCircle, ClipboardList, Target
 };
 
 export const AppIcon = ({ name, size = 18, className = "" }) => {

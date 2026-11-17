@@ -59,18 +59,66 @@ const bySourceOrder = (a, b) => (a.order[0] - b.order[0]) || (a.order[1] - b.ord
 const optionLabel = (data, questionId, value) => data.questions[questionId]?.options
   .find(([option]) => option === value)?.[1] ?? value;
 
+// Which parts of an answer show, shared by the page and its copied summary.
+function resultParts(data, result) {
+  return {
+    // Not shown when the activity itself is ruled out: no CVS decision could change that.
+    showCvsCard: Boolean(result.context?.thirdParty)
+      && !['outside', 'handoff'].includes(result.permission)
+      && !(result.permission === 'prohibited' && result.blocking === 'rule' && !result.evidence),
+    cvsCardId: CVS_CARD_MESSAGES[result.cvsRequirement] || 'cvsUnknown',
+    missing: result.missing.map((item) => (item.question ? data.questions[item.question].label : formatMessage(data, item.id))),
+    sources: result.sources.map((key) => describeSource(data, key)).filter(Boolean).sort(bySourceOrder),
+    // Less common circumstances that can change an answer about a third-party Event.
+    showConsiderations: Boolean(result.context?.thirdParty) && !['outside', 'handoff'].includes(result.permission),
+  };
+}
+
+/**
+ * The answer as sections of the copied summary (utils/resultSummary.js), in the page's order.
+ * `origin` makes the Code's links absolute.
+ */
+export function eventSupportSummarySections(data, result, origin) {
+  const { showCvsCard, cvsCardId, missing, sources } = resultParts(data, result);
+  const evidence = showCvsCard && result.evidence;
+  return [
+    {
+      lines: [
+        { label: 'Answer', value: data.outcomes[result.outcome] },
+        data.outcomeTexts[result.outcome],
+        data.messages.codeDisclaimer,
+      ],
+    },
+    ...result.warnings.map((warning) => ({
+      heading: formatMessage(data, warning.titleId),
+      lines: [formatMessage(data, warning.messageId, warning.params), warning.noteId ? formatMessage(data, warning.noteId) : ''],
+    })),
+    { heading: 'Why this answer?', lines: result.reasons.map((reason) => `- ${formatMessage(data, reason.id, reason.params)}`) },
+    {
+      heading: 'CVS position',
+      lines: showCvsCard ? [
+        formatMessage(data, cvsCardId),
+        evidence ? `${evidence.name} · ${evidence.emtId}` : '',
+        evidence ? { label: 'Status in CVS', value: `${evidence.status.raw} (checked ${new Date(evidence.retrievedAt).toLocaleString()})` } : '',
+        !evidence && result.cvsRelevant ? 'No CVS record has been confirmed for this Event.' : '',
+      ] : [],
+    },
+    { heading: 'Still to confirm', lines: missing.map((text) => `- ${text}`) },
+    {
+      heading: 'What the company would pay',
+      lines: result.expenses.map((expense) => `- ${optionLabel(data, 'expenses', expense.id)}: ${data.expenseStates[expense.state]}. ${formatMessage(data, expense.reason)}`),
+    },
+    {
+      heading: 'Conditions',
+      lines: result.conditions.map((condition) => `- ${(CONDITION_ANSWERS[condition.answer] || CONDITION_ANSWERS.unknown).label}: ${condition.label}`),
+    },
+    { heading: 'Sources', lines: sources.map((source) => `- ${source.label}: ${new URL(source.href, origin).href}`) },
+  ];
+}
+
 export default function EventSupportResult({ data, result, glossaryMap }) {
   const style = OUTCOME_STYLES[result.outcome] || OUTCOME_STYLES.review;
-  // Not shown when the activity itself is ruled out: no CVS decision could change that.
-  const showCvsCard = Boolean(result.context?.thirdParty)
-    && !['outside', 'handoff'].includes(result.permission)
-    && !(result.permission === 'prohibited' && result.blocking === 'rule' && !result.evidence);
-  const cvsCardId = CVS_CARD_MESSAGES[result.cvsRequirement] || 'cvsUnknown';
-  const missing = result.missing.map((item) => (item.question ? data.questions[item.question].label : formatMessage(data, item.id)));
-  const sources = result.sources.map((key) => describeSource(data, key)).filter(Boolean).sort(bySourceOrder);
-
-  // Less common circumstances that can change an answer about a third-party Event.
-  const showConsiderations = Boolean(result.context?.thirdParty) && !['outside', 'handoff'].includes(result.permission);
+  const { showCvsCard, cvsCardId, missing, sources, showConsiderations } = resultParts(data, result);
 
   // Every text in reading order, so each glossary term is linked once in the whole answer.
   const texts = [

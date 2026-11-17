@@ -5,7 +5,9 @@ import { ContextPanel } from './ContextPanel';
 import { ResizeHandle } from './ResizeHandle';
 import CvsEventLookup from './CvsEventLookup';
 import EventSupportAgenda from './EventSupportAgenda';
-import EventSupportResult, { optionLabel } from './EventSupportResult';
+import EventSupportResult, { eventSupportSummarySections, optionLabel } from './EventSupportResult';
+import { CopySummaryButton } from './CopySummaryButton';
+import { buildResultSummary } from '../utils/resultSummary';
 import { useCvsLookup } from '../hooks/useCvsLookup';
 import { useCheckerText } from '../hooks/useCheckerText';
 import { useKeepReadingPosition } from '../hooks/useKeepReadingPosition';
@@ -108,16 +110,19 @@ function ConditionList({ conditions, answers, onChange, glossaryMap }) {
   );
 }
 
+// An answer as text, for the list of answers and the copied summary.
+function describeAnswer(question, answers) {
+  const value = answers[question.id];
+  if (question.type === 'agenda') {
+    return (answers.sessions || []).map((session) => `${session.title}: ${session.type}, ${session.durationMinutes} min`).join('; ') || 'Not given';
+  }
+  if (question.type === 'multi') return (value || []).map((item) => optionLabel(data, question.id, item)).join(', ') || 'Not given';
+  const labels = question.options.find(([option]) => option === value);
+  return labels ? labels[1] : 'Not given';
+}
+
 function AnswerFacts({ questions, answers }) {
-  const describe = (question) => {
-    const value = answers[question.id];
-    if (question.type === 'agenda') {
-      return (answers.sessions || []).map((session) => `${session.title}: ${session.type}, ${session.durationMinutes} min`).join('; ') || 'Not given';
-    }
-    if (question.type === 'multi') return (value || []).map((item) => optionLabel(data, question.id, item)).join(', ') || 'Not given';
-    const labels = question.options.find(([option]) => option === value);
-    return labels ? labels[1] : 'Not given';
-  };
+  const describe = (question) => describeAnswer(question, answers);
   return (
     <dl className="mt-4 space-y-3 text-sm">
       {questions.map((question) => (
@@ -439,6 +444,19 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
                   <button type="button" disabled={preparing || Boolean(lookup.busy)} onClick={printSummary} className={secondary}>
                     <AppIcon name="Printer" size={16} /> {preparing ? 'Checking…' : 'Print summary'}
                   </button>
+                  <CopySummaryButton
+                    className={secondary}
+                    iconSize={16}
+                    getText={() => buildResultSummary({
+                      title: 'Can we support this event?',
+                      url: `${window.location.origin}${window.location.pathname}`,
+                      sections: [
+                        { lines: [{ label: 'Planned support', value: activity?.label }, { label: 'Rules version', value: result.version }] },
+                        { heading: 'Your answers', lines: eventQuestions.map((question) => ({ question: question.label, answer: describeAnswer(question, answers) })) },
+                        ...eventSupportSummarySections(data, result, window.location.origin),
+                      ],
+                    })}
+                  />
                 </div>
               </div>
               {lookup.error && (

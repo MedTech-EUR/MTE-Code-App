@@ -10,17 +10,18 @@ import {
   resolveTreeReference,
 } from '../utils/crossReferences';
 
-const OUTCOME_STYLES = {
-  'compliant':     { bg: 'bg-emerald-50',  border: 'border-emerald-200', text: 'text-emerald-800', icon: '✅', label: 'Compliant' },
-  'non-compliant': { bg: 'bg-red-50',      border: 'border-red-200',     text: 'text-red-800',     icon: '❌', label: 'Non-Compliant' },
-  'conditional':   { bg: 'bg-amber-50',    border: 'border-amber-200',   text: 'text-amber-800',   icon: '⚠️', label: 'Conditional' },
-  'consult-legal': { bg: 'bg-blue-50',     border: 'border-blue-200',    text: 'text-blue-800',    icon: '⚖️', label: 'Consult Legal' },
-  'not-required':  { bg: 'bg-teal-50',     border: 'border-teal-200',    text: 'text-teal-800',    icon: 'ℹ️', label: 'CVS Assessment Not Required' },
-  'out-of-scope':  { bg: 'bg-purple-50',   border: 'border-purple-200',  text: 'text-purple-800',  icon: '➖', label: 'Out of Scope' },
-  'not-applicable':{ bg: 'bg-purple-50',   border: 'border-purple-200',  text: 'text-purple-800',  icon: '➖', label: 'Not Applicable' },
-  'prior-review':  { bg: 'bg-purple-50',   border: 'border-purple-200',  text: 'text-purple-800',  icon: '📋', label: 'Prior Review Required' },
-  'in-scope':      { bg: 'bg-indigo-50',   border: 'border-indigo-200',  text: 'text-indigo-800',  icon: '🎯', label: 'In Scope of the Code' },
-  'more-info':     { bg: 'bg-gray-50',     border: 'border-gray-300',    text: 'text-gray-800',    icon: '❔', label: 'More Information Needed' },
+// Exported for the copied summary, which names the outcome as the card does.
+export const OUTCOME_STYLES = {
+  'compliant':     { bg: 'bg-emerald-50',  border: 'border-emerald-200', text: 'text-emerald-800', icon: 'CheckCircle',   label: 'Compliant' },
+  'non-compliant': { bg: 'bg-red-50',      border: 'border-red-200',     text: 'text-red-800',     icon: 'XCircle',       label: 'Non-Compliant' },
+  'conditional':   { bg: 'bg-amber-50',    border: 'border-amber-200',   text: 'text-amber-800',   icon: 'AlertTriangle', label: 'Conditional' },
+  'consult-legal': { bg: 'bg-blue-50',     border: 'border-blue-200',    text: 'text-blue-800',    icon: 'JusticeScale',  label: 'Consult Legal' },
+  'not-required':  { bg: 'bg-teal-50',     border: 'border-teal-200',    text: 'text-teal-800',    icon: 'Info',          label: 'CVS Assessment Not Required' },
+  'out-of-scope':  { bg: 'bg-purple-50',   border: 'border-purple-200',  text: 'text-purple-800',  icon: 'MinusCircle',   label: 'Out of Scope' },
+  'not-applicable':{ bg: 'bg-purple-50',   border: 'border-purple-200',  text: 'text-purple-800',  icon: 'MinusCircle',   label: 'Not Applicable' },
+  'prior-review':  { bg: 'bg-purple-50',   border: 'border-purple-200',  text: 'text-purple-800',  icon: 'ClipboardList', label: 'Prior Review Required' },
+  'in-scope':      { bg: 'bg-indigo-50',   border: 'border-indigo-200',  text: 'text-indigo-800',  icon: 'Target',        label: 'In Scope of the Code' },
+  'more-info':     { bg: 'bg-gray-50',     border: 'border-gray-300',    text: 'text-gray-800',    icon: 'HelpCircle',    label: 'More Information Needed' },
 };
 
 // The provision a result cites. It opens in place, so the tree keeps its answers, and links to
@@ -89,7 +90,7 @@ export const TreeResultCard = ({ outcome, text, reference, onOpenReference }) =>
   return (
     <div className={`rounded-2xl border-2 ${style.border} ${style.bg} p-8 mb-6`}>
       <div className="flex items-center gap-3 mb-4">
-        <span className="text-2xl">{style.icon}</span>
+        <AppIcon name={style.icon} size={26} className={`shrink-0 ${style.text}`} />
         <span className={`text-sm font-bold uppercase tracking-wider ${style.text}`}>
           {style.label}
         </span>

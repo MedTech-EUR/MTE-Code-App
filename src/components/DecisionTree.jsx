@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { AppIcon } from './AppIcons';
 import { PageHeader } from './PageHeader';
-import { TreeResultCard } from './TreeResultCard';
+import { OUTCOME_STYLES, TreeResultCard } from './TreeResultCard';
+import { CopySummaryButton } from './CopySummaryButton';
+import { buildTreeSummary } from '../utils/resultSummary';
 import { TREE_DATA } from '../data/treeData';
 
 export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenReference }) => {
@@ -164,7 +166,7 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
             />
 
             {/* Controls */}
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={handleGoBack}
                 className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
@@ -179,6 +181,17 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
                 <AppIcon name="RotateCcw" size={14} />
                 Try Different Scenario
               </button>
+              <CopySummaryButton
+                className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors sm:ml-auto"
+                getText={() => buildTreeSummary({
+                  title: tree.title,
+                  steps: pathHistory.map((step) => ({ question: questionText(step.nodeId), answer: step.choice })),
+                  outcomeLabel: (OUTCOME_STYLES[currentNode.outcome] || OUTCOME_STYLES.conditional).label,
+                  text: currentNode.text,
+                  reference: currentNode.reference,
+                  url: `${window.location.origin}${window.location.pathname}`,
+                })}
+              />
             </div>
           </div>
         )}

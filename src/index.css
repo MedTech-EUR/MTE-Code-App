@@ -315,9 +315,9 @@ body {
   from { opacity: 0; }
 }
 
-/* Holds back for the first 70ms, while the old page fades away, so the two never overlap. */
+/* Holds back for the first 90ms, while the old page fades away, so the two never overlap. */
 @keyframes page-in {
-  0%, 14% { opacity: 0; transform: translateY(0.5rem); }
+  0%, 18% { opacity: 0; transform: translateY(0.5rem); }
 }
 
 @keyframes rise-in {
@@ -498,7 +498,7 @@ body {
    uncovering the new page as it rises in. */
 ::view-transition-old(root) {
   z-index: 1;
-  animation: view-fade-out 0.12s ease-out both;
+  animation: view-fade-out 0.1s ease-out both;
 }
 
 ::view-transition-new(root) {

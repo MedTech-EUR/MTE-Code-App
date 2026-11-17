@@ -344,13 +344,13 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
               <span className="no-print">Page {page} of {totalPages}</span>
             </div>
 
-            <div className="grid gap-4">
+            <div key={page} className="stagger grid gap-4">
               {results.map((item) => (
                 <button
                   type="button"
                   key={item.id}
                   onClick={() => fetchDeclarationDetail(item.id)}
-                  className="text-left bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-[#0099A7] hover:shadow-md transition-all active:scale-[0.99]"
+                  className="text-left bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-[#0099A7] hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 ease-out-soft active:translate-y-0 active:scale-[0.99]"
                 >
                   <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                     <div>
@@ -383,7 +383,7 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="inline-flex items-center gap-1 px-4 py-2 border border-slate-200 rounded-xl disabled:opacity-30 hover:bg-slate-50"
+                className="inline-flex items-center gap-1 px-4 py-2 border border-slate-200 rounded-xl transition disabled:opacity-30 enabled:hover:bg-slate-50 enabled:active:scale-[0.97]"
               >
                 <AppIcon name="ChevronLeft" size={14} />
                 Previous
@@ -392,7 +392,7 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
                 type="button"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page >= totalPages}
-                className="inline-flex items-center gap-1 px-4 py-2 bg-[#7654A1] text-white rounded-xl disabled:opacity-30 hover:opacity-90"
+                className="inline-flex items-center gap-1 px-4 py-2 bg-[#7654A1] text-white rounded-xl transition disabled:opacity-30 enabled:hover:bg-[#634488] enabled:active:scale-[0.97]"
               >
                 Next
                 <AppIcon name="ChevronRight" size={14} />

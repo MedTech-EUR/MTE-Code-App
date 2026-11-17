@@ -38,6 +38,8 @@ export const DocumentReader = ({
     Number.isNaN(Number(content?.icon)) ? '' : `Ch ${content?.icon} - `
   ),
   renderBeforeSections,
+  // Narrows the sections shown (the Glossary's filter box); all of them when absent.
+  filterSection,
   buildSectionPath,
   citationSourceTitle,
   citationMarkdownLabel,
@@ -150,13 +152,14 @@ export const DocumentReader = ({
             <div className="mx-auto w-full max-w-[var(--reader-measure)] print:max-w-none">
               <div
                 id="summary-top"
-                className="no-print mb-6 flex items-center text-xs font-bold text-[#007A86] uppercase tracking-widest gap-2 scroll-mt-24"
+                className="no-print mb-5 flex min-w-0 items-center text-sm font-medium text-[#007A86] gap-1.5 scroll-mt-24"
               >
-                <button onClick={onNavigateHome} className="hover:text-purple-700">
+                <button onClick={onNavigateHome} className="shrink-0 whitespace-nowrap font-semibold hover:text-[#7654A1]">
                   {homeLabel}
                 </button>
-                <AppIcon name="ChevronRight" size={12} />
-                <span className="text-gray-800">{activeContent?.title}</span>
+                <AppIcon name="ChevronRight" size={14} className="shrink-0 text-gray-400" />
+                {/* One line: a long title is cut off rather than wrapped. */}
+                <span className="min-w-0 truncate text-gray-600" title={activeContent?.title}>{activeContent?.title}</span>
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
@@ -203,7 +206,7 @@ export const DocumentReader = ({
                 <div className={`animate-rise-in ${showSummary && hasSummary ? 'border-t border-gray-100 pt-10' : ''}`}>
                   {renderBeforeSections?.(activeContent)}
 
-                  {activeContent?.sections?.map((section) => (
+                  {activeContent?.sections?.filter((section) => !filterSection || filterSection(section)).map((section) => (
                     <FullTextSection
                       key={section.computedId}
                       id={section.computedId}

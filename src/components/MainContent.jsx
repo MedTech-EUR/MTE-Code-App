@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DocumentReader } from './DocumentReader';
 import { LandingPage } from './LandingPage';
 import { AppIcon } from './AppIcons';
+import { GlossaryIndex } from './GlossaryIndex';
+import { matchesTerm } from '../utils/glossaryIndex';
 import { CODE_CHAPTERS, WEBSITE_CHAPTERS, WEBSITE_PART_ID } from '../data/codeData';
 import { getTreesByChapter, isSectionTree } from '../data/treeData';
 import { buildCodeSectionPath } from '../utils/routeUtils';
@@ -24,6 +26,11 @@ export const MainContent = ({
   onOpenReference,
   sidePane,
 }) => {
+  // The Glossary has a filter box and an A–Z bar above its definitions.
+  const isGlossary = activeContent?.id === 'glossary';
+  const [glossaryQuery, setGlossaryQuery] = useState('');
+  useEffect(() => setGlossaryQuery(''), [activeContent?.id]);
+
   const renderRelatedTrees = (content) => {
     if (!onNavigateTree) return null;
 
@@ -73,7 +80,15 @@ export const MainContent = ({
       handleTermClick={handleTermClick}
       scrollRef={scrollRef}
       bookmarksControls={bookmarksControls}
-      renderBeforeSections={renderRelatedTrees}
+      renderBeforeSections={(content) => (
+        <>
+          {isGlossary && (
+            <GlossaryIndex sections={content.sections} query={glossaryQuery} onQueryChange={setGlossaryQuery} />
+          )}
+          {renderRelatedTrees(content)}
+        </>
+      )}
+      filterSection={isGlossary && glossaryQuery.trim() ? (section) => matchesTerm(section.title, glossaryQuery) : undefined}
       buildSectionPath={buildCodeSectionPath}
       citationSourceTitle="MedTech Europe Code of Ethical Business Practice"
       citationMarkdownLabel="MedTech Europe Code"

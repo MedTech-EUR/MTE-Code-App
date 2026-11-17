@@ -525,7 +525,7 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
           accent="purple"
           title="TPPT Checker"
           description="Support tool to help companies determine if an event qualifies as a Third Party Procedural Training meeting"
-          back={{ label: 'Back to Home Hub', onClick: onGoHome }}
+          back={{ label: 'Home', onClick: onGoHome }}
           className="mb-8 min-[1440px]:col-span-2"
         />
 

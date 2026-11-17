@@ -101,7 +101,7 @@ export default function EventSupportResult({ data, result, glossaryMap }) {
   const [considerationsMarkup] = take();
 
   return (
-    <section className="space-y-5" aria-label="Support assessment">
+    <section className="stagger space-y-5" aria-label="Support assessment">
       <div className={`rounded-2xl border p-5 ${style.box}`}>
         <div className="flex items-start gap-3">
           <AppIcon name={style.icon} size={24} className="mt-0.5 shrink-0" />

@@ -54,7 +54,7 @@ export const TableOfContents = ({ sections, showSummary, collapsed = false, onEx
   }
 
   return (
-    <div className="space-y-4 font-sans no-print opacity-0 animate-fade-in" style={{ animationDelay: '300ms', animationFillMode: 'forwards' }}>
+    <div className="space-y-4 font-sans no-print animate-rise-in [animation-delay:200ms]">
       <h2 className="text-[10px] font-bold text-[#007A86] uppercase tracking-widest mb-4">On This Page</h2>
       <ul className="space-y-3 pl-2 border-l-2 border-gray-200">
         {showSummary && (

@@ -10,7 +10,7 @@ export const InstallPrompt = ({ show, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-xl relative"
+        className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-xl relative animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         <button

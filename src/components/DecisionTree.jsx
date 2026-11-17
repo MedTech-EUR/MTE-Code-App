@@ -60,7 +60,7 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
   return (
     // From 1280px the answers sit in a column beside the question, so the question stays in
     // the same place as you answer.
-    <div className="animate-fade-in px-4 sm:px-8 py-8 sm:py-10 max-w-3xl xl:max-w-[72rem] 3xl:max-w-[80rem] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] 3xl:grid-cols-[minmax(0,1fr)_22rem] xl:gap-12 xl:items-start">
+    <div className="animate-page-in px-4 sm:px-8 py-8 sm:py-10 max-w-3xl xl:max-w-[72rem] 3xl:max-w-[80rem] mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] 3xl:grid-cols-[minmax(0,1fr)_22rem] xl:gap-12 xl:items-start">
       <div className="min-w-0">
         <PageHeader
           icon="GitBranch"
@@ -86,7 +86,7 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
           <div className="mb-6 flex flex-wrap items-center gap-1 text-xs text-gray-400 xl:hidden">
             <span className="font-medium text-gray-500">Path:</span>
             {pathHistory.map((step, i) => (
-              <span key={i} className="flex items-center gap-1">
+              <span key={i} className="flex items-center gap-1 animate-rise-in">
                 <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600">{step.choice}</span>
                 {i < pathHistory.length - 1 && <AppIcon name="ChevronRight" size={10} />}
               </span>
@@ -95,8 +95,9 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
         )}
 
         {/* Question node */}
+        {/* Keyed by the question, so each one rises in as it is reached. */}
         {currentNode.type === 'question' && (
-          <div className="animate-fade-in">
+          <div key={currentNodeId} className="animate-rise-in">
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8 mb-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">
@@ -114,15 +115,15 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
                 </div>
               )}
 
-              <div className="space-y-3">
+              <div className="stagger space-y-3">
                 {currentNode.options.map((option, i) => (
                   <button
                     key={i}
                     onClick={() => handleOption(option.next, option.label)}
-                    className="w-full text-left px-5 py-4 rounded-xl border border-gray-200 bg-white hover:bg-amber-50 hover:border-amber-400 transition-all text-sm font-medium text-gray-800 flex items-center justify-between gap-3 group active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                    className="w-full text-left px-5 py-4 rounded-xl border border-gray-200 bg-white hover:bg-amber-50 hover:border-amber-400 hover:shadow-sm transition-all text-sm font-medium text-gray-800 flex items-center justify-between gap-3 group active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                   >
                     <span>{option.label}</span>
-                    <AppIcon name="ChevronRight" size={16} className="shrink-0 text-gray-400 group-hover:text-amber-600 transition-colors" />
+                    <AppIcon name="ChevronRight" size={16} className="shrink-0 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-amber-600" />
                   </button>
                 ))}
               </div>
@@ -154,7 +155,7 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
 
         {/* Result node */}
         {currentNode.type === 'result' && (
-          <div className="animate-fade-in">
+          <div key={currentNodeId} className="animate-rise-in">
             <TreeResultCard
               outcome={currentNode.outcome}
               text={currentNode.text}
@@ -193,7 +194,7 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
         ) : (
           <ol className="space-y-3 border-l-2 border-amber-100 pl-4">
             {pathHistory.map((step, i) => (
-              <li key={i}>
+              <li key={`${i}-${step.nodeId}`} className="animate-rise-in">
                 <button
                   type="button"
                   onClick={() => handleChangeAnswer(i)}

@@ -9,6 +9,15 @@
   /* Very large screens: 2400px at the default text size. A named breakpoint, so its rules come
      after the sm to 2xl ones (an arbitrary min-[2400px] variant would lose to them). */
   --breakpoint-3xl: 150rem;
+
+  /* MOTION. Easing curves for Tailwind's ease-* utilities (ease-out-soft, ease-emphasized,
+     ease-spring), and the defaults every transition-* utility uses without a duration-* or
+     ease-* of its own. See "Motion" below for the keyframes and what each is for. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --default-transition-duration: 200ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
 :root {
@@ -280,32 +289,243 @@ body {
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
 
-  to {
-    opacity: 1;
-  }
+/* --------------------------------------------------------------------------------- MOTION
+   One small vocabulary, shared by the whole app. Entrances are quick to start and long to
+   settle (--ease-out-soft); state changes use --ease-emphasized. Every animation fills
+   "backwards" only, so it never keeps hold of opacity or transform once it has played.
+
+   animate-page-in         a page arriving: a menu, a chapter, a tool. Fades in, rises 8px.
+   animate-rise-in         part of a page appearing in place: an answer, an expanded group.
+   animate-fade-in         opacity only, for what must not move (backdrops, overlays).
+   animate-pop-in          a menu or popover opening from its button (add an origin-* class).
+   animate-scale-in, -up   a dialog opening.
+   animate-slide-up        a bottom sheet on phones; a dialog from sm.
+   animate-toast-in        a short confirmation at the edge of the window.
+   animate-badge-in        a small mark (a tick, a cross) arriving with a little spring.
+   animate-slide-in-right  the reader toolbar arriving in the header.
+   stagger                 on a list: its items rise in one after another.
+   skeleton                a loading placeholder with a soft sheen.
+
+   Page changes also cross-fade (utils/viewTransition.js, the View Transitions API): the
+   header and the sidebar stay where they are while the old page fades out over the new one.
+   With the system's "Reduce motion" setting all of this is instant. */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+/* Holds back for the first 90ms, while the old page fades away, so the two never overlap. */
+@keyframes page-in {
+  0%, 18% { opacity: 0; transform: translateY(0.5rem); }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(0.375rem); }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(-0.25rem) scale(0.97); }
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(0.75rem) scale(0.97); }
+}
+
+@keyframes sheet-up {
+  from { opacity: 0; transform: translateY(2rem); }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(0.75rem) scale(0.96); }
+}
+
+/* A small mark (a tick, a cross) arriving with a little spring. */
+@keyframes badge-in {
+  from { opacity: 0; transform: scale(0.4); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(1rem); }
+}
+
+@keyframes sheen {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+@keyframes view-fade-out {
+  to { opacity: 0; }
+}
+
+/* Written out in longhands, so an [animation-delay:…] utility on the element still applies. */
+.animate-page-in,
+.animate-rise-in,
+.animate-fade-in,
+.animate-pop-in,
+.animate-scale-in,
+.animate-scale-up,
+.animate-slide-up,
+.animate-toast-in,
+.animate-badge-in,
+.animate-slide-in-right,
+.stagger > * {
+  animation-timing-function: var(--ease-out-soft);
+  animation-fill-mode: backwards;
+}
+
+.animate-page-in {
+  animation-name: page-in;
+  animation-duration: 0.5s;
+}
+
+.animate-rise-in {
+  animation-name: rise-in;
+  animation-duration: 0.36s;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation-name: fade-in;
+  animation-duration: 0.3s;
 }
 
-@keyframes slideInRight {
-  from {
-    transform: translateX(30px);
-    opacity: 0;
-  }
+.animate-pop-in {
+  animation-name: pop-in;
+  animation-duration: 0.2s;
+}
 
-  to {
-    transform: translateX(0);
-    opacity: 1;
+.animate-scale-in,
+.animate-scale-up {
+  animation-name: dialog-in;
+  animation-duration: 0.32s;
+}
+
+.animate-slide-up {
+  animation-name: sheet-up;
+  animation-duration: 0.4s;
+}
+
+@media (min-width: 40rem) {
+  .animate-slide-up {
+    animation-name: dialog-in;
+    animation-duration: 0.32s;
   }
+}
+
+.animate-toast-in {
+  animation-name: toast-in;
+  animation-duration: 0.34s;
+  animation-timing-function: var(--ease-spring);
+}
+
+.animate-badge-in {
+  animation-name: badge-in;
+  animation-duration: 0.45s;
+  animation-timing-function: var(--ease-spring);
 }
 
 .animate-slide-in-right {
-  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-name: slide-in-right;
+  animation-duration: 0.42s;
+}
+
+/* A list whose items arrive one after another: 40ms apart, the tenth and later together. */
+.stagger > * {
+  animation-name: rise-in;
+  animation-duration: 0.44s;
+}
+
+.stagger > :nth-child(2) { animation-delay: 40ms; }
+.stagger > :nth-child(3) { animation-delay: 80ms; }
+.stagger > :nth-child(4) { animation-delay: 120ms; }
+.stagger > :nth-child(5) { animation-delay: 160ms; }
+.stagger > :nth-child(6) { animation-delay: 200ms; }
+.stagger > :nth-child(7) { animation-delay: 240ms; }
+.stagger > :nth-child(8) { animation-delay: 280ms; }
+.stagger > :nth-child(9) { animation-delay: 320ms; }
+.stagger > :nth-child(n + 10) { animation-delay: 360ms; }
+
+/* Shown while a part of the app loads: a light grey shape with a sheen passing over it. */
+.skeleton {
+  background: linear-gradient(90deg, #eef0f4 0%, #eef0f4 35%, #f8f9fb 50%, #eef0f4 65%, #eef0f4 100%);
+  background-size: 200% 100%;
+  animation-name: sheen;
+  animation-duration: 1.6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Page changes (utils/viewTransition.js). The header, the sidebar and the reader's side panel
+   are named ([view-transition-name:…] on each), so they are left out of the fade: they change
+   in place at once, as without the transition, and their own parts animate as usual (an
+   expanded group, the reader toolbar). Everything else, the page, fades out over the new page,
+   which rises in itself. "normal" blending: the default (plus-lighter) would wash out the new
+   page's text. */
+::view-transition-group(*) {
+  animation-duration: 0.26s;
+  animation-timing-function: var(--ease-out-soft);
+}
+
+::view-transition-old(app-header),
+::view-transition-old(app-sidebar),
+::view-transition-old(reader-side-pane) {
+  animation: none;
+  opacity: 0;
+}
+
+::view-transition-new(app-header),
+::view-transition-new(app-sidebar),
+::view-transition-new(reader-side-pane) {
+  animation: none;
+}
+
+/* The side panel fades in as the reader opens, and out as it closes. */
+::view-transition-old(reader-side-pane):only-child {
+  animation: view-fade-out 0.18s ease-out both;
+  opacity: 1;
+}
+
+::view-transition-new(reader-side-pane):only-child {
+  animation: fade-in 0.3s var(--ease-out-soft) both;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+/* The old page sits above the new one (the default is the other way round) and fades away,
+   uncovering the new page as it rises in. */
+::view-transition-old(root) {
+  z-index: 1;
+  animation: view-fade-out 0.1s ease-out both;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* A spinner still turns: it is the only sign that something is loading. */
+  .animate-spin {
+    animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

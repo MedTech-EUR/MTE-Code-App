@@ -4,7 +4,7 @@ import { AppIcon } from './AppIcons';
 // Finds an Event in the public Conference Vetting System and shows its current status. The
 // search runs through this app's Worker (cvs-api.js); nothing entered in the checker is sent.
 
-const inputClass = 'w-full rounded-xl border border-slate-200 p-3 outline-none focus:ring-2 focus:ring-[#7654A1]';
+const inputClass = 'w-full rounded-xl border border-slate-200 p-3 outline-none transition hover:border-slate-300 focus:border-[#7654A1] focus:ring-2 focus:ring-[#7654A1]/40';
 
 export default function CvsEventLookup({ lookup }) {
   const { filters, search, selected, busy, error, updateFilter, searchEvents, selectEvent } = lookup;
@@ -26,7 +26,7 @@ export default function CvsEventLookup({ lookup }) {
               </div>
             ))}
           </div>
-          <button type="submit" disabled={busy === 'search' || !filters.name.trim()} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#7654A1] px-5 py-3 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50">
+          <button type="submit" disabled={busy === 'search' || !filters.name.trim()} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#7654A1] px-5 py-3 text-sm font-semibold text-white shadow-sm transition enabled:hover:bg-[#634488] enabled:hover:shadow-md enabled:active:scale-[0.98] disabled:opacity-50">
             <AppIcon name={busy === 'search' ? 'Loader2' : 'Search'} size={18} className={busy === 'search' ? 'animate-spin' : ''} />
             {busy === 'search' ? 'Searching CVS…' : 'Search CVS'}
           </button>
@@ -37,7 +37,7 @@ export default function CvsEventLookup({ lookup }) {
           {search?.results.length === 0 && <p>No Event in CVS matches this search. Try another name, or remove the country or dates. No match does not show that the Event is outside CVS scope.</p>}
         </div>
         {error && (
-          <div role="alert" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          <div role="alert" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 animate-rise-in">
             <p>{error.message}</p>
             <p className="mt-1 font-medium">The Event’s CVS status is unknown.</p>
             {error.kind === 'status' && selected && <button type="button" onClick={() => selectEvent(selected)} className="no-print mt-2 font-semibold underline">Try again</button>}
@@ -45,11 +45,11 @@ export default function CvsEventLookup({ lookup }) {
         )}
 
         {search?.results.length > 0 && (
-          <fieldset className="no-print mt-6 space-y-3">
+          <fieldset className="stagger no-print mt-6 space-y-3">
             <legend className="mb-3 text-lg font-semibold text-slate-800">Events found in CVS ({search.results.length})</legend>
             {search.mayBeLimited && <p className="mb-3 text-sm text-amber-800">CVS shows at most 50 Events per search. If yours is missing, narrow the name, country or dates.</p>}
             {search.results.map((event) => (
-              <label key={event.emtId} className={`flex cursor-pointer items-start gap-3 rounded-xl border bg-white p-4 ${selected?.emtId === event.emtId ? 'border-[#7654A1]' : 'border-slate-200'}`}>
+              <label key={event.emtId} className={`flex cursor-pointer items-start gap-3 rounded-xl border bg-white p-4 transition-colors hover:border-[#7654A1]/60 ${selected?.emtId === event.emtId ? 'border-[#7654A1]' : 'border-slate-200'}`}>
                 <input type="radio" name="cvs-event" value={event.emtId} checked={selected?.emtId === event.emtId} onChange={() => selectEvent(event)} className="mt-1 accent-[#7654A1]" />
                 <span>
                   <span className="block font-semibold text-slate-800">{event.name}</span>

@@ -68,7 +68,7 @@ export const Header = ({
 
   return (
     <>
-      <header className="h-20 flex-none border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 md:px-8 bg-white/95 backdrop-blur-sm z-30 shadow-sm relative">
+      <header className="h-20 flex-none border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 md:px-8 bg-white/95 backdrop-blur-sm z-30 shadow-sm relative [view-transition-name:app-header]">
         <div className="flex min-w-0 items-center gap-1 sm:gap-3 z-10">
           <button
             type="button"
@@ -95,7 +95,7 @@ export const Header = ({
             <button
               type="button"
               onClick={() => setSuggestionModalOpen(true)}
-              className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all flex items-center gap-1 md:gap-2 h-full text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 shadow-sm"
+              className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 shadow-sm"
               title="Send a Suggestion"
               aria-label="Send a suggestion"
               aria-haspopup="dialog"
@@ -110,7 +110,7 @@ export const Header = ({
               <button
                 type="button"
                 onClick={() => setShowSummary(!showSummary)}
-                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all flex items-center gap-1 md:gap-2 h-full ${
+                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full ${
                   showSummary
                     ? 'bg-white text-[#7654A1] shadow-sm'
                     : 'text-gray-400 hover:text-gray-600'
@@ -127,7 +127,7 @@ export const Header = ({
               <button
                 type="button"
                 onClick={() => setShowFullText(!showFullText)}
-                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all flex items-center gap-1 md:gap-2 h-full ${
+                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full ${
                   showFullText
                     ? 'bg-white text-[#7654A1] shadow-sm'
                     : 'text-gray-400 hover:text-gray-600'
@@ -144,7 +144,7 @@ export const Header = ({
               <button
                 type="button"
                 onClick={() => setShowQA(!showQA)}
-                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all flex items-center gap-1 md:gap-2 h-full ${
+                className={`px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full ${
                   showQA
                     ? 'bg-white text-[#7654A1] shadow-sm'
                     : 'text-gray-400 hover:text-gray-600'
@@ -164,7 +164,7 @@ export const Header = ({
                 ref={readerTriggerRef}
                 type="button"
                 onClick={() => setReaderOpen((v) => !v)}
-                className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all flex items-center gap-1 md:gap-2 h-full bg-white text-[#7654A1] shadow-sm hover:opacity-80"
+                className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full bg-white text-[#7654A1] shadow-sm hover:opacity-80"
                 title="Reading settings"
                 aria-label="Reading settings"
                 aria-expanded={readerOpen}
@@ -178,7 +178,7 @@ export const Header = ({
                   id="reader-settings-panel"
                   role="group"
                   aria-label="Reading settings"
-                  className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg p-3 animate-fade-in z-50"
+                  className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-xl shadow-slate-900/10 p-3 animate-pop-in origin-top-right z-50"
                 >
                   {[
                     { heading: 'Font size', options: READER_FONT_SIZES, value: readerSize, onChange: setReaderSize },
@@ -230,7 +230,7 @@ export const Header = ({
 
             <button
               onClick={() => window.print()}
-              className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all flex items-center gap-1 md:gap-2 h-full bg-white text-[#7654A1] shadow-sm hover:opacity-80"
+              className="px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold rounded-md md:rounded-lg transition-all active:scale-95 flex items-center gap-1 md:gap-2 h-full bg-white text-[#7654A1] shadow-sm hover:opacity-80"
               title="Print Current View"
             >
               <AppIcon name="Printer" size={16} />
@@ -246,7 +246,7 @@ export const Header = ({
             <button
               type="button"
               onClick={() => setSuggestionModalOpen(true)}
-              className="px-2.5 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 shadow-sm"
+              className="px-2.5 py-1.5 text-xs font-bold rounded-lg transition-all active:scale-95 flex items-center gap-1.5 text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 shadow-sm"
               title="Send a Suggestion"
               aria-label="Send a suggestion"
               aria-haspopup="dialog"

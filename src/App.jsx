@@ -22,6 +22,7 @@ import { TreeContent } from './components/TreeContent';
 import { QuizContent } from './components/quiz/QuizContent';
 import { TransparencyContent } from './components/TransparencyContent';
 import { SectionLoadError } from './components/SectionLoadError';
+import { PageLoading } from './components/PageLoading';
 import { getTransparencyUnit } from './data/transparency/transparencyData';
 import { getReaderMeasure } from './config/readerSettings';
 import {
@@ -429,7 +430,7 @@ const App = () => {
 
         {sidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/30 z-30 lg:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/30 z-30 lg:hidden backdrop-blur-sm animate-fade-in"
             onClick={() => setSidebarOpen(false)}
           ></div>
         )}
@@ -486,13 +487,7 @@ const App = () => {
           />
         ) : activeSection === 'event-support' ? (
           <Suspense
-            fallback={
-              <main className="flex-1 h-full overflow-y-auto bg-gray-50/50 custom-scrollbar p-8">
-                <div className="max-w-4xl mx-auto bg-white border border-slate-100 rounded-2xl shadow-sm p-6 text-sm font-semibold text-gray-500">
-                  Loading the event support checker...
-                </div>
-              </main>
-            }
+            fallback={<PageLoading label="Loading the event support checker…" />}
           >
             <EventSupportContent
               onGoHome={handleGoHome}
@@ -506,13 +501,7 @@ const App = () => {
           </Suspense>
         ) : activeSection === 'tppt' ? (
           <Suspense
-            fallback={
-              <main className="flex-1 h-full overflow-y-auto bg-gray-50/50 custom-scrollbar p-8">
-                <div className="max-w-4xl mx-auto bg-white border border-slate-100 rounded-2xl shadow-sm p-6 text-sm font-semibold text-gray-500">
-                  Loading TPPT Checker...
-                </div>
-              </main>
-            }
+            fallback={<PageLoading label="Loading the TPPT Checker…" />}
           >
             <TPPTContent
               onGoHome={handleGoHome}

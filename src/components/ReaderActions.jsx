@@ -68,11 +68,15 @@ export const ReaderActions = ({
                     <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); onToggleBookmark(); }}
-                        className={`text-sm border rounded px-2 py-1 transition-colors ${isBookmarked ? 'bg-purple-100 text-purple-700 border-purple-200' : 'text-gray-500 hover:text-purple-600 border-transparent hover:border-purple-100'}`}
+                        className={`text-sm border rounded px-2 py-1 transition active:scale-95 ${isBookmarked ? 'bg-purple-100 text-purple-700 border-purple-200' : 'text-gray-500 hover:text-purple-600 border-transparent hover:border-purple-100'}`}
                         title={isBookmarked ? 'Remove bookmark' : `Bookmark this ${subject}`}
                         aria-label={labelled(isBookmarked ? 'Bookmarked' : 'Bookmark')}
                     >
-                        {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}
+                        {/* Keyed, so the star springs in each time the bookmark is set. */}
+                        <span key={isBookmarked ? 'on' : 'off'} className={`inline-block ${isBookmarked ? 'animate-badge-in' : ''}`}>
+                            {isBookmarked ? '★' : '☆'}
+                        </span>
+                        {isBookmarked ? ' Bookmarked' : ' Bookmark'}
                     </button>
                 </div>
             )}
@@ -88,7 +92,7 @@ export const ReaderActions = ({
                     aria-controls={menuOpen ? menuId : undefined}
                 >
                     <span>Cite/Link</span>
-                    <AppIcon name={menuOpen ? "ChevronUp" : "ChevronDown"} size={12} />
+                    <AppIcon name="ChevronDown" size={12} className={`transition-transform duration-300 ease-out-soft ${menuOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {menuOpen && (
                     <div
@@ -96,7 +100,7 @@ export const ReaderActions = ({
                         role="group"
                         aria-label="Copy reference"
                         onClick={(e) => e.stopPropagation()}
-                        className="absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-xl p-2 z-50 animate-fade-in text-left"
+                        className="absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-xl shadow-slate-900/10 p-2 z-50 animate-pop-in origin-top-right text-left"
                     >
                         <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-1">Copy Reference</div>
                         <button

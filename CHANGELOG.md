@@ -9,6 +9,12 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### Historical declarations: fewer D1 rows read — 2026-11-19
+- `historical-declarations-api.js`: `metadata`, `search` and detail answers go through `withEdgeCache()`, which stores them in `caches.default` for the response's `s-maxage` (the header alone never cached a Worker-built response, so every visit ran the four metadata queries, two of them full scans of the 31k-row table). The stored copy carries `max-age`; the browser copy keeps `max-age=0, must-revalidate`. Keys sort the query parameters and include `CACHE_VERSION`. Only 200s are stored. `X-Declarations-Cache: HIT|MISS`. `server.js` passes `ctx` through for `waitUntil`.
+- Name search of three or more characters uses the new FTS5 trigram table `declarations_fts` (`d1/historical-declarations/search-index.sql`, run after loading data) as one quoted phrase, instead of `LIKE '%…%'` on both names; shorter text, and any search before the table exists, still uses `LIKE`. Same results, checked against the sample fixture.
+- The count query stops at `MAX_ACCESSIBLE_RECORDS + 1` rows. Results order by `id` after year and company name, so pages of tied rows no longer overlap or skip.
+- `HistoricalDeclarationsContent.jsx`: the search box waits 500ms (was 300ms) after typing stops (`SEARCH_DEBOUNCE_MS`).
+
 ### Footer on the Home page only, and compact — 2026-11-17
 - `App.jsx` passes the footer to the Home Hub only; the `footer` prop and `WithFooter` wrapper are gone from `DocumentReader`, `MainContent`, `TransparencyContent`, `TransparencyLandingPage`, `HistoricalDeclarationsContent`, `TreeContent`, `QuizContent`, `EventSupportContent` and `TPPTContent` (whose `pb-24` moves back to its scrolling area).
 - `SiteFooter.jsx`: same content in a band less than half as tall (157px → 67px at 1366px, 261px → 113px on a 390px phone), in small print: links 10px, the publisher's details and "Last updated" 9px, logo `h-3.5`, `py-4`. On a wide footer (`@3xl` container) the links and "Last updated" share the first line and the publisher's details take the second; the details paragraph becomes grid cells with `@3xl:contents`, so the date is not duplicated. Narrower, the date follows the details in the same paragraph.

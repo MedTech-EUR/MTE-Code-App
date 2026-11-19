@@ -103,6 +103,36 @@ Already done for `historical-declarations-final`
 6. Confirm with
    `npx wrangler d1 execute <name> --remote --command "SELECT year, COUNT(*) FROM declarations GROUP BY year ORDER BY year;"`
 
+## Removing old declarations
+
+When part of the archive has to be deleted (for example a year that has
+passed its retention period), do these three steps on the same day, in
+this order:
+
+1. **Delete the rows.** In the D1 console (Cloudflare dashboard → D1 →
+   `historical-declarations-final` → Console), type `/bookmark` first to
+   keep a restore point, then run the `DELETE`, for example
+   `DELETE FROM declarations WHERE year = 2023;`
+2. **Rebuild the search index.** Run the contents of `search-index.sql`
+   in the same console, as one line:
+
+   ```sql
+   DROP TABLE IF EXISTS declarations_fts; CREATE VIRTUAL TABLE declarations_fts USING fts5(company_name, beneficiary_name, content='declarations', content_rowid='rowid', tokenize='trigram', columnsize=0); INSERT INTO declarations_fts(declarations_fts) VALUES('rebuild');
+   ```
+
+   Search would still give correct answers without this (the index's
+   entries for deleted rows match nothing), but the rebuild removes them.
+3. **Clear the edge cache.** Bump `CACHE_VERSION` in
+   `historical-declarations-api.js` (for example `'1'` → `'2'`) and
+   deploy. **Do not skip this:** otherwise Cloudflare keeps serving the
+   deleted declarations from its cache for up to 1 hour (searches),
+   24 hours (the year list) and 7 days (a declaration opened on its own).
+
+Then check with
+`SELECT year, COUNT(*) FROM declarations GROUP BY year ORDER BY year;`
+and, after the deploy, that the year filter on the Historical Declarations
+page no longer lists the removed year.
+
 ## Caching and D1 reads
 
 D1 bills "rows read" as rows scanned, not rows returned, so a query that

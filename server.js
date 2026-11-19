@@ -97,7 +97,7 @@ async function verifyState(state, secret, maxAgeMs = 600000) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
     // A page that has moved to another site (moved-pages.js): one redirect, whichever spelling
@@ -210,7 +210,7 @@ export default {
     // Must run before the SPA fallback below, since that fallback serves
     // index.html for any dotless path and would otherwise swallow these.
     if (url.pathname.startsWith('/api/historical-declarations')) {
-      return handleHistoricalDeclarationsRequest(request, env);
+      return handleHistoricalDeclarationsRequest(request, env, ctx);
     }
 
     // Live CVS event lookup used by the event support checker; keep before the SPA fallback.

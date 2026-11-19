@@ -3,6 +3,9 @@ import { AppIcon } from './AppIcons';
 import { PageHeader } from './PageHeader';
 
 const PAGE_SIZE = 50;
+// How long typing must pause before the text is searched. Each search queries
+// the database, so a pause mid-word should not start one.
+const SEARCH_DEBOUNCE_MS = 500;
 
 const EMPTY_FILTERS = Object.freeze({
   q: '',
@@ -116,7 +119,7 @@ export const HistoricalDeclarationsContent = ({ onNavigateTransparencyHome }) =>
       if (searchTerm !== filters.q) {
         setPage(1);
       }
-    }, 300);
+    }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);

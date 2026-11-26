@@ -1,5 +1,6 @@
 import React from 'react';
 import { CODE_CHAPTERS, CODE_PARTS } from '../data/codeData';
+import { CODE_EDITION } from '../data/codeEdition';
 import { summarizeHtml } from '../utils/pageMeta';
 import { Logo } from './Logo';
 import { MenuGroup, MenuList, MenuRow } from './MenuList';
@@ -23,7 +24,7 @@ export const LandingPage = ({ onSelectChapter }) => (
             icon="FileText"
             accent="teal"
             title="The MedTech Europe Code of Ethical Business Practice"
-            description="Code text: September 2024."
+            description={`Code text: ${CODE_EDITION}.`}
             className="mb-0"
         />
         {CODE_PARTS.map((part) => {

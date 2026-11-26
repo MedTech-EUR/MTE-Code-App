@@ -47,7 +47,7 @@ Prefer explicit labels, semantic controls, and keyboard access in existing workf
 
 ## Deliberately Deferred Structural Changes
 
-The current project scale does not justify adding a routing library, global state management, accounts or cloud synchronization, a full TypeScript migration, a backend content API, or an AI assistant. Reconsider only if a future requirement offers a major gain that cannot be achieved within the existing architecture.
+The current project scale does not justify adding a routing library, global state management, accounts or cloud synchronization, a full TypeScript migration, a backend content service (a database or a query and search API for the content), or an AI assistant. Reconsider only if a future requirement offers a major gain that cannot be achieved within the existing architecture. (A read-only Code API was added on 2026-11-26 at MedTech Europe's request, for Member Companies, ethicalmedtech.eu and the public: it is files made at build time and served by the Worker, with no database or search; see `docs/code-api.md`.)
 
 ## Audit Findings — 2026-08-08
 
@@ -128,3 +128,10 @@ See `PROJECT_CHECKS.md` for detailed instructions and troubleshooting.
 - The TPPT Checker's empty result panel ("Import the agenda, review the sessions and select Calculate Eligibility.", `TPPTContent.tsx`, `text-xs font-light` in grey) fails axe's colour-contrast check at 1440px. It predates this work (`cad49bfe`); darken the text (for example `text-gray-600`) the next time that file is changed.
 - The Glossary's A–Z bar scrolls to the first term under a letter; the term sits below the reader's `scroll-mt-24`, so on short definitions the one before it shows above. Harmless; revisit if the Glossary gets a sticky header.
 
+
+## Found While Adding the Code API — 2026-11-26
+
+- The terms of reuse every Code API answer carries (`CODE_API_TERMS` in `scripts/lib/code-api.mjs`) were released as proposed on 2026-11-26; MedTech Europe's legal team may still reword them. Their `publishedEdition` is the September 2024 PDF on medtecheurope.org: when `CODE_EDITION` changes, change that address with it.
+- The Code API's guide (`docs/code-api.md`) is in the repository only. If other organisations are to find the API on their own, it needs a page on the site (or a link from the footer or the Code's page); decide with the product owner.
+- Section IDs come from section titles, and three untitled sections use their position (`ch7-section-0`, `ch8-section-0`, `ch10-section-0`). Nothing stops a retitle from changing an ID that other organisations' tools rely on; a recorded list of the published IDs, checked by `npm test` and updated on purpose, would catch it before release.
+- The Transparency publications (the Disclosure Guidelines) are not in the Code API. Add them only if someone asks for them, under their own address (`/api/transparency/v1`), since their units and IDs differ from the Code's.

@@ -26,12 +26,18 @@ export function escapeHtml(value) {
 // Text of a title or question, which may carry entities or inline tags.
 const plainText = (value) => escapeHtml(htmlToPlainText(value).replace(/\s+/g, ' ').trim());
 
+const HREF_ATTRIBUTE = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/i;
+
 /**
  * The content's HTML reduced to plain structure: allowed tags only, no attributes (but table
  * spans), every tag closed in order, and any other "<" or ">" escaped, so nothing in the text
  * can run script or close the page's own elements.
+ *
+ * Links are dropped and their text kept, unless `linkHref` is given: it receives a link's raw
+ * address and returns the address to keep (written as the link's only attribute), or null to
+ * drop that link too. The Code API (scripts/lib/code-api.mjs) keeps web links this way.
  */
-export function sanitizeContentHtml(html) {
+export function sanitizeContentHtml(html, { linkHref } = {}) {
   const source = String(html ?? '')
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(DROPPED_WITH_CONTENT, '');
@@ -47,7 +53,18 @@ export function sanitizeContentHtml(html) {
 
     const [, closing, rawName, attributes] = match;
     const name = rawName.toLowerCase();
-    if (!ALLOWED_TAGS.has(name)) continue;
+
+    if (name === 'a' && linkHref && !closing) {
+      const raw = HREF_ATTRIBUTE.exec(attributes);
+      const href = raw ? linkHref((raw[1] ?? raw[2] ?? raw[3]).replace(/&amp;/g, '&')) : null;
+      if (href) {
+        output += `<a href="${escapeHtml(href)}">`;
+        open.push('a');
+      }
+      continue;
+    }
+    // A link's closing tag is matched below only when its opening tag was kept.
+    if (!ALLOWED_TAGS.has(name) && !(name === 'a' && closing)) continue;
 
     if (VOID_TAGS.has(name)) {
       if (!closing) output += `<${name}>`;

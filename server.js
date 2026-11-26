@@ -1,7 +1,7 @@
 /**
  * Cloudflare Worker entry point for MTE Code App.
- * Handles the content editor's OAuth flow, the Historical Declarations API, and
- * serves the React app as static assets.
+ * Handles the content editor's OAuth flow, the Historical Declarations API, the CVS lookup,
+ * the Code API, and serves the React app as static assets.
  *
  * Security: Uses HMAC-signed state tokens for CSRF protection,
  * no-cache headers on token responses, and generic error messages.
@@ -9,6 +9,7 @@
 
 import { handleHistoricalDeclarationsRequest } from './historical-declarations-api.js';
 import { handleCvsRequest } from './cvs-api.js';
+import { handleCodeApiRequest } from './code-api.js';
 import { isPrerenderedFilePath, prerenderedAssetPathFor } from './prerendered-pages.js';
 import { movedPageUrl } from './moved-pages.js';
 
@@ -216,6 +217,11 @@ export default {
     // Live CVS event lookup used by the event support checker; keep before the SPA fallback.
     if (url.pathname === '/api/cvs' || url.pathname.startsWith('/api/cvs/')) {
       return handleCvsRequest(request);
+    }
+
+    // The Code API: the Code's text as JSON for any site (code-api.js, docs/code-api.md).
+    if (url.pathname === '/api/code' || url.pathname.startsWith('/api/code/')) {
+      return handleCodeApiRequest(request, env);
     }
 
     // 4. Fallback: Serve static assets

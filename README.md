@@ -26,6 +26,7 @@ The app is built using **React**, **Vite**, and **Cloudflare Workers**. All the 
  │   ├── main.jsx     # React entry point
  │   └── index.css    # Global styles, fonts, and print rules
  ├── server.js       # App/SPA Cloudflare Worker with optional same-origin OAuth endpoints
+ ├── code-api.js     # The Code API: the Code's text as JSON for any site (docs/code-api.md)
  ├── oauth-proxy.js  # Standalone OAuth proxy Worker for the content editor's GitHub sign-in
  ├── CHANGELOG.md    # Developer technical version changelog
  ├── PROJECT_CHECKS.md # Plain-language validation and testing guide
@@ -116,6 +117,7 @@ The app is organized into independently navigable **sections**, all accessible f
 - **Decision Trees** — Interactive compliance decision guides based on the Code.
 - **Knowledge Quiz** — A testing module that challenges users with randomized multiple-choice questions on selected chapters.
 - **CVS and e4ethics check** — Not part of this app: the Home Hub card and the sidebar entry open it on ethicalmedtech.eu (https://www.ethicalmedtech.eu/cvs-e4ethics-check/) in a new tab. It was the decision tree `dt-annex1-cvs-scope` here until November 2026 and moved there, with e4ethics added, so it is kept in one place; the tree's old addresses redirect (`moved-pages.js`). Its live status lookup uses this app's `/api/cvs/*`, which answers ethicalmedtech.eu as well as this app (`ALLOWED_ORIGINS` in `cvs-api.js`).
+- **Code API** — Not a page: the Code's chapters, sections and Q&As as JSON at `/api/code/v1`, read-only and open to every site, for Member Companies' tools, ethicalmedtech.eu and anyone else. Made from the chapter files on every build. See [`docs/code-api.md`](docs/code-api.md).
 - **Can we support this event?** — Listed on the Decision Trees page. Checks one planned form of support (an Educational Grant, booth, payment to an HCP, meal, item, donation and more) against the Code, with a live CVS check for third-party Events, its conditions and sources, and a comparison of other options. See [`docs/event-support.md`](docs/event-support.md).
 - **TPPT Checker** — A compliance tool for evaluating whether a medical event qualifies as a Third Party Procedural Training meeting. Parses PDF/Word/text agendas, classifies sessions by type (Hands-on, Streaming, Case Study, etc.), checks the Code's practical-session thresholds, and exports a formatted PDF report.
 

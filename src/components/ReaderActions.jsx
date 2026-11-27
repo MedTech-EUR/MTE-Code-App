@@ -71,6 +71,7 @@ export const ReaderActions = ({
                 <div className={isBookmarked ? undefined : actionsReveal}>
                     <button
                         type="button"
+                        data-tour="bookmark"
                         onClick={(e) => { e.stopPropagation(); onToggleBookmark(); }}
                         className={`text-sm border rounded px-2 py-1 transition active:scale-95 ${isBookmarked ? 'bg-purple-100 text-purple-700 border-purple-200' : 'text-gray-500 hover:text-purple-600 border-transparent hover:border-purple-100'}`}
                         title={isBookmarked ? 'Remove bookmark' : `Bookmark this ${subject}`}
@@ -86,6 +87,7 @@ export const ReaderActions = ({
             )}
             <div ref={containerRef} className={`relative ${actionsReveal}`}>
                 <button
+                    data-tour="cite"
                     ref={triggerRef}
                     type="button"
                     onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}

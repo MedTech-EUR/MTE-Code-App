@@ -114,14 +114,36 @@ function renderHighlightedTitle(title: string, type: SessionType) {
 }
 
 interface TPPTContentProps {
+  practice?: boolean;
   onGoHome: () => void;
 }
 
-export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
-  const [inputText, setInputText] = useState("");
+type Answer = "Yes" | "No" | "I am not sure" | null;
+type AgendaDraft = {
+  inputText?: string;
+  sessions?: Session[];
+  qVenue?: Answer;
+  qStandalone?: Answer;
+  qSize?: Answer;
+};
+
+function initialAgenda(practice: boolean): AgendaDraft {
+  if (practice) {
+    return { inputText: "09:00 - 10:00 Hands-on workshop\n10:00 - 10:30 Case study discussion" };
+  }
+  try {
+    return JSON.parse(localStorage.getItem('tppt_autosave_state') || '{}') || {};
+  } catch {
+    return {};
+  }
+}
+
+export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome, practice = false }) => {
+  const [initial] = useState(() => initialAgenda(practice));
+  const [inputText, setInputText] = useState(initial.inputText || "");
   const [isExtracting, setIsExtracting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [sessions, setSessions] = useState<Session[]>([]);
+  const [sessions, setSessions] = useState<Session[]>(initial.sessions || []);
   const [result, setResult] = useState<{
     total: number;
     handsOn: number;
@@ -143,10 +165,9 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
   const exportTriggerRef = useRef<HTMLButtonElement>(null);
   const eventNameInputRef = useRef<HTMLInputElement>(null);
 
-  type Answer = "Yes" | "No" | "I am not sure" | null;
-  const [qVenue, setQVenue] = useState<Answer>(null);
-  const [qStandalone, setQStandalone] = useState<Answer>(null);
-  const [qSize, setQSize] = useState<Answer>(null);
+  const [qVenue, setQVenue] = useState<Answer>(initial.qVenue || null);
+  const [qStandalone, setQStandalone] = useState<Answer>(initial.qStandalone || null);
+  const [qSize, setQSize] = useState<Answer>(initial.qSize || null);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
 
   const closeParseWarning = () => {
@@ -178,32 +199,16 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
     return () => document.removeEventListener('keydown', handleDialogKeyDown);
   }, [showParseWarning, showExportModal]);
 
-  // Restore state on mount
+  // Practice uses the real parser without writing to the visitor’s saved agenda.
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('tppt_autosave_state');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.inputText) setInputText(parsed.inputText);
-        if (parsed.sessions && parsed.sessions.length > 0) setSessions(parsed.sessions);
-        if (parsed.qVenue) setQVenue(parsed.qVenue);
-        if (parsed.qStandalone) setQStandalone(parsed.qStandalone);
-        if (parsed.qSize) setQSize(parsed.qSize);
-      }
-    } catch (e) {
-      console.error("Could not restore state", e);
-    }
-  }, []);
-
-  // Autosave when key data changes
-  useEffect(() => {
+    if (practice) return;
     try {
       const stateToSave = { inputText, sessions, qVenue, qStandalone, qSize };
       localStorage.setItem('tppt_autosave_state', JSON.stringify(stateToSave));
     } catch (e) {
       // Ignore storage errors in restricted domains
     }
-  }, [inputText, sessions, qVenue, qStandalone, qSize]);
+  }, [practice, inputText, sessions, qVenue, qStandalone, qSize]);
 
   const clearExportDownloadUrl = () => {
     setExportDownloadUrl((previousUrl) => {
@@ -592,6 +597,7 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
           </div>
 
           <button
+            data-tour="tppt-parse"
             ref={parseWarningTriggerRef}
             onClick={() => {
               handleParseText();
@@ -765,6 +771,7 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
           {sessions.length > 0 && (
             <div className="mt-4 flex flex-col items-center border-t border-slate-100 pt-8">
               <button
+                data-tour="tppt-calculate"
                 onClick={handleCalculate}
                 className="flex items-center justify-center gap-2 py-3 px-8 bg-[#634488] hover:bg-[#533873] text-white rounded-full font-extrabold text-base sm:text-lg hover:shadow-md transition-all cursor-pointer shadow-sm active:scale-[0.98]"
               >
@@ -790,7 +797,7 @@ export const TPPTContent: React.FC<TPPTContentProps> = ({ onGoHome }) => {
           {result && (
             <div className="mt-6 min-[1440px]:mt-0 flex flex-col gap-6 w-full animate-fade-in">
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div data-tour="tppt-totals" className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Total Duration */}
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-slate-100/80 flex flex-col items-center justify-center text-center">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Total Duration</span>

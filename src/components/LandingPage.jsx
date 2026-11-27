@@ -38,6 +38,7 @@ export const LandingPage = ({ onSelectChapter }) => (
                         {chapters.map((chapter) => (
                             <MenuRow
                                 key={chapter.id}
+                                tourId={`chapter-${chapter.id}`}
                                 headingLevel="h3"
                                 icon={chapter.icon}
                                 title={chapter.title}

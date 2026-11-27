@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { Suspense, useCallback, lazy, useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { FULL_CODE_DATA } from './data/codeData';
 import { REFERENCE_INDEX } from './data/referenceIndex';
 import { DefinitionPopup } from './components/DefinitionPopup';
@@ -13,6 +13,8 @@ import { useRecentHistory } from './hooks/useRecentHistory';
 import { useReaderSettings } from './hooks/useReaderSettings';
 import { useSidePanelFits } from './hooks/useSidePanelFits';
 import { usePaneWidths } from './hooks/usePaneWidths';
+import { GuidedTour } from './components/tour/GuidedTour';
+import { lessons } from './components/tour/lessons';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { MainContent } from './components/MainContent';
@@ -68,6 +70,10 @@ if (typeof FULL_CODE_DATA !== 'undefined') {
 }
 
 const App = () => {
+  const [tour, setTour] = useState(() => {
+    const id = new URLSearchParams(window.location.search).get('walkthrough');
+    return Object.hasOwn(lessons, id) && window.location.pathname === '/' ? { lesson: id, index: 0 } : null;
+  });
   const [activeSection, setActiveSection] = useState(null); // null = Home, 'code', 'trees', 'quiz', 'tppt', 'transparency', 'event-support'
   const [activeId, setActiveId] = useState('home');
   const [activeDocumentId, setActiveDocumentId] = useState(null);
@@ -356,6 +362,45 @@ const App = () => {
     navigateTree(treeId);
   };
 
+  // Keep an in-progress quiz, checker or tree mounted while its reader tries a tour.
+  const preserveTask = tour?.preserve === true;
+  const openTour = () => setTour({ preserve: ['tppt', 'quiz', 'event-support'].includes(activeSection)
+    || (activeSection === 'trees' && !['home', 'trees-home'].includes(activeId)) });
+  const startTour = (lesson) => {
+    if (preserveTask) {
+      window.open('/?walkthrough=' + encodeURIComponent(lesson), '_blank', 'noopener');
+      setTour(null);
+      return;
+    }
+    setReaderOpen(false);
+    setActiveDefinition(null);
+    setContextItem(null);
+    setSidebarOpen(false);
+    if (lesson === 'reader') setShowFullText(true);
+    if (lesson === 'search') setSearchTerm('');
+    navigateHome();
+    setTour({ lesson, index: 0 });
+  };
+  const runningLesson = Boolean(tour?.lesson);
+  const endPractice = useCallback(() => {
+    if (runningLesson) {
+      setReaderOpen(false);
+      setSidebarOpen(false);
+      setActiveDefinition(null);
+      setContextItem(null);
+    }
+  }, [runningLesson]);
+  const exitTour = useCallback(() => {
+    endPractice();
+    setTour(null);
+    window.requestAnimationFrame(() => document.getElementById('app-tour-launch')?.focus({ preventScroll: true }));
+  }, [endPractice]);
+  useEffect(() => {
+    const closeOnBack = () => setTour(null);
+    window.addEventListener('popstate', closeOnBack);
+    return () => window.removeEventListener('popstate', closeOnBack);
+  }, []);
+
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden print:h-auto print:overflow-visible">
       <DefinitionPopup
@@ -366,7 +411,12 @@ const App = () => {
       />
       <InstallPrompt show={showIosPrompt} onClose={() => setShowIosPrompt(false)} />
 
+      {tour && <GuidedTour tour={tour} preserveTask={preserveTask} onStart={startTour}
+        onNext={() => setTour(t => t?.lesson ? { ...t, index: t.index + 1 } : t)}
+        onChoose={() => { endPractice(); setTour({}); }}
+        onExit={exitTour} />}
       <Header
+        onOpenTour={openTour}
         activeId={activeId}
         activeSection={activeSection}
         setSidebarOpen={setSidebarOpen}
@@ -534,7 +584,8 @@ const App = () => {
           <Suspense
             fallback={<PageLoading label="Loading the TPPT Checker…" />}
           >
-            <TPPTContent
+            <TPPTContent key={tour?.lesson === 'tppt' ? 'practice' : 'agenda'}
+              practice={tour?.lesson === 'tppt'}
               onGoHome={handleGoHome}
             />
           </Suspense>

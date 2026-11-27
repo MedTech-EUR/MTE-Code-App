@@ -314,6 +314,69 @@ body {
    header and the sidebar stay where they are while the old page fades out over the new one.
    With the system's "Reduce motion" setting all of this is instant. */
 
+/* The tour launcher gently draws attention three times, then keeps a compact footprint. */
+.tour-launch {
+  @apply inline-flex shrink-0 items-center justify-center rounded-full border border-[#9ebfc2] bg-[#edf7f7] text-[#006771] font-semibold;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding-inline: .5rem;
+  animation: tour-pulse 1.45s ease-in-out 3, tour-colour 9s ease-in-out 4.35s infinite alternate;
+}
+.tour-launch span {
+  @apply inline-block overflow-hidden text-left text-[.69rem] leading-tight sm:whitespace-nowrap sm:text-xs;
+  max-width: 10rem;
+  margin-left: .35rem;
+  animation: tour-collapse .5s ease-in-out 4.35s forwards;
+}
+.tour-launch b { @apply inline-block w-max max-w-16 align-middle font-semibold sm:max-w-none; }
+@media (width < 40rem) { .tour-launch span { max-width: 4rem; } }
+@keyframes tour-pulse { 50% { background: #d3ebec; box-shadow: 0 0 0 4px #0099a723; } }
+@keyframes tour-collapse { to { max-width: 0; margin-left: 0; opacity: 0; } }
+@keyframes tour-colour {
+  0%, 15% { background: #e3f4f3; color: #00626b; border-color: #81b2b6; }
+  85%, 100% { background: #f1eafa; color: #603c89; border-color: #b099c8; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tour-launch, .tour-launch span { animation: none; }
+  .tour-launch span { display: none; }
+}
+
+.tour-dialog, .tour-card {
+  @apply rounded-2xl border border-[#c7d9da] bg-white text-left text-slate-800 shadow-xl;
+}
+.tour-dialog {
+  @apply m-auto overflow-auto p-5;
+  width: min(410px, calc(100% - 24px));
+  max-height: calc(100dvh - 24px);
+}
+.tour-dialog::backdrop, .tour-shade { background: #11243666; }
+.tour-dialog h2, .tour-card h2 { @apply my-2 text-lg font-bold leading-tight; }
+.tour-dialog p, .tour-card p { @apply text-sm leading-relaxed text-slate-600; }
+.tour-meta { @apply flex items-center justify-between gap-3 text-xs font-semibold text-[#006771]; }
+.tour-close { @apply grid size-8 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700; }
+.tour-primary, .tour-link { @apply rounded-lg px-3 py-2 text-sm font-semibold; }
+.tour-primary { @apply mt-3 bg-[#006c75] text-white; }
+.tour-link { @apply text-[#006771] underline; }
+.tour-buttons { @apply mt-3 flex items-center gap-3; }
+.tour-buttons .tour-primary { @apply m-0; }
+.tour-lessons { @apply mt-4 grid gap-1.5; }
+.tour-lessons button { @apply flex items-center gap-2.5 rounded-lg border border-slate-200 p-3 text-left text-sm font-semibold text-[#006771] hover:bg-teal-50; }
+.tour-lessons button span { @apply flex-1; }
+.tour-layer { @apply pointer-events-none fixed inset-0 z-[200] overflow-hidden; }
+.tour-shade { @apply absolute inset-0; }
+.tour-hole {
+  @apply absolute rounded-lg outline-2 outline-[#12a7aa];
+  box-shadow: 0 0 0 9999px #11243666;
+}
+.tour-card {
+  @apply pointer-events-auto absolute max-h-[48dvh] overflow-auto px-4 py-3;
+  width: min(328px, calc(100% - 20px));
+}
+.tour-centred { @apply top-1/2 left-1/2 -translate-1/2; }
+/* Reader actions normally reveal themselves on hover or keyboard focus. */
+div:has(> button[data-tour-current]) { opacity: 1 !important; }
+@media print { .tour-dialog, .tour-layer, .tour-launch { display: none !important; } }
+
 @keyframes fade-in {
   from { opacity: 0; }
 }

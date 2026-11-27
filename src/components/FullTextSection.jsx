@@ -242,7 +242,7 @@ export const FullTextSection = ({
     const isCodeReader = bookmarkSection === 'code';
 
     return (
-        <div id={id} className={`group/section ${isGlossaryDefinition ? 'mb-4' : 'mb-8'} scroll-mt-24`} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onClick={handleClick}>
+        <div id={id} data-tour-section={section.liveId} className={`group/section ${isGlossaryDefinition ? 'mb-4' : 'mb-8'} scroll-mt-24`} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onClick={handleClick}>
             {/* The actions sit beside the title when both fit and wrap under it otherwise, so a
                 long title keeps the full column width. */}
             <div className={`group flex flex-wrap items-baseline gap-x-4 gap-y-2 ${isGlossaryDefinition ? 'mb-1' : 'mb-3 mt-6'} ${section.title ? 'justify-between' : 'justify-end print:hidden'}`}>

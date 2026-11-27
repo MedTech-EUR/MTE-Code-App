@@ -143,6 +143,7 @@ const ResultRow = ({
       <button
         type="button"
         disabled={isStale}
+        data-tour="search-result"
         onClick={() => onSelect(hit, rank)}
         className={`w-full text-left px-3 py-2.5 rounded-xl border border-gray-100 hover:border-[#0099A7]/50 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-wait ${
           onPreview ? 'pr-9' : ''

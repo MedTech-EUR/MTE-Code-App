@@ -77,6 +77,7 @@ export const TreeLandingPage = ({ onSelectTree, onOpenTool }) => {
           {orderedTrees.map((tree) => (
             <MenuRow
               key={tree.id}
+              tourId={`tree-${tree.id}`}
               accent="amber"
               icon="GitBranch"
               title={tree.title}

@@ -142,6 +142,7 @@ export const QuizConfig = ({ onStart }) => {
           </div>
 
           <button
+            data-tour="quiz-start"
             onClick={handleStart}
             disabled={selectedChapters.length === 0 || selectedQuestionCount === 0}
             className="w-full no-print py-3.5 bg-[#7654A1] hover:bg-[#634488] disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 flex items-center justify-center transition shadow-sm enabled:active:scale-[0.99] group"

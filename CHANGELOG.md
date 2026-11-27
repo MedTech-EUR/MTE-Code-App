@@ -9,6 +9,11 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### Guided tours — 2026-11-27
+
+- Added six task-based tours to the shared top bar. Each highlights the active control and follows the visitor through the actual reader or tool. The launcher supports reduced motion.
+- Isolated the TPPT sample from agenda autosave and kept existing tool sessions open when launching a tour. See the [feature map and implementation plan](docs/guided-tour.md).
+
 ### Code API — 2026-11-26
 - Added permanent section and Q&A IDs, single-item JSON and script-free live embeds under Cite/Link. Publication version and optional edition are Code-wide. Plain-text annex tables expand merged cells and Annex III exposes its published map.
 - New read-only, public Code API (`docs/code-api.md`): `/api/code/v1` (about the text and the list of chapters), `/api/code/v1/code` (every chapter with its sections and Q&As) and `/api/code/v1/chapters/:chapterId`. JSON, `Access-Control-Allow-Origin: *`, `Cache-Control: public, max-age=3600`, the assets' `ETag` (and 304 on `If-None-Match`), `nosniff`; `OPTIONS` answers a preflight; other methods 405; unknown addresses `NOT_FOUND`, unknown chapters `CHAPTER_NOT_FOUND`, a build without the files 503. Only `If-None-Match`/`If-Modified-Since` are passed to the assets binding.

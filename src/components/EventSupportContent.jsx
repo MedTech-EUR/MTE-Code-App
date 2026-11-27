@@ -355,6 +355,7 @@ export default function EventSupportContent({ onBack, scrollRef, glossaryMap, on
                     {data.activities.filter((item) => item.group === group.id).map((item) => (
                       <button
                         key={item.id}
+                        data-tour="support-activity"
                         type="button"
                         onClick={() => choose(item.id)}
                         className="group flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition duration-300 ease-out-soft hover:-translate-y-0.5 hover:border-[#7654A1] hover:shadow-md active:translate-y-0 active:scale-[0.99]"

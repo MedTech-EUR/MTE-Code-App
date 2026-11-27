@@ -30,7 +30,7 @@ export const siteName = (href) => new URL(href).hostname.replace(/^www\./, '');
  * opens the entry while the heading stays a heading and the description stays plain text.
  * An entry with `href` opens another site in a new tab; the others call `onClick`.
  */
-const MenuAction = ({ onClick, href, children }) => {
+const MenuAction = ({ onClick, href, children, tourId }) => {
   const className = 'cursor-pointer text-left outline-none after:absolute after:inset-0';
   if (href) {
     return (
@@ -41,7 +41,7 @@ const MenuAction = ({ onClick, href, children }) => {
     );
   }
   return (
-    <button type="button" onClick={onClick} className={className}>
+    <button type="button" data-tour={tourId} onClick={onClick} className={className}>
       {children}
     </button>
   );
@@ -64,6 +64,7 @@ export const MenuTile = ({
   note = undefined,
   title,
   description = undefined,
+  tourId = undefined,
   onClick = undefined,
   href = undefined,
   className = '',
@@ -108,7 +109,7 @@ export const MenuTile = ({
 
     <div>
       <Heading className="text-2xl font-semibold tracking-tight">
-        <MenuAction onClick={onClick} href={href}>{title}</MenuAction>
+        <MenuAction tourId={tourId} onClick={onClick} href={href}>{title}</MenuAction>
       </Heading>
       {description && (
         <p className={`mt-2 max-w-md text-[0.9375rem] leading-relaxed print:text-gray-700 ${filled ? '' : 'text-gray-600'}`}>
@@ -183,6 +184,7 @@ export const MenuRow = ({
   split = false,
   titleWidth = '12rem',
   clamp = false,
+  tourId = undefined,
   onClick = undefined,
   href = undefined,
 }) => (
@@ -201,7 +203,7 @@ export const MenuRow = ({
     <div className={`min-w-0 flex-1 ${split ? '@2xl:grid @2xl:grid-cols-[var(--menu-title-width)_minmax(0,1fr)] @2xl:gap-x-6' : ''}`}>
       <div>
         <Heading className="text-[1.0625rem] font-semibold leading-6 tracking-tight text-gray-900 transition-colors group-hover:text-[var(--accent-text)]">
-          <MenuAction onClick={onClick} href={href}>{title}</MenuAction>
+          <MenuAction tourId={tourId} onClick={onClick} href={href}>{title}</MenuAction>
         </Heading>
         {note && <p className="text-xs leading-5 text-gray-500">{note}</p>}
       </div>

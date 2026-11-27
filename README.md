@@ -111,6 +111,7 @@ The Code App is a multi-section platform with a custom-built architecture optimi
 
 The app is organized into independently navigable **sections**, all accessible from a central **Home Hub**:
 
+- **Guided tours** — Choose **How to use the Code App** in the top bar to practise a task using the real interface. See the [feature map and implementation plan](docs/guided-tour.md).
 - **Home Hub** — A card-based landing page that links to each section.
 - **The Code** — The full MedTech Europe Code of Ethical Business Practice reader.
 - **Transparency** — Standalone transparency publications, initially the Disclosure Guidelines.

@@ -100,7 +100,7 @@ export const DecisionTree = ({ treeId, onBack, onShowVisualization, onOpenRefere
         {/* Keyed by the question, so each one rises in as it is reached. */}
         {currentNode.type === 'question' && (
           <div key={currentNodeId} className="animate-rise-in">
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8 mb-6">
+            <div data-tour="tree-options" className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8 mb-6">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">
                   Question {pathHistory.length + 1}

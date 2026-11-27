@@ -58,8 +58,8 @@ function ordered(source, keys, defaults = {}) {
 }
 
 const CHAPTER_KEYS = ['id', 'part', 'title', 'icon', 'summary', 'sections'];
-const SECTION_KEYS = ['title', 'legalText', 'qas'];
-const QA_KEYS = ['q', 'a'];
+const SECTION_KEYS = ['liveId', 'title', 'legalText', 'qas'];
+const QA_KEYS = ['liveId', 'q', 'a'];
 
 /** A Code chapter in the editor's key order (its values are never changed). */
 export function canonicalChapter(chapter) {

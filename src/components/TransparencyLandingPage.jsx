@@ -21,6 +21,7 @@ const UnitList = ({ units, headingLevel, onSelectUnit }) => (
     {units.map((unit) => (
       <MenuRow
         key={unit.id}
+        tourId="disclosure-unit"
         headingLevel={headingLevel}
         icon={unit.icon || 'FileText'}
         title={unit.title}
@@ -112,6 +113,7 @@ export const TransparencyLandingPage = ({ documents, onOpenDocument, onOpenUnit,
             {documents.map((document, index) => (
               <MenuTile
                 key={document.id}
+                tourId={`pub-${document.id}`}
                 filled={index === 0}
                 icon={document.icon || 'FileText'}
                 note={document.publicationDate}

@@ -46,15 +46,16 @@ export function fieldsOf(path, data) {
     const byTitle = website && titles.every((title, i) => title && titles.indexOf(title) === i);
     (data.sections ?? []).forEach((section, i) => {
       const group = section.title || `Section ${i + 1} (untitled)`;
-      const base = byTitle ? `update:${section.title}` : `sections.${i}`;
+      const base = section.liveId ? `section:${section.liveId}` : byTitle ? `update:${section.title}` : `sections.${i}`;
       // Updates can be reordered: keyed by position (two share a title), each one is a unit.
       const unit = website && !byTitle ? base : null;
       if (!byTitle) add(`${base}.title`, ['sections', i, 'title'], group, glossary ? 'Term' : 'Section title', 'text', section.title, unit);
       add(`${base}.legalText`, ['sections', i, 'legalText'], group, glossary ? 'Definition' : 'Text', 'html', section.legalText, unit);
       (section.qas ?? []).forEach((qa, k) => {
         const number = qaNumber(qa.q, k);
-        add(`${base}.qas.${k}.q`, ['sections', i, 'qas', k, 'q'], group, `${number} · Question`, 'text', qa.q, unit);
-        add(`${base}.qas.${k}.a`, ['sections', i, 'qas', k, 'a'], group, `${number} · Answer`, 'html', qa.a, unit);
+        const qaKey = qa.liveId ? `qa:${qa.liveId}` : `${base}.qas.${k}`;
+        add(`${qaKey}.q`, ['sections', i, 'qas', k, 'q'], group, `${number} · Question`, 'text', qa.q, unit);
+        add(`${qaKey}.a`, ['sections', i, 'qas', k, 'a'], group, `${number} · Answer`, 'html', qa.a, unit);
       });
     });
     return fields;

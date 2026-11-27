@@ -11,6 +11,7 @@ import {
 import { tokenizeAllWithOffsets, tokenizeWords } from '../src/utils/searchText.js';
 import { CONDITION_TAGS, findSourceSectionIndex } from '../src/utils/eventSupportRules.js';
 import { normalizeCvsStatus } from '../src/utils/eventSupportCvs.js';
+import { validateLiveIds } from './lib/code-live-ids.mjs';
 import { loadSplitCodeData } from './lib/code-content.mjs';
 import { loadTransparencyData } from './lib/transparency-content.mjs';
 import { checkHtml } from '../public/admin/lib/html-tools.js';
@@ -883,6 +884,11 @@ export function validateCurrentProject() {
     searchPhrasebook: phrasebook.value,
     eventSupportRules: readJson('src/data/eventSupportRules.json'),
   });
+  try {
+    validateLiveIds(codeData.chapters, readJson('src/data/code-live-ids.json'));
+  } catch (error) {
+    result.errors.push(error.message);
+  }
   if (phrasebook.error) result.errors.push(phrasebook.error);
   // The map of Annex III must show the areas its text lists.
   const mapSection = codeData.chapters

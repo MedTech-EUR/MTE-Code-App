@@ -72,7 +72,7 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
       {/* Question Card */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex-1 flex flex-col">
         {/* Keyed by the question, so each one rises in as it comes up. */}
-        <div key={currentIndex} className="p-6 sm:p-8 border-b border-gray-100 flex-1 animate-rise-in">
+        <div data-tour="quiz-options" key={currentIndex} className="p-6 sm:p-8 border-b border-gray-100 flex-1 animate-rise-in">
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 leading-snug sm:leading-snug mb-7">
             {currentQuestion.question}
           </h2>
@@ -101,6 +101,7 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
               return (
                 <button
                   key={opt.id}
+                  data-tour="quiz-answer"
                   onClick={() => handleSelect(opt.id)}
                   disabled={hasSubmitted}
                   className={optionClasses}
@@ -144,7 +145,7 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
           )}
 
           {hasSubmitted && (
-            <div className={`mt-8 p-6 rounded-xl animate-rise-in border ${
+            <div data-tour="quiz-feedback" className={`mt-8 p-6 rounded-xl animate-rise-in border ${
               currentQuestion.options.find(o => o.id === selectedOption)?.isCorrect 
                 ? 'bg-green-50 border-green-200 text-green-900' 
                 : 'bg-red-50 border-red-200 text-red-900'
@@ -164,6 +165,7 @@ export const QuizSession = ({ questions, onComplete, onExit }) => {
         <div className="no-print p-4 sm:p-6 bg-gray-50/70 border-t border-gray-100">
           {!hasSubmitted ? (
             <button
+              data-tour="quiz-submit"
               onClick={handleSubmit}
               disabled={!selectedOption}
               className="w-full py-3.5 bg-[#7654A1] hover:bg-[#634488] disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1] focus-visible:ring-offset-2 flex items-center justify-center transition shadow-sm enabled:active:scale-[0.99]"

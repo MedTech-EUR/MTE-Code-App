@@ -16,6 +16,7 @@ export const PAGE_ACCENTS = {
 export const PageBackLink = ({ onClick, children, className = '' }) => (
   <button
     type="button"
+    data-tour="page-back"
     onClick={onClick}
     className={`group no-print -ml-1 inline-flex items-center gap-1 rounded-md px-1 py-0.5 text-sm font-semibold text-[#007A86] transition-colors hover:text-[#7654A1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7654A1]/50 ${className}`}
   >

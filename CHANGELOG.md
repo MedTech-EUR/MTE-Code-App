@@ -9,6 +9,20 @@ Versions are internal application-release labels; they are independent of the pr
 
 ## [Unreleased]
 
+### Guided tours — 2026-11-27
+
+- Added six task-based tours to the shared top bar. Each highlights the active control and follows the visitor through the actual reader or tool. The launcher supports reduced motion.
+- Isolated the TPPT sample from agenda autosave and kept existing tool sessions open when launching a tour. See the [feature map and implementation plan](docs/guided-tour.md).
+
+### Code API — 2026-11-26
+- Added permanent section and Q&A IDs, single-item JSON and script-free live embeds under Cite/Link. Publication version and optional edition are Code-wide. Plain-text annex tables expand merged cells and Annex III exposes its published map.
+- New read-only, public Code API (`docs/code-api.md`): `/api/code/v1` (about the text and the list of chapters), `/api/code/v1/code` (every chapter with its sections and Q&As) and `/api/code/v1/chapters/:chapterId`. JSON, `Access-Control-Allow-Origin: *`, `Cache-Control: public, max-age=3600`, the assets' `ETag` (and 304 on `If-None-Match`), `nosniff`; `OPTIONS` answers a preflight; other methods 405; unknown addresses `NOT_FOUND`, unknown chapters `CHAPTER_NOT_FOUND`, a build without the files 503. Only `If-None-Match`/`If-Modified-Since` are passed to the assets binding.
+- `scripts/lib/code-api.mjs` (new) builds the answers from the chapter files: website pages and the app's chapter summaries left out; section and Q&A IDs stored in the source, with current reader anchors from `generateSectionId`/`getQaAnchorId`; `html` through `sanitizeContentHtml` with links kept as absolute http(s) addresses; `text` with paragraphs and list items on their own lines and table cells separated by tabs; Q&A `label` ("Q&A 29") split from `question`; `about` with the edition, a 16-hex `contentHash` of the chapters and the terms of reuse (`CODE_API_TERMS`, linking the published September 2024 PDF on medtecheurope.org). `scripts/build-code-api.mjs` (new) writes them to `dist/api/code/v1/` as the build's last step (after the service worker, so not precached). `code-api.js` (new, beside `server.js`) serves them; `server.js` routes `/api/code` and `/api/code/*` to it.
+- `sanitizeContentHtml()` takes an optional `{ linkHref }` that keeps a link with its address only; the page files are unchanged without it (checked: all 46 identical apart from asset hashes).
+- `CODE_PARTS` and `WEBSITE_PART_ID` move from `codeData.js` (which re-exports them) to `codeOrder.js`, so Node scripts can read them. `src/data/codeEdition.js` (new) holds the Code-wide version, optional edition and official publication URL used by the reader and the API.
+- Version History: November 2026 Update 7 (the Code as data).
+- `tests/codeApi.test.mjs` (new); `tests/cvs.test.mjs` loads `code-api.js` into its Workers runtime with the other Worker modules.
+
 ### Historical declarations: fewer D1 rows read — 2026-11-19
 - `historical-declarations-api.js`: `metadata`, `search` and detail answers go through `withEdgeCache()`, which stores them in `caches.default` for the response's `s-maxage` (the header alone never cached a Worker-built response, so every visit ran the four metadata queries, two of them full scans of the 31k-row table). The stored copy carries `max-age`; the browser copy keeps `max-age=0, must-revalidate`. Keys sort the query parameters and include `CACHE_VERSION`. Only 200s are stored. `X-Declarations-Cache: HIT|MISS`. `server.js` passes `ctx` through for `waitUntil`.
 - Name search of three or more characters uses the new FTS5 trigram table `declarations_fts` (`d1/historical-declarations/search-index.sql`, run after loading data) as one quoted phrase, instead of `LIKE '%…%'` on both names; shorter text, and any search before the table exists, still uses `LIKE`. Same results, checked against the sample fixture.

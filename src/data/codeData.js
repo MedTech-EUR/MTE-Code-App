@@ -21,7 +21,9 @@ import annex5 from './code/annex5.json';
 import annex6 from './code/annex6.json';
 import annex7 from './code/annex7.json';
 import changelog from './code/changelog.json';
-import { CODE_CHAPTER_IDS } from './codeOrder';
+import { CODE_CHAPTER_IDS, CODE_PARTS, WEBSITE_PART_ID } from './codeOrder';
+
+export { CODE_PARTS, WEBSITE_PART_ID };
 
 const CHAPTERS_BY_ID = {
   scope,
@@ -58,17 +60,8 @@ export const FULL_CODE_DATA = CODE_CHAPTER_IDS.map((id) => {
 // Website pages (Version History) are stored and routed like Code chapters, but they describe
 // the app, not the Code: the sidebar, the Code landing page and chapter-to-chapter navigation
 // keep them apart from the Code's own chapters.
-export const WEBSITE_PART_ID = 'website';
 export const CODE_CHAPTERS = FULL_CODE_DATA.filter((chapter) => chapter.part !== WEBSITE_PART_ID);
 export const WEBSITE_CHAPTERS = FULL_CODE_DATA.filter((chapter) => chapter.part === WEBSITE_PART_ID);
-
-// The parts the Code's chapters are listed under, in the sidebar and on the Code's own page.
-export const CODE_PARTS = Object.freeze([
-  { id: 'intro', label: 'Introductory Chapters' },
-  { id: 'part1', label: 'Part 1: The Code' },
-  { id: 'part2', label: 'Part 2: Complaint Handling' },
-  { id: 'part3', label: 'Part 3: Annexes & Glossary' },
-]);
 
 export const updateSearchStatus = (message) => {
   const statusEl = document.getElementById('search-status');

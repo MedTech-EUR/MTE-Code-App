@@ -12,6 +12,7 @@ import {
 
 export const Header = ({
   activeId,
+  onOpenTour,
   activeSection,
   setSidebarOpen,
   onGoHome,
@@ -69,7 +70,7 @@ export const Header = ({
   return (
     <>
       <header className="h-20 flex-none border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 md:px-8 bg-white/95 backdrop-blur-sm z-30 shadow-sm relative [view-transition-name:app-header]">
-        <div className="flex min-w-0 items-center gap-1 sm:gap-3 z-10">
+        <div className="flex min-w-0 flex-1 items-center gap-1 sm:gap-3 z-10">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
@@ -88,11 +89,16 @@ export const Header = ({
           </button>
           {/* A phone's reader header has room for the compact logo only, beside its two buttons. */}
           {readerMode && (
-            <button onClick={onGoHome} className="flex md:hidden min-w-0 items-center hover:opacity-80 transition-opacity">
-              <CompactLogo />
+            <button onClick={onGoHome} className="@container/logo flex md:hidden min-w-8 flex-1 items-center hover:opacity-80 transition-opacity">
+              <CompactLogo className="[&>span:last-child]:sr-only @min-[9.5rem]/logo:[&>span:last-child]:not-sr-only" />
             </button>
           )}
         </div>
+
+        <button type="button" id="app-tour-launch" className="tour-launch no-print ml-auto mr-1 sm:mr-3"
+          title="How to use the Code App" aria-label="How to use the Code App" aria-haspopup="dialog" onClick={onOpenTour}>
+          <strong aria-hidden="true">?</strong><span aria-hidden="true"><b>How to use the Code App</b></span>
+        </button>
 
         {/* Document reader toolbar */}
         {readerMode && (

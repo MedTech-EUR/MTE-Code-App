@@ -6,8 +6,13 @@
   "summary": "<div><p>Track updates and changes to the MedTech Europe Code App.</p></div>",
   "sections": [
     {
+      "title": "November 2026 Update 7",
+      "legalText": "<div class=\"space-y-4\"><div class=\"flex items-center gap-2 mb-2\"><span class=\"text-xs font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800\">Current</span></div><p class=\"text-sm font-semibold text-slate-700 mb-2\">The Code as data</p><ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600 mb-4\"><li>The full text of the Code (every chapter, section and Q&A, the Glossary and the Annexes) is now available as data at medtecheurope-code.org/api/code/v1, free for anyone to use in their own tools and websites, without registration.</li><li>Each section and Q&A comes with a link to its page in this app, the edition of the Code and the terms for reusing the text.</li><li>Choose <strong>Copy live embed</strong> under <strong>Cite/Link</strong> to display a Code section or Q&amp;A on your own site. The text follows future updates and renumbering. You can show the Code-wide edition and version and, for a section, include its related Q&amp;As.</li></ul><p class=\"text-sm font-semibold text-slate-700 mb-2\">Guided tour</p><ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600 mb-4\"><li>Choose <strong>How to use the Code App</strong> in the top bar to try a guided tour. Follow the highlighted controls to practise finding, reading and sharing Code text or exploring the app’s tools.</li></ul></div>",
+      "qas": []
+    },
+    {
       "title": "November 2026 Update 6",
-      "legalText": "<div class=\"space-y-4\"><div class=\"flex items-center gap-2 mb-2\"><span class=\"text-xs font-medium px-2.5 py-0.5 rounded bg-green-100 text-green-800\">Current</span></div><p class=\"text-sm font-semibold text-slate-700 mb-2\">Historical Declarations</p><ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600 mb-4\"><li>Searching historical declarations is faster, and results reappear instantly when you repeat a search.</li><li>Results that span several pages no longer show the same declaration twice or skip one.</li></ul></div>",
+      "legalText": "<div class=\"space-y-4\"><p class=\"text-sm font-semibold text-slate-700 mb-2\">Historical Declarations</p><ul class=\"list-disc pl-5 space-y-2 text-sm text-slate-600 mb-4\"><li>Searching historical declarations is faster, and results reappear instantly when you repeat a search.</li><li>Results that span several pages no longer show the same declaration twice or skip one.</li></ul></div>",
       "qas": []
     },
     {

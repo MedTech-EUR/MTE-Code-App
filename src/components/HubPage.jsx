@@ -193,6 +193,7 @@ export const HubPage = ({
             {featured.map((section, index) => (
               <MenuTile
                 key={section.id}
+                tourId={`home-${section.id}`}
                 accent={section}
                 filled={index === 0}
                 icon={section.icon}
@@ -210,6 +211,7 @@ export const HubPage = ({
             {others.map((section) => (
               <MenuRow
                 key={section.id}
+                tourId={`home-${section.id}`}
                 accent={section}
                 icon={section.icon}
                 title={section.title}

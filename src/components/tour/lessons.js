@@ -70,7 +70,7 @@ export const lessons = {
     finish: 'Continue the quiz at your own pace. The results page lets you review your answers and share the questions.',
   },
   tppt: {
-    title: 'Check a training agenda', icon: 'Calculator',
+    title: 'Check if an Event qualifies as a TPPT', icon: 'Calculator',
     steps: [
       open('home-tppt', 'Open the TPPT Checker', 'Select the checker to practise with a sample agenda. Your own saved agenda is kept separately.'),
       step('#tppt-agenda-text', 'Inspect the sample agenda', 'Read or edit the sample, then continue. Outside this tour you can also import a PDF or Word file.', 'read'),

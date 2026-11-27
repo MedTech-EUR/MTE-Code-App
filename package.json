@@ -16,6 +16,7 @@
     "verify:disclosure-guidelines": "node scripts/verify-disclosure-guidelines.mjs",
     "verify:production-disclosure-assets": "node scripts/verify-production-disclosure-assets.mjs",
     "validate:data": "node scripts/validate-data.mjs",
+    "assign:code-ids": "node scripts/assign-code-ids.mjs",
     "format:data": "node scripts/format-cms-data.mjs",
     "build:geographic-area-map": "node scripts/build-geographic-area-map.mjs",
     "sync:national-associations": "node scripts/sync-national-associations.mjs",

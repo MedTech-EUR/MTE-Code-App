@@ -84,6 +84,7 @@ collections:
             collapsed: true
             summary: '{{fields.title}}'
             fields:
+              - { name: liveId, label: Permanent reference, widget: hidden }
               - name: title
                 label: Section title
                 widget: string
@@ -106,6 +107,7 @@ collections:
                 collapsed: true
                 summary: '{{fields.q}}'
                 fields:
+                  - { name: liveId, label: Permanent reference, widget: hidden }
                   - name: q
                     label: Question
                     widget: text
@@ -167,6 +169,7 @@ collections:
             collapsed: true
             summary: '{{fields.title}}'
             fields:
+              - { name: liveId, label: Permanent reference, widget: hidden }
               - name: title
                 label: Term
                 widget: string
@@ -188,6 +191,7 @@ collections:
                 collapsed: true
                 summary: '{{fields.q}}'
                 fields:
+                  - { name: liveId, label: Permanent reference, widget: hidden }
                   - { name: q, label: Question, widget: text }
                   - { name: a, label: Answer, widget: exact-html }
       - { name: annex1, label: 'Annex I: CVS Scope', file: src/data/code/annex1.json, fields: *chapter_fields }

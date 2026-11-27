@@ -15,10 +15,10 @@ const apiDirectory = resolve(projectRoot, 'dist', CODE_API_PATH.slice(1));
 const files = buildCodeApiFiles(loadSplitCodeData(projectRoot).chapters);
 
 rmSync(apiDirectory, { recursive: true, force: true });
-for (const { file, data } of files) {
+for (const { file, data, body } of files) {
   const target = resolve(apiDirectory, file);
   mkdirSync(dirname(target), { recursive: true });
-  writeFileSync(target, `${JSON.stringify(data)}\n`);
+  writeFileSync(target, body ?? `${JSON.stringify(data)}\n`);
 }
 
 console.log(`Wrote ${files.length} Code API files to dist${CODE_API_PATH}/.`);

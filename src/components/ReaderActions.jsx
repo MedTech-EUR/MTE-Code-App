@@ -15,9 +15,13 @@ export const ReaderActions = ({
     onToggleBookmark,
     onCopyCitation,
     onCopyText,
+    onCopyEmbed,
+    allowEmbedQas = false,
     className = '',
 }) => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [includeQas, setIncludeQas] = useState(false);
+    const [showVersion, setShowVersion] = useState(true);
     const containerRef = useRef(null);
     const triggerRef = useRef(null);
 
@@ -136,6 +140,29 @@ export const ReaderActions = ({
                             </div>
                             <AppIcon name="ExternalLink" size={14} className="text-gray-400 group-hover:text-slate-700" />
                         </button>
+                        {onCopyEmbed && (
+                            <fieldset className="mt-1 border-t border-slate-200 px-2.5 pt-2 text-xs text-slate-700">
+                                <legend className="sr-only">Live embed options</legend>
+                                {allowEmbedQas && (
+                                    <label className="flex items-center gap-2 py-1">
+                                        <input type="checkbox" checked={includeQas} onChange={(e) => setIncludeQas(e.target.checked)} />
+                                        Include related Q&amp;As
+                                    </label>
+                                )}
+                                <label className="flex items-center gap-2 py-1">
+                                    <input type="checkbox" checked={showVersion} onChange={(e) => setShowVersion(e.target.checked)} />
+                                    Show Code edition and version
+                                </label>
+                                <button type="button" className="mt-1 w-full rounded-md bg-cyan-50 p-2 text-left font-semibold text-[#005F68]"
+                                    onClick={async () => {
+                                        if (await onCopyEmbed({ includeQas, showVersion })) {
+                                            setMenuOpen(false);
+                                            triggerRef.current?.focus();
+                                        }
+                                    }}>Copy live embed</button>
+                                <p className="py-1 text-slate-500">Paste into an HTML or embed block to show the current wording.</p>
+                            </fieldset>
+                        )}
                     </div>
                 )}
             </div>

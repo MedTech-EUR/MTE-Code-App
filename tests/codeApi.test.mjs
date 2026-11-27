@@ -22,7 +22,7 @@ const whole = fileData(CODE_API_FILES.code);
 
 test('writes an index, the whole Code and one file per Code chapter, without website pages', () => {
   assert.deepEqual(
-    files.map((entry) => entry.file).sort(),
+    files.map((entry) => entry.file).filter((file) => /^(index|code)\.json$|^chapters\//.test(file)).sort(),
     [CODE_API_FILES.index, CODE_API_FILES.code, ...codeChapters.map((chapter) => CODE_API_FILES.chapter(chapter.id))].sort(),
   );
   assert.deepEqual(whole.chapters.map((chapter) => chapter.id), codeChapters.map((chapter) => chapter.id));
@@ -37,12 +37,14 @@ test('keeps every section and Q&A, under the same IDs as their links in the app'
     for (const [sectionIndex, section] of source.sections.entries()) {
       const apiSection = chapter.sections[sectionIndex];
       const sectionId = generateSectionId(source.id, section.title, sectionIndex);
-      assert.equal(apiSection.id, sectionId);
+      assert.equal(apiSection.id, section.liveId);
+      assert.equal(apiSection.anchorId, sectionId);
       assert.equal(apiSection.url, `https://medtecheurope-code.org/code/${source.id}#${sectionId}`);
       assert.equal(apiSection.qas.length, (section.qas || []).length, sectionId);
       ids.add(apiSection.id);
       for (const [qaIndex, qa] of apiSection.qas.entries()) {
-        assert.equal(qa.id, getQaAnchorId(sectionId, qaIndex));
+        assert.equal(qa.id, section.qas[qaIndex].liveId);
+        assert.equal(qa.anchorId, getQaAnchorId(sectionId, qaIndex));
         ids.add(qa.id);
       }
     }
@@ -80,7 +82,7 @@ test('serves the text with its structure only, and as plain text', () => {
 
 test('describes the edition, the terms and every chapter in each answer', () => {
   const index = fileData(CODE_API_FILES.index);
-  for (const { data } of files) {
+  for (const { data } of files.filter((entry) => entry.data)) {
     assert.equal(data.about.edition, CODE_EDITION);
     assert.match(data.about.contentHash, /^[0-9a-f]{16}$/);
     assert.ok(data.about.terms.reuse && data.about.terms.authority);
@@ -211,4 +213,86 @@ test('says the API is unavailable when the build wrote no API files', async () =
   const env = { ASSETS: createAssets(new Map()) };
   const response = await handleCodeApiRequest(new Request(`https://medtecheurope-code.org${CODE_API_PATH}`), env);
   assert.equal(response.status, 503);
+});
+
+test('a published embed and JSON item follow 6.4 and its Q&As across chapters', () => {
+  const revised = structuredClone(chapters);
+  const from = revised.find(c => c.id === 'ch6');
+  const to = revised.find(c => c.id === 'ch7');
+  const [section] = from.sections.splice(from.sections.findIndex(s => s.title.includes('Collaborative Research')), 1);
+  section.title = '2. Collaborative Research';
+  section.qas.reverse();
+  section.qas[0].q = section.qas[0].q.replace('Q&A 40', 'Q&A 58');
+  section.legalText += '<p>Test wording change.</p>';
+  to.sections.push(section);
+  const output = new Map(buildCodeApiFiles(revised).map(e => [e.file, e]));
+  const item = output.get(CODE_API_FILES.item(section.liveId)).data;
+  assert.equal(item.chapter.id, 'ch7');
+  assert.equal(item.section.id, 'ch6-4-collaborative-research');
+  assert.match(item.section.url, /ch7#ch7-2-collaborative-research$/);
+  assert.equal(item.about.version, whole.about.version);
+  assert.equal(item.about.edition, whole.about.edition);
+  assert.notEqual(item.about.contentHash, whole.about.contentHash);
+  const embedded = (qas, label) => output.get(CODE_API_FILES.embed(section.liveId, qas, label)).body;
+  assert.match(embedded(true, true), /Test wording change/);
+  assert.match(embedded(true, true), /Q&amp;A 58/);
+  assert.ok(embedded(true, true).includes('Version ' + whole.about.version));
+  assert.ok(!embedded(false, false).includes('Version ' + whole.about.version));
+  assert.doesNotMatch(embedded(false, false), /Q&amp;A 58/);
+  const qa = output.get(CODE_API_FILES.item(section.qas[0].liveId)).data;
+  assert.equal(qa.qa.label, 'Q&A 58');
+  assert.equal(qa.section.id, section.liveId);
+});
+
+test('loss of a published identity stops the build and duplicate IDs fail validation', () => {
+  const changed = structuredClone(chapters);
+  const [first, second] = changed[0].sections;
+  delete second.liveId;
+  assert.throws(() => buildCodeApiFiles(changed), /missing, unregistered or duplicate/);
+  second.liveId = first.liveId;
+  assert.throws(() => buildCodeApiFiles(changed), /duplicate/);
+  changed[0].sections.pop();
+  assert.throws(() => buildCodeApiFiles(changed), /Missing published record/);
+});
+
+test('both representations preserve the context of annex VI and the published annex III map', () => {
+  const annex = whole.chapters.find(c => c.id === 'annex6').sections[0];
+  assert.match(annex.html, /rowspan="3"/);
+  assert.match(annex.text, /Third Party Organised Educational Conference\tSatellite Symposium\tSatellite Symposium\tAllowed \(consulting agreement required\)\tNot allowed/);
+  const map = whole.chapters.find(c => c.id === 'annex3').sections[0];
+  assert.match(map.figure.url, /^https:\/\/medtecheurope-code.org\/code-assets\/.+\.png$/);
+  assert.ok(fileData(CODE_API_FILES.item(map.id)).section.figure.description);
+});
+
+test('the Worker serves an embed variant, JSON item and explicit withdrawal notice', async () => {
+  const id = 'ch6-4-collaborative-research';
+  const fake = new Map(files.map(entry => [CODE_API_PATH + '/' + entry.file, entry.body ?? JSON.stringify(entry.data)]));
+  const page = (suffix, init) => call(CODE_API_PATH + suffix, init, { files: fake }).then(r => r.response);
+  const item = await page('/items/' + id);
+  assert.equal((await item.json()).section.id, id);
+  const frame = await page('/embed/' + id + '?qas=1&version=0');
+  assert.match(frame.headers.get('Content-Type'), /text\/html/);
+  const html = await frame.text();
+  assert.match(html, /Q&amp;A 39/);
+  assert.doesNotMatch(html, /Version September 2024/);
+  fake.set(CODE_API_PATH + '/withdrawn/old.txt', 'Withdrawn');
+  assert.equal((await page('/items/old')).status, 410);
+  const old = await page('/embed/old');
+  assert.equal(old.status, 410);
+  assert.match(await old.text(), /withdrawn/);
+  assert.equal((await page('/items/unknown')).status, 404);
+});
+
+test('a replacement import can identify unique unchanged passages after a move without guessing duplicates', async () => {
+  const { suggestLiveIds } = await import('../scripts/lib/reconcile-code-ids.mjs');
+  const old = [{ sections: [
+    { liveId: 'unique', legalText: 'One', qas: [{ liveId: 'qa-old', q: 'Q&A 3: Why?', a: 'Yes.' }] },
+    { liveId: 'another', legalText: 'Common', qas: [] },
+    { liveId: 'third', legalText: 'Common', qas: [] },
+  ] }];
+  const next = [{ sections: [] }, { sections: [
+    { legalText: 'Common', qas: [] },
+    { legalText: 'One', qas: [{ q: 'Q&A 17: Why?', a: 'Yes.' }] },
+  ] }];
+  assert.deepEqual(suggestLiveIds(old, next).map(match => match.id), ['unique', 'qa-old']);
 });

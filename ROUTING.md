@@ -79,10 +79,7 @@ anchor it is built on) or if that section's own Q&As are reordered, inserted,
 or removed before it. Opening a Q&A link switches the Q&A view on so the linked
 answer is visible.
 
-The Code API (`/api/code/v1`, see `docs/code-api.md`) identifies each Code
-chapter, section and Q&A by these same IDs, so other organisations' tools rely
-on them too: renaming a Code section or reordering its Q&As changes the API's
-IDs as well as the app's links. Announce such a change in the Version History.
+Code API item and embed addresses use a permanent `liveId` stored on each section and Q&A. Their `url` and `anchorId` identify the item's **current** reader location. Preserve the permanent ID when moving or renaming a record. See [Code API maintenance](docs/code-api.md#maintaining-the-feed).
 
 Before renaming a Code chapter ID, Transparency document ID, Transparency unit
 ID, decision-tree ID, or section title:

@@ -4,6 +4,7 @@ import { processReaderHtml, getQaAnchorId } from '../utils/textUtils';
 import { copyTextToClipboard } from '../utils/clipboardUtils';
 import { Highlight } from './Highlight';
 import { AppIcon } from './AppIcons';
+import { liveEmbedSnippet } from '../utils/liveEmbed';
 import { ReaderActions } from './ReaderActions';
 import { getTreesBySection } from '../data/treeData';
 import { buildCodeSectionPath } from '../utils/routeUtils';
@@ -187,6 +188,10 @@ export const FullTextSection = ({
         CITATION_COPIED_MESSAGES[format],
     );
 
+    const copyEmbed = (liveId, options) => copyWithFeedback(
+        liveEmbedSnippet(liveId, options), 'Live embed copied. Paste it into an HTML or embed block.',
+    );
+
     const copyPlainText = async () => {
         let textToCopy = `${sectionTitle}\n\n${toPlainText(section.legalText)}`;
 
@@ -267,6 +272,8 @@ export const FullTextSection = ({
                     isBookmarked={isAnchorBookmarked(id)}
                     onToggleBookmark={bookmarksControls ? () => toggleBookmark(id, sectionTitle) : undefined}
                     onCopyCitation={(format) => copyCitation(format, sectionTitle, id)}
+                    onCopyEmbed={section.liveId ? (options) => copyEmbed(section.liveId, options) : undefined}
+                    allowEmbedQas={Boolean(section.liveId)}
                     onCopyText={copyPlainText}
                     className="shrink-0 sm:ml-auto sm:justify-end"
                 />
@@ -337,6 +344,7 @@ export const FullTextSection = ({
                                     isBookmarked={isAnchorBookmarked(qa.anchorId)}
                                     onToggleBookmark={bookmarksControls ? () => toggleBookmark(qa.anchorId, qaTitle) : undefined}
                                     onCopyCitation={(format) => copyCitation(format, qaTitle, qa.anchorId)}
+                                    onCopyEmbed={qa.liveId ? (options) => copyEmbed(qa.liveId, options) : undefined}
                                     onCopyText={() => copyQaPlainText(qa)}
                                     className="justify-end mb-2 sm:float-right sm:ml-4 sm:-my-1"
                                 />

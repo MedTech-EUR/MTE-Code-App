@@ -131,7 +131,7 @@ See `PROJECT_CHECKS.md` for detailed instructions and troubleshooting.
 
 ## Found While Adding the Code API — 2026-11-26
 
-- The terms of reuse every Code API answer carries (`CODE_API_TERMS` in `scripts/lib/code-api.mjs`) were released as proposed on 2026-11-26; MedTech Europe's legal team may still reword them. Their `publishedEdition` is the September 2024 PDF on medtecheurope.org: when `CODE_EDITION` changes, change that address with it.
+- The terms of reuse every Code API answer carries (`CODE_API_TERMS` in `scripts/lib/code-api.mjs`) were released as proposed on 2026-11-26; MedTech Europe's legal team may still reword them. Their `publishedEdition` is the September 2024 PDF on medtecheurope.org: update `CODE_PDF` when publishing a new source PDF.
 - The Code API's guide (`docs/code-api.md`) is in the repository only. If other organisations are to find the API on their own, it needs a page on the site (or a link from the footer or the Code's page); decide with the product owner.
 - Section IDs come from section titles, and three untitled sections use their position (`ch7-section-0`, `ch8-section-0`, `ch10-section-0`). Nothing stops a retitle from changing an ID that other organisations' tools rely on; a recorded list of the published IDs, checked by `npm test` and updated on purpose, would catch it before release.
 - The Transparency publications (the Disclosure Guidelines) are not in the Code API. Add them only if someone asks for them, under their own address (`/api/transparency/v1`), since their units and IDs differ from the Code's.
